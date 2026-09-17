@@ -1,0 +1,324 @@
+import React, { useState, useEffect } from 'react';
+import { ArrowLeft, Server, ChevronLeft, ChevronRight, Play, Layers, AlertCircle, Maximize2, Minimize2 } from 'lucide-react';
+import { Episode, RouteState, SeasonDetails, Theme, TVDetails, Language } from '../types';
+import { SeriesService, VideoService } from '../services';
+import { StreamServer } from '../services/videoService';
+import { translations } from '../i18n/translations';
+
+interface WatchTvViewProps {
+  id: number;
+  season: number;
+  episode: number;
+  onNavigate: (route: RouteState) => void;
+  language: Language;
+  theme: Theme;
+}
+
+export const WatchTvView: React.FC<WatchTvViewProps> = ({
+  id,
+  season,
+  episode,
+  onNavigate,
+  language,
+  theme,
+}) => {
+  const [series, setSeries] = useState<TVDetails | null>(null);
+  const [seasonData, setSeasonData] = useState<SeasonDetails | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [activeServer, setActiveServer] = useState<StreamServer>('vidcore');
+  const [isWideTheater, setIsWideTheater] = useState(false);
+
+  const t = translations[language];
+
+  // Load TV Details and Season Details
+  useEffect(() => {
+    let isMounted = true;
+    setIsLoading(true);
+    window.scrollTo(0, 0);
+
+    async function loadData() {
+      try {
+        const langParam = language === 'fa' ? 'fa-IR' : 'en-US';
+        const [tvData, sData] = await Promise.all([
+          SeriesService.getDetails(id, langParam),
+          SeriesService.getSeasonDetails(id, season, langParam),
+        ]);
+        if (isMounted) {
+          setSeries(tvData);
+          setSeasonData(sData);
+        }
+      } catch (err) {
+        console.error("WatchTV load error:", err);
+      } finally {
+        if (isMounted) setIsLoading(false);
+      }
+    }
+
+    loadData();
+    return () => { isMounted = false; };
+  }, [id, season, language]);
+
+  const embedUrl = VideoService.getTvEmbedUrl(id, season, episode, activeServer);
+
+  const servers: { id: StreamServer; name: string }[] = [
+    { id: 'vidcore', name: t.serverPrimary },
+    { id: 'vidsrc_icu', name: t.serverBackup1 },
+    { id: 'vidsrc_cc', name: t.serverBackup2 },
+    { id: 'embed_su', name: t.serverBackup3 },
+  ];
+
+  const totalEpisodesInSeason = seasonData?.episodes?.length || 0;
+  const currentEpData = seasonData?.episodes?.find((e: Episode) => e.episode_number === episode);
+
+  const availableSeasons = (series?.seasons || [])
+    .slice()
+    .sort((a, b) => a.season_number - b.season_number);
+
+  const hasPrevEpisode = episode > 1;
+  const hasNextEpisode = episode < totalEpisodesInSeason;
+
+  const handlePrevEpisode = () => {
+    if (hasPrevEpisode) {
+      onNavigate({ view: 'watch-tv', id, season, episode: episode - 1 });
+    }
+  };
+
+  const handleNextEpisode = () => {
+    if (hasNextEpisode) {
+      onNavigate({ view: 'watch-tv', id, season, episode: episode + 1 });
+    }
+  };
+
+  return (
+    <div className="min-h-screen pb-20">
+      {/* Top Bar Navigation */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between gap-4">
+        <button
+          id="back-to-tv-details-btn"
+          onClick={() => onNavigate({ view: 'series-detail', id })}
+          className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-sky-500 hover:text-sky-400 transition-colors cursor-pointer"
+        >
+          <ArrowLeft className="w-4 h-4 rtl:rotate-180" />
+          <span>{series ? `${t.moreInfo}: ${series.name}` : t.series}</span>
+        </button>
+
+        {/* Previous & Next Episode controls in header */}
+        <div className="flex items-center gap-2">
+          <button
+            id="watch-prev-ep-btn"
+            disabled={!hasPrevEpisode}
+            onClick={handlePrevEpisode}
+            className={`px-3 py-1.5 rounded-lg border text-xs font-semibold flex items-center gap-1 transition-colors ${
+              !hasPrevEpisode
+                ? 'opacity-40 cursor-not-allowed border-transparent text-slate-500'
+                : theme === 'dark'
+                ? 'bg-slate-900 border-slate-800 text-slate-300 hover:text-white cursor-pointer'
+                : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50 cursor-pointer'
+            }`}
+          >
+            <ChevronLeft className="w-4 h-4 rtl:rotate-180" />
+            <span className="hidden sm:inline">{t.prevEpisode}</span>
+          </button>
+
+          <span className="text-xs font-bold px-2 py-1 rounded-md bg-sky-600/20 text-sky-400 border border-sky-500/30">
+            S{season} : E{episode}
+          </span>
+
+          <button
+            id="watch-next-ep-btn"
+            disabled={!hasNextEpisode}
+            onClick={handleNextEpisode}
+            className={`px-3 py-1.5 rounded-lg border text-xs font-semibold flex items-center gap-1 transition-colors ${
+              !hasNextEpisode
+                ? 'opacity-40 cursor-not-allowed border-transparent text-slate-500'
+                : theme === 'dark'
+                ? 'bg-slate-900 border-slate-800 text-slate-300 hover:text-white cursor-pointer'
+                : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50 cursor-pointer'
+            }`}
+          >
+            <span className="hidden sm:inline">{t.nextEpisode}</span>
+            <ChevronRight className="w-4 h-4 rtl:rotate-180" />
+          </button>
+
+          <button
+            id="toggle-tv-theater-btn"
+            onClick={() => setIsWideTheater(!isWideTheater)}
+            className={`hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold cursor-pointer transition-colors ml-2 ${
+              theme === 'dark'
+                ? 'bg-slate-900 border-slate-800 text-slate-300 hover:text-white'
+                : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50'
+            }`}
+          >
+            {isWideTheater ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
+          </button>
+        </div>
+      </div>
+
+      {/* Actual Video Streaming Player Container */}
+      <div className={`${isWideTheater ? 'w-full px-2 sm:px-6' : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'} transition-all duration-300`}>
+        <div className="relative w-full aspect-16/9 bg-black rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border border-slate-800/80">
+          <iframe
+            id="tv-streaming-iframe"
+            key={`${id}-${season}-${episode}-${activeServer}`}
+            src={embedUrl}
+            title={series ? `${series.name} S${season}E${episode}` : "TV Player"}
+            className="w-full h-full border-0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        </div>
+
+        {/* Server & Next/Prev Navigation Bar */}
+        <div className={`mt-4 p-4 rounded-2xl border flex flex-wrap items-center justify-between gap-4 ${
+          theme === 'dark' ? 'bg-slate-900/80 border-slate-800' : 'bg-white border-slate-200 shadow-xs'
+        }`}>
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-sky-500">
+            <Server className="w-4 h-4" />
+            <span>{t.server}:</span>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            {servers.map((srv) => (
+              <button
+                key={srv.id}
+                id={`tv-server-btn-${srv.id}`}
+                onClick={() => setActiveServer(srv.id)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  activeServer === srv.id
+                    ? 'bg-sky-600 text-white shadow-md shadow-sky-600/30'
+                    : theme === 'dark'
+                    ? 'bg-slate-950 text-slate-400 hover:text-white border border-slate-800'
+                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300'
+                }`}
+              >
+                {srv.name}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-1.5 text-xs text-slate-400">
+            <AlertCircle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+            <span className="text-[11px]">{t.streamingNotice}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Series & Current Episode Details + Season Episode List */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Left Column: Current Episode Info */}
+        <div className="lg:col-span-2 space-y-4">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-xs">
+              <span className="px-2.5 py-0.5 rounded-md bg-sky-600/20 text-sky-400 font-bold border border-sky-500/30">
+                {t.season} {season} • {t.episode} {episode}
+              </span>
+              {currentEpData?.air_date && (
+                <span className="text-slate-500 text-xs">{currentEpData.air_date}</span>
+              )}
+            </div>
+
+            <h1 className={`text-2xl sm:text-3xl font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+              {series?.name}: {currentEpData?.name || `Episode ${episode}`}
+            </h1>
+
+            <p className={`text-sm leading-relaxed ${theme === 'dark' ? 'text-slate-300' : 'text-slate-700'}`}>
+              {currentEpData?.overview || series?.overview || 'Enjoy streaming this episode.'}
+            </p>
+          </div>
+
+          {/* Previous/Next episode buttons banner */}
+          <div className="pt-4 flex items-center gap-3">
+            <button
+              disabled={!hasPrevEpisode}
+              onClick={handlePrevEpisode}
+              className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs flex items-center gap-2 disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
+            >
+              <ChevronLeft className="w-4 h-4 rtl:rotate-180" />
+              <span>{t.prevEpisode}</span>
+            </button>
+
+            <button
+              disabled={!hasNextEpisode}
+              onClick={handleNextEpisode}
+              className="px-5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs flex items-center gap-2 disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
+            >
+              <span>{t.nextEpisode}</span>
+              <ChevronRight className="w-4 h-4 rtl:rotate-180" />
+            </button>
+          </div>
+        </div>
+
+        {/* Right Column: Episode Playlist */}
+        <div
+          className={`p-5 rounded-2xl border space-y-4 h-[480px] flex flex-col ${
+            theme === 'dark' ? 'bg-slate-900/60 border-slate-800' : 'bg-slate-50 border-slate-200'
+          }`}
+        >
+          <div className="flex items-center justify-between pb-3 border-b border-slate-800/40 gap-2">
+            <div className="flex items-center gap-2 min-w-0">
+              <Layers className="w-4 h-4 text-sky-500 shrink-0" />
+              {availableSeasons.length > 1 ? (
+                <select
+                  id="watch-tv-season-select"
+                  value={season}
+                  onChange={(e) => onNavigate({ view: 'watch-tv', id, season: Number(e.target.value), episode: 1 })}
+                  className={`text-xs font-bold px-2 py-1 rounded-lg border cursor-pointer outline-hidden ${
+                    theme === 'dark'
+                      ? 'bg-slate-900 border-slate-700 text-slate-200 focus:border-sky-500'
+                      : 'bg-white border-slate-300 text-slate-800 focus:border-sky-500 shadow-xs'
+                  }`}
+                >
+                  {availableSeasons.map((s) => (
+                    <option key={s.id} value={s.season_number}>
+                      {s.name || `${t.season} ${s.season_number}`}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <h3 className={`text-sm font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+                  {seasonData?.name || `${t.season} ${season}`} {t.episodes}
+                </h3>
+              )}
+            </div>
+            <span className="text-xs text-slate-500 font-mono shrink-0">
+              {totalEpisodesInSeason} eps
+            </span>
+          </div>
+
+          {/* Scrollable episode list */}
+          <div className="flex-1 overflow-y-auto space-y-2 pr-1">
+            {seasonData?.episodes?.map((ep: Episode) => {
+              const isPlaying = ep.episode_number === episode;
+              return (
+                <div
+                  key={ep.id}
+                  onClick={() => onNavigate({ view: 'watch-tv', id, season, episode: ep.episode_number })}
+                  className={`p-2.5 rounded-xl border transition-all flex items-center justify-between gap-3 cursor-pointer ${
+                    isPlaying
+                      ? 'bg-sky-600/15 border-sky-500 text-sky-400 font-bold'
+                      : theme === 'dark'
+                      ? 'bg-slate-950/60 border-slate-800/70 hover:border-slate-700 text-slate-300'
+                      : 'bg-white border-slate-200 hover:border-slate-300 text-slate-700 shadow-xs'
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className={`w-6 h-6 rounded-md flex items-center justify-center text-xs font-mono shrink-0 ${
+                      isPlaying ? 'bg-sky-600 text-white' : 'bg-slate-800 text-slate-400'
+                    }`}>
+                      {ep.episode_number}
+                    </div>
+                    <span className="text-xs truncate font-medium">
+                      {ep.name || `Episode ${ep.episode_number}`}
+                    </span>
+                  </div>
+
+                  <Play className={`w-3.5 h-3.5 shrink-0 ${isPlaying ? 'text-sky-400 fill-sky-400' : 'opacity-40'}`} />
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

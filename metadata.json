@@ -1,0 +1,6 @@
+{
+  "name": "NovaStream",
+  "description": "A modern, cinematic movie and TV series streaming platform with dynamic discovery, actor filmographies, video playback, and bilingual support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
