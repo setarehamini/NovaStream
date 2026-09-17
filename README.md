@@ -76,7 +76,7 @@ Configure the following variables in `.env`:
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/your-username/novastream.git
+git clone https://github.com/setarehamini/novastream.git
 cd novastream
 ```
 
