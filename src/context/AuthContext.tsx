@@ -7,6 +7,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   watchlist: UserWatchlistItem[];
+  watchLater: UserWatchlistItem[];
   favorites: UserWatchlistItem[];
   history: UserHistoryItem[];
   login: (email: string, password: string) => Promise<{ success: boolean; message?: string }>;
@@ -26,6 +27,20 @@ interface AuthContextType {
   }) => Promise<boolean>;
   removeFromWatchlist: (mediaType: 'movie' | 'tv', mediaId: number) => Promise<boolean>;
   isInWatchlist: (mediaType: string, mediaId: number) => boolean;
+  addToWatchLater: (item: {
+    mediaId: number;
+    mediaType: 'movie' | 'tv';
+    title?: string;
+    name?: string;
+    posterPath?: string | null;
+    backdropPath?: string | null;
+    voteAverage?: number;
+    releaseDate?: string;
+    firstAirDate?: string;
+    overview?: string;
+  }) => Promise<boolean>;
+  removeFromWatchLater: (mediaType: 'movie' | 'tv', mediaId: number) => Promise<boolean>;
+  isInWatchLater: (mediaType: string, mediaId: number) => boolean;
   addToFavorites: (item: {
     mediaId: number;
     mediaType: 'movie' | 'tv';
@@ -69,6 +84,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [watchlist, setWatchlist] = useState<UserWatchlistItem[]>([]);
+  const [watchLater, setWatchLater] = useState<UserWatchlistItem[]>([]);
   const [favorites, setFavorites] = useState<UserWatchlistItem[]>([]);
   const [history, setHistory] = useState<UserHistoryItem[]>([]);
 
@@ -78,12 +94,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [authPromptMessage, setAuthPromptMessage] = useState<string | null>(null);
   const [authCallback, setAuthCallback] = useState<(() => void) | null>(null);
 
-  // Load user data (Watchlist, Favorites, History)
+  // Load user data (Watchlist, Watch Later, Favorites, History)
   const refreshUserData = useCallback(async (authToken: string) => {
     try {
       const headers = { Authorization: `Bearer ${authToken}` };
-      const [wlRes, favRes, histRes] = await Promise.all([
+      const [wlRes, wLaterRes, favRes, histRes] = await Promise.all([
         fetch('/api/user/watchlist', { headers }),
+        fetch('/api/user/watchlater', { headers }),
         fetch('/api/user/favorites', { headers }),
         fetch('/api/user/history', { headers }),
       ]);
@@ -91,6 +108,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       if (wlRes.ok) {
         const data = await wlRes.json();
         if (data.items) setWatchlist(data.items);
+      }
+      if (wLaterRes.ok) {
+        const data = await wLaterRes.json();
+        if (data.items) setWatchLater(data.items);
       }
       if (favRes.ok) {
         const data = await favRes.json();
@@ -216,6 +237,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setToken(null);
     setUser(null);
     setWatchlist([]);
+    setWatchLater([]);
     setFavorites([]);
     setHistory([]);
   }, []);
@@ -286,6 +308,73 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const isInWatchlist = useCallback((mediaType: string, mediaId: number): boolean => {
     return watchlist.some((w) => w.mediaId === mediaId && w.mediaType === mediaType);
   }, [watchlist]);
+
+  const addToWatchLater = useCallback(async (item: {
+    mediaId: number;
+    mediaType: 'movie' | 'tv';
+    title?: string;
+    name?: string;
+    posterPath?: string | null;
+    backdropPath?: string | null;
+    voteAverage?: number;
+    releaseDate?: string;
+    firstAirDate?: string;
+    overview?: string;
+  }) => {
+    if (!token) {
+      openAuthModal('login', 'Sign in or create an account to save movies and shows to Watch Later.');
+      return false;
+    }
+
+    try {
+      const res = await fetch('/api/user/watchlater', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(item),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setWatchLater((prev) => {
+          const filtered = prev.filter(
+            (w) => !(w.mediaId === item.mediaId && w.mediaType === item.mediaType)
+          );
+          return [data.item, ...filtered];
+        });
+        return true;
+      }
+      return false;
+    } catch (err) {
+      console.error('Add to watch later failed:', err);
+      return false;
+    }
+  }, [token, openAuthModal]);
+
+  const removeFromWatchLater = useCallback(async (mediaType: 'movie' | 'tv', mediaId: number) => {
+    if (!token) return false;
+    try {
+      const res = await fetch(`/api/user/watchlater/${mediaType}/${mediaId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) {
+        setWatchLater((prev) =>
+          prev.filter((w) => !(w.mediaId === mediaId && w.mediaType === mediaType))
+        );
+        return true;
+      }
+      return false;
+    } catch (err) {
+      console.error('Remove from watch later failed:', err);
+      return false;
+    }
+  }, [token]);
+
+  const isInWatchLater = useCallback((mediaType: string, mediaId: number): boolean => {
+    return watchLater.some((w) => w.mediaId === mediaId && w.mediaType === mediaType);
+  }, [watchLater]);
 
   const addToFavorites = useCallback(async (item: {
     mediaId: number;
@@ -410,6 +499,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     isAuthenticated: Boolean(user),
     isLoading,
     watchlist,
+    watchLater,
     favorites,
     history,
     login,
@@ -418,6 +508,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     addToWatchlist,
     removeFromWatchlist,
     isInWatchlist,
+    addToWatchLater,
+    removeFromWatchLater,
+    isInWatchLater,
     addToFavorites,
     removeFromFavorites,
     isFavorite,
@@ -433,6 +526,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     token,
     isLoading,
     watchlist,
+    watchLater,
     favorites,
     history,
     login,
@@ -441,6 +535,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     addToWatchlist,
     removeFromWatchlist,
     isInWatchlist,
+    addToWatchLater,
+    removeFromWatchLater,
+    isInWatchLater,
     addToFavorites,
     removeFromFavorites,
     isFavorite,

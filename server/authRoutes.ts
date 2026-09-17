@@ -257,6 +257,62 @@ router.delete('/favorites/:mediaType/:mediaId', requireAuth, async (req: Authent
   }
 });
 
+// WATCH LATER ENDPOINTS
+const handleGetWatchLater = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const items = await db.getWatchLater(req.user!.id);
+    return res.json({ success: true, items });
+  } catch (error: any) {
+    return res.status(500).json({ error: true, message: 'Failed to fetch watch later list' });
+  }
+};
+
+const handlePostWatchLater = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { mediaId, mediaType, title, name, posterPath, backdropPath, voteAverage, releaseDate, firstAirDate, overview } = req.body;
+    if (!mediaId || !mediaType) {
+      return res.status(400).json({ error: true, message: 'mediaId and mediaType are required' });
+    }
+
+    const record = await db.addToWatchLater({
+      id: `wl_${req.user!.id}_${mediaType}_${mediaId}`,
+      userId: req.user!.id,
+      mediaId: Number(mediaId),
+      mediaType,
+      title,
+      name,
+      posterPath,
+      backdropPath,
+      voteAverage: voteAverage ? Number(voteAverage) : undefined,
+      releaseDate,
+      firstAirDate,
+      overview,
+      addedAt: new Date().toISOString(),
+    });
+
+    return res.json({ success: true, item: record });
+  } catch (error: any) {
+    return res.status(500).json({ error: true, message: 'Failed to save to watch later' });
+  }
+};
+
+const handleDeleteWatchLater = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { mediaType, mediaId } = req.params;
+    await db.removeFromWatchLater(req.user!.id, mediaType, Number(mediaId));
+    return res.json({ success: true, message: 'Removed from watch later' });
+  } catch (error: any) {
+    return res.status(500).json({ error: true, message: 'Failed to remove from watch later' });
+  }
+};
+
+router.get('/watchlater', requireAuth, handleGetWatchLater);
+router.get('/watch-later', requireAuth, handleGetWatchLater);
+router.post('/watchlater', requireAuth, handlePostWatchLater);
+router.post('/watch-later', requireAuth, handlePostWatchLater);
+router.delete('/watchlater/:mediaType/:mediaId', requireAuth, handleDeleteWatchLater);
+router.delete('/watch-later/:mediaType/:mediaId', requireAuth, handleDeleteWatchLater);
+
 // WATCH HISTORY ENDPOINTS
 router.get('/history', requireAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {

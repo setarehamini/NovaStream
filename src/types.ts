@@ -206,4 +206,5 @@ export interface RouteState {
   season?: number;
   episode?: number;
   query?: string;
+  tab?: 'watchlist' | 'watchlater' | 'favorites' | 'history';
 }

@@ -85,11 +85,22 @@ export interface Dictionary {
   name: string;
   signOut: string;
   watchlist: string;
+  watchLater: string;
   favorites: string;
   history: string;
   addToWatchlist: string;
   removeFromWatchlist: string;
   inWatchlist: string;
+  addToWatchLater: string;
+  removeFromWatchLater: string;
+  inWatchLater: string;
+  emptyWatchLater: string;
+  emptyWatchLaterDesc: string;
+  myLists: string;
+  jumpToEpisode: string;
+  searchEpisodes: string;
+  allEpisodes: string;
+  showingEpisodes: string;
   loginRequiredToWatch: string;
   loginRequiredDesc: string;
   emptyWatchlist: string;
@@ -189,11 +200,22 @@ export const translations: Record<'en' | 'fa', Dictionary> = {
     name: "Full Name",
     signOut: "Sign Out",
     watchlist: "My Watchlist",
+    watchLater: "Watch Later",
     favorites: "Favorites",
     history: "Watch History",
     addToWatchlist: "Add to Watchlist",
     removeFromWatchlist: "Remove from Watchlist",
     inWatchlist: "In Watchlist",
+    addToWatchLater: "Watch Later",
+    removeFromWatchLater: "Remove from Watch Later",
+    inWatchLater: "In Watch Later",
+    emptyWatchLater: "Your Watch Later list is empty",
+    emptyWatchLaterDesc: "Save titles you want to watch next for quick one-click playback.",
+    myLists: "My Lists",
+    jumpToEpisode: "Jump to Episode",
+    searchEpisodes: "Search episodes...",
+    allEpisodes: "All Episodes",
+    showingEpisodes: "Showing episodes",
     loginRequiredToWatch: "Sign In to Watch",
     loginRequiredDesc: "Exclusive Member Streaming: Please log in or create a free account to play this title.",
     emptyWatchlist: "Your Watchlist is empty",
@@ -291,11 +313,22 @@ export const translations: Record<'en' | 'fa', Dictionary> = {
     name: "نام و نام خانوادگی",
     signOut: "خروج از حساب",
     watchlist: "لیست تماشای من",
+    watchLater: "بعداً تماشا کنید",
     favorites: "علاقه‌مندی‌ها",
     history: "تاریخچه تماشا",
     addToWatchlist: "افزودن به لیست تماشا",
     removeFromWatchlist: "حذف از لیست تماشا",
     inWatchlist: "در لیست تماشا",
+    addToWatchLater: "بعداً تماشا کنید",
+    removeFromWatchLater: "حذف از تماشای بعدی",
+    inWatchLater: "در تماشای بعدی",
+    emptyWatchLater: "لیست بعداً تماشا کنید شما خالی است",
+    emptyWatchLaterDesc: "عناوینی که می‌خواهید به‌زودی ببینید را ذخیره کنید تا به سرعت به آن‌ها دسترسی داشته باشید.",
+    myLists: "لیست‌های من",
+    jumpToEpisode: "پرش به قسمت",
+    searchEpisodes: "جستجوی قسمت‌ها...",
+    allEpisodes: "همه قسمت‌ها",
+    showingEpisodes: "نمایش قسمت‌های",
     loginRequiredToWatch: "ورود برای تماشا",
     loginRequiredDesc: "پخش اختصاصی اعضا: لطفاً برای تماشای آنلاین وارد حساب کاربری خود شوید یا حساب جدید بسازید.",
     emptyWatchlist: "لیست تماشای شما خالی است",

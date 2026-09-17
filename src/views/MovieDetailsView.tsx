@@ -25,6 +25,9 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
     addToWatchlist,
     removeFromWatchlist,
     isInWatchlist,
+    addToWatchLater,
+    removeFromWatchLater,
+    isInWatchLater,
     addToFavorites,
     removeFromFavorites,
     isFavorite,
@@ -256,6 +259,36 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
                     <Bookmark className="w-4 h-4 text-rose-500" />
                   )}
                   <span>{isInWatchlist('movie', movie.id) ? t.inWatchlist : t.addToWatchlist}</span>
+                </button>
+
+                {/* Watch Later Button */}
+                <button
+                  id="movie-watch-later-toggle-btn"
+                  onClick={() => {
+                    if (isInWatchLater('movie', movie.id)) {
+                      removeFromWatchLater('movie', movie.id);
+                    } else {
+                      addToWatchLater({
+                        mediaId: movie.id,
+                        mediaType: 'movie',
+                        title: movie.title,
+                        posterPath: movie.poster_path,
+                        voteAverage: movie.vote_average,
+                        releaseDate: movie.release_date,
+                      });
+                    }
+                  }}
+                  className={`px-5 py-3.5 rounded-xl text-sm font-semibold flex items-center gap-2 border transition-all cursor-pointer ${
+                    isInWatchLater('movie', movie.id)
+                      ? 'bg-amber-500 text-white border-amber-500 shadow-lg shadow-amber-500/25'
+                      : theme === 'dark'
+                      ? 'bg-slate-900/80 hover:bg-slate-800 text-slate-200 border-slate-700'
+                      : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-300 shadow-xs'
+                  }`}
+                  title={isInWatchLater('movie', movie.id) ? t.inWatchLater : t.addToWatchLater}
+                >
+                  <Clock className={`w-4 h-4 ${isInWatchLater('movie', movie.id) ? 'text-white' : 'text-amber-500'}`} />
+                  <span>{isInWatchLater('movie', movie.id) ? t.inWatchLater : t.watchLater}</span>
                 </button>
 
                 {/* Favorite Heart Button */}

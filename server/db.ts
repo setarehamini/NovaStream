@@ -58,9 +58,12 @@ export interface HistoryRecord {
   watchedAt: string;
 }
 
+export type WatchLaterRecord = WatchlistRecord;
+
 interface LocalDatabaseSchema {
   users: UserRecord[];
   watchlist: WatchlistRecord[];
+  watchLater: WatchlistRecord[];
   favorites: FavoriteRecord[];
   history: HistoryRecord[];
 }
@@ -80,6 +83,7 @@ function readLocalDb(): LocalDatabaseSchema {
       const initial: LocalDatabaseSchema = {
         users: [],
         watchlist: [],
+        watchLater: [],
         favorites: [],
         history: [],
       };
@@ -91,12 +95,13 @@ function readLocalDb(): LocalDatabaseSchema {
     return {
       users: parsed.users || [],
       watchlist: parsed.watchlist || [],
+      watchLater: parsed.watchLater || [],
       favorites: parsed.favorites || [],
       history: parsed.history || [],
     };
   } catch (error) {
     console.error('Error reading local DB, using memory fallback:', error);
-    return { users: [], watchlist: [], favorites: [], history: [] };
+    return { users: [], watchlist: [], watchLater: [], favorites: [], history: [] };
   }
 }
 
@@ -174,6 +179,23 @@ export async function initDatabase(): Promise<void> {
           );
 
           CREATE TABLE IF NOT EXISTS favorites (
+            id VARCHAR(64) PRIMARY KEY,
+            user_id VARCHAR(64) NOT NULL,
+            media_id INT NOT NULL,
+            media_type VARCHAR(20) NOT NULL,
+            title VARCHAR(255),
+            name VARCHAR(255),
+            poster_path VARCHAR(255),
+            backdrop_path VARCHAR(255),
+            vote_average NUMERIC,
+            release_date VARCHAR(50),
+            first_air_date VARCHAR(50),
+            overview TEXT,
+            added_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE(user_id, media_id, media_type)
+          );
+
+          CREATE TABLE IF NOT EXISTS watch_later (
             id VARCHAR(64) PRIMARY KEY,
             user_id VARCHAR(64) NOT NULL,
             media_id INT NOT NULL,
@@ -448,6 +470,94 @@ export const db = {
       (f) => !(f.userId === userId && f.mediaType === mediaType && f.mediaId === mediaId)
     );
     if (local.favorites.length !== prevLen) {
+      writeLocalDb(local);
+      return true;
+    }
+    return false;
+  },
+
+  // Watch Later
+  async getWatchLater(userId: string): Promise<WatchLaterRecord[]> {
+    if (isPgActive && pgPool) {
+      const res = await pgPool.query(
+        'SELECT * FROM watch_later WHERE user_id = $1 ORDER BY added_at DESC',
+        [userId]
+      );
+      return res.rows.map((row) => ({
+        id: row.id,
+        userId: row.user_id,
+        mediaId: row.media_id,
+        mediaType: row.media_type,
+        title: row.title,
+        name: row.name,
+        posterPath: row.poster_path,
+        backdropPath: row.backdrop_path,
+        voteAverage: row.vote_average ? Number(row.vote_average) : undefined,
+        releaseDate: row.release_date,
+        firstAirDate: row.first_air_date,
+        overview: row.overview,
+        addedAt: row.added_at?.toISOString() || new Date().toISOString(),
+      }));
+    }
+    const local = readLocalDb();
+    return (local.watchLater || [])
+      .filter((w) => w.userId === userId)
+      .sort((a, b) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime());
+  },
+
+  async addToWatchLater(item: WatchLaterRecord): Promise<WatchLaterRecord> {
+    if (isPgActive && pgPool) {
+      await pgPool.query(
+        `INSERT INTO watch_later (id, user_id, media_id, media_type, title, name, poster_path, backdrop_path, vote_average, release_date, first_air_date, overview, added_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+         ON CONFLICT (user_id, media_id, media_type) DO UPDATE SET added_at = EXCLUDED.added_at`,
+        [
+          item.id,
+          item.userId,
+          item.mediaId,
+          item.mediaType,
+          item.title || null,
+          item.name || null,
+          item.posterPath || null,
+          item.backdropPath || null,
+          item.voteAverage || null,
+          item.releaseDate || null,
+          item.firstAirDate || null,
+          item.overview || null,
+          item.addedAt,
+        ]
+      );
+      return item;
+    }
+    const local = readLocalDb();
+    if (!local.watchLater) local.watchLater = [];
+    const existingIdx = local.watchLater.findIndex(
+      (w) => w.userId === item.userId && w.mediaId === item.mediaId && w.mediaType === item.mediaType
+    );
+    if (existingIdx >= 0) {
+      local.watchLater[existingIdx] = item;
+    } else {
+      local.watchLater.push(item);
+    }
+    writeLocalDb(local);
+    return item;
+  },
+
+  async removeFromWatchLater(userId: string, mediaType: string, mediaId: number): Promise<boolean> {
+    if (isPgActive && pgPool) {
+      const res = await pgPool.query(
+        'DELETE FROM watch_later WHERE user_id = $1 AND media_type = $2 AND media_id = $3',
+        [userId, mediaType, mediaId]
+      );
+      return (res.rowCount ?? 0) > 0;
+    }
+    const local = readLocalDb();
+    if (!local.watchLater) local.watchLater = [];
+    const prevLen = local.watchLater.length;
+    local.watchLater = local.watchLater.filter(
+      (w) => !(w.userId === userId && w.mediaType === mediaType && w.mediaId === mediaId)
+    );
+    if (local.watchLater.length !== prevLen) {
       writeLocalDb(local);
       return true;
     }

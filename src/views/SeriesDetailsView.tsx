@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Play, Video, Star, Calendar, ArrowLeft, Users, Tv, Layers, ChevronLeft, ChevronRight, Bookmark, Heart, Check } from 'lucide-react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { Play, Video, Star, Calendar, ArrowLeft, Users, Tv, Layers, ChevronLeft, ChevronRight, Bookmark, Heart, Check, Clock, Search, X, ChevronsLeft, ChevronsRight, Hash } from 'lucide-react';
 import { Episode, RouteState, SeasonDetails, Theme, TVDetails, VideoItem, Language } from '../types';
 import { SeriesService, TMDBService, VideoService } from '../services';
 import { MovieCard } from '../components/MovieCard';
@@ -25,6 +25,9 @@ export const SeriesDetailsView: React.FC<SeriesDetailsViewProps> = ({
     addToWatchlist,
     removeFromWatchlist,
     isInWatchlist,
+    addToWatchLater,
+    removeFromWatchLater,
+    isInWatchLater,
     addToFavorites,
     removeFromFavorites,
     isFavorite,
@@ -37,6 +40,12 @@ export const SeriesDetailsView: React.FC<SeriesDetailsViewProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [isTrailerOpen, setIsTrailerOpen] = useState(false);
   const [trailerVideo, setTrailerVideo] = useState<VideoItem | null>(null);
+
+  // Episode pagination and search state
+  const [episodePage, setEpisodePage] = useState<number>(1);
+  const [episodePageSize, setEpisodePageSize] = useState<number>(50);
+  const [episodeSearch, setEpisodeSearch] = useState<string>('');
+  const [jumpToEpInput, setJumpToEpInput] = useState<string>('');
 
   // Carousel scrolling state & refs
   const seasonsScrollRef = useRef<HTMLDivElement>(null);
@@ -93,6 +102,10 @@ export const SeriesDetailsView: React.FC<SeriesDetailsViewProps> = ({
     if (!series) return;
 
     setIsLoadingSeason(true);
+    setEpisodePage(1);
+    setEpisodeSearch('');
+    setJumpToEpInput('');
+
     async function loadSeasonEpisodes() {
       try {
         const langParam = language === 'fa' ? 'fa-IR' : 'en-US';
@@ -199,6 +212,59 @@ export const SeriesDetailsView: React.FC<SeriesDetailsViewProps> = ({
     const timer = setTimeout(updateScrollButtons, 350);
     return () => clearTimeout(timer);
   }, [selectedSeasonNum, updateScrollButtons]);
+
+  // Episode pagination and search calculations
+  const allEpisodes = useMemo(() => seasonData?.episodes || [], [seasonData]);
+
+  const filteredEpisodes = useMemo(() => {
+    if (!episodeSearch.trim()) return allEpisodes;
+    const q = episodeSearch.toLowerCase().trim();
+    return allEpisodes.filter(
+      (ep) =>
+        ep.episode_number.toString() === q ||
+        (ep.name && ep.name.toLowerCase().includes(q)) ||
+        (ep.overview && ep.overview.toLowerCase().includes(q))
+    );
+  }, [allEpisodes, episodeSearch]);
+
+  const totalEpisodesCount = filteredEpisodes.length;
+  const totalPages = Math.max(1, Math.ceil(totalEpisodesCount / episodePageSize));
+
+  useEffect(() => {
+    if (episodePage > totalPages) {
+      setEpisodePage(1);
+    }
+  }, [episodePage, totalPages]);
+
+  const paginatedEpisodes = useMemo(() => {
+    const start = (episodePage - 1) * episodePageSize;
+    return filteredEpisodes.slice(start, start + episodePageSize);
+  }, [filteredEpisodes, episodePage, episodePageSize]);
+
+  const handleJumpToEpisode = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const epNum = parseInt(jumpToEpInput.trim(), 10);
+    if (isNaN(epNum) || epNum <= 0) return;
+
+    let targetIdx = filteredEpisodes.findIndex((ep) => ep.episode_number === epNum);
+    if (targetIdx === -1 && episodeSearch) {
+      setEpisodeSearch('');
+      targetIdx = allEpisodes.findIndex((ep) => ep.episode_number === epNum);
+    }
+
+    if (targetIdx !== -1) {
+      const targetPage = Math.floor(targetIdx / episodePageSize) + 1;
+      setEpisodePage(targetPage);
+      setTimeout(() => {
+        const el = document.getElementById(`episode-card-${epNum}`);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          el.classList.add('ring-2', 'ring-sky-500');
+          setTimeout(() => el.classList.remove('ring-2', 'ring-sky-500'), 2500);
+        }
+      }, 150);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -386,6 +452,36 @@ export const SeriesDetailsView: React.FC<SeriesDetailsViewProps> = ({
                     <Bookmark className="w-4 h-4 text-sky-500" />
                   )}
                   <span>{isInWatchlist('tv', series.id) ? t.inWatchlist : t.addToWatchlist}</span>
+                </button>
+
+                {/* Watch Later Button */}
+                <button
+                  id="series-watch-later-toggle-btn"
+                  onClick={() => {
+                    if (isInWatchLater('tv', series.id)) {
+                      removeFromWatchLater('tv', series.id);
+                    } else {
+                      addToWatchLater({
+                        mediaId: series.id,
+                        mediaType: 'tv',
+                        title: series.name,
+                        posterPath: series.poster_path,
+                        voteAverage: series.vote_average,
+                        releaseDate: series.first_air_date,
+                      });
+                    }
+                  }}
+                  className={`px-5 py-3.5 rounded-xl text-sm font-semibold flex items-center gap-2 border transition-all cursor-pointer ${
+                    isInWatchLater('tv', series.id)
+                      ? 'bg-amber-500 text-white border-amber-500 shadow-lg shadow-amber-500/25'
+                      : theme === 'dark'
+                      ? 'bg-slate-900/80 hover:bg-slate-800 text-slate-200 border-slate-700'
+                      : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-300 shadow-xs'
+                  }`}
+                  title={isInWatchLater('tv', series.id) ? t.inWatchLater : t.addToWatchLater}
+                >
+                  <Clock className={`w-4 h-4 ${isInWatchLater('tv', series.id) ? 'text-white' : 'text-amber-500'}`} />
+                  <span>{isInWatchLater('tv', series.id) ? t.inWatchLater : t.watchLater}</span>
                 </button>
 
                 {/* Favorite Heart Button */}
@@ -649,10 +745,160 @@ export const SeriesDetailsView: React.FC<SeriesDetailsViewProps> = ({
             </button>
           </div>
 
+          {/* Episode Search, Jump & Per-Page Controls Toolbar */}
+          {!isLoadingSeason && allEpisodes.length > 0 && (
+            <div
+              id="episodes-toolbar"
+              className={`p-4 rounded-2xl border flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3.5 ${
+                theme === 'dark'
+                  ? 'bg-slate-900/60 border-slate-800'
+                  : 'bg-slate-50 border-slate-200 shadow-xs'
+              }`}
+            >
+              {/* Left: Search input */}
+              <div className="relative flex-1 min-w-[200px] max-w-md">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none rtl:left-auto rtl:right-3" />
+                <input
+                  id="episode-search-input"
+                  type="text"
+                  value={episodeSearch}
+                  onChange={(e) => {
+                    setEpisodeSearch(e.target.value);
+                    setEpisodePage(1);
+                  }}
+                  placeholder={t.searchEpisodes || 'Search episodes by title or #...'}
+                  className={`w-full pl-9 pr-8 py-2 rounded-xl text-xs sm:text-sm border transition-colors outline-hidden rtl:pl-8 rtl:pr-9 ${
+                    theme === 'dark'
+                      ? 'bg-slate-900 border-slate-700 text-slate-200 placeholder-slate-500 focus:border-sky-500'
+                      : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400 focus:border-sky-500 shadow-xs'
+                  }`}
+                />
+                {episodeSearch && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEpisodeSearch('');
+                      setEpisodePage(1);
+                    }}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white rtl:right-auto rtl:left-2.5"
+                    aria-label="Clear search"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+
+              {/* Right: Quick Jump & Page Size */}
+              <div className="flex flex-wrap items-center gap-2.5 justify-end">
+                {/* Jump to Episode form */}
+                <form onSubmit={handleJumpToEpisode} className="flex items-center gap-1.5">
+                  <div className="relative">
+                    <Hash className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none rtl:left-auto rtl:right-2.5" />
+                    <input
+                      id="jump-to-episode-input"
+                      type="number"
+                      min={1}
+                      value={jumpToEpInput}
+                      onChange={(e) => setJumpToEpInput(e.target.value)}
+                      placeholder={t.jumpToEpisode || 'Ep #'}
+                      className={`w-24 pl-7 pr-2 py-2 rounded-xl text-xs sm:text-sm border transition-colors outline-hidden rtl:pl-2 rtl:pr-7 ${
+                        theme === 'dark'
+                          ? 'bg-slate-900 border-slate-700 text-slate-200 placeholder-slate-500 focus:border-sky-500'
+                          : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400 focus:border-sky-500 shadow-xs'
+                      }`}
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    id="jump-to-episode-submit-btn"
+                    className="px-3 py-2 rounded-xl text-xs font-bold bg-sky-600 hover:bg-sky-500 text-white transition-colors cursor-pointer"
+                  >
+                    {t.go || 'Go'}
+                  </button>
+                </form>
+
+                {/* Range Selector Dropdown for series with many episodes */}
+                {totalPages > 1 && (
+                  <select
+                    id="quick-range-selector"
+                    value={episodePage}
+                    onChange={(e) => setEpisodePage(Number(e.target.value))}
+                    className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold border transition-colors cursor-pointer outline-hidden ${
+                      theme === 'dark'
+                        ? 'bg-slate-900 border-slate-700 text-slate-200 focus:border-sky-500'
+                        : 'bg-white border-slate-300 text-slate-900 focus:border-sky-500 shadow-xs'
+                    }`}
+                  >
+                    {Array.from({ length: totalPages }).map((_, idx) => {
+                      const pageNum = idx + 1;
+                      const fromEp = idx * episodePageSize + 1;
+                      const toEp = Math.min(pageNum * episodePageSize, totalEpisodesCount);
+                      return (
+                        <option
+                          key={pageNum}
+                          value={pageNum}
+                          className={theme === 'dark' ? 'bg-slate-900 text-slate-200' : 'bg-white text-slate-900'}
+                        >
+                          {t.page || 'Page'} {pageNum} (Ep {fromEp}–{toEp})
+                        </option>
+                      );
+                    })}
+                  </select>
+                )}
+
+                {/* Per Page Select */}
+                {allEpisodes.length > 25 && (
+                  <div className="flex items-center gap-1.5">
+                    <select
+                      id="episode-page-size-select"
+                      value={episodePageSize}
+                      onChange={(e) => {
+                        setEpisodePageSize(Number(e.target.value));
+                        setEpisodePage(1);
+                      }}
+                      className={`px-2.5 py-2 rounded-xl text-xs font-semibold border transition-colors cursor-pointer outline-hidden ${
+                        theme === 'dark'
+                          ? 'bg-slate-900 border-slate-700 text-slate-200 focus:border-sky-500'
+                          : 'bg-white border-slate-300 text-slate-900 focus:border-sky-500 shadow-xs'
+                      }`}
+                      title={t.episodesPerPage || 'Episodes per page'}
+                    >
+                      <option value={25} className={theme === 'dark' ? 'bg-slate-900 text-slate-200' : 'bg-white text-slate-900'}>25 / page</option>
+                      <option value={50} className={theme === 'dark' ? 'bg-slate-900 text-slate-200' : 'bg-white text-slate-900'}>50 / page</option>
+                      <option value={100} className={theme === 'dark' ? 'bg-slate-900 text-slate-200' : 'bg-white text-slate-900'}>100 / page</option>
+                    </select>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Episode Count & Range Indicator */}
+          {!isLoadingSeason && allEpisodes.length > 0 && (
+            <div className="flex items-center justify-between text-xs text-slate-400 px-1">
+              <span>
+                {t.showingEpisodes || 'Showing episodes'}{' '}
+                <strong className={theme === 'dark' ? 'text-slate-200' : 'text-slate-700'}>
+                  {totalEpisodesCount > 0 ? (episodePage - 1) * episodePageSize + 1 : 0}–{Math.min(episodePage * episodePageSize, totalEpisodesCount)}
+                </strong>{' '}
+                {t.of || 'of'}{' '}
+                <strong className={theme === 'dark' ? 'text-slate-200' : 'text-slate-700'}>{totalEpisodesCount}</strong>
+                {episodeSearch && (
+                  <span className="ml-1 text-sky-400">({t.filteredFrom || 'filtered from'} {allEpisodes.length})</span>
+                )}
+              </span>
+              {totalPages > 1 && (
+                <span>
+                  {t.page || 'Page'} <strong className={theme === 'dark' ? 'text-slate-200' : 'text-slate-700'}>{episodePage}</strong> {t.of || 'of'} {totalPages}
+                </span>
+              )}
+            </div>
+          )}
+
           {/* Episodes List Grid */}
           {isLoadingSeason ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {Array.from({ length: 4 }).map((_, i) => (
+              {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="h-28 rounded-xl bg-slate-900/60 animate-pulse" />
               ))}
             </div>
@@ -660,9 +906,25 @@ export const SeriesDetailsView: React.FC<SeriesDetailsViewProps> = ({
             <div className="p-8 text-center text-slate-500">
               No episode data available for this season.
             </div>
+          ) : paginatedEpisodes.length === 0 ? (
+            <div className="p-12 text-center rounded-2xl border border-dashed border-slate-700/60 space-y-3">
+              <p className="text-slate-400 text-sm font-medium">
+                {t.noEpisodesMatchFilter || 'No episodes match your search query.'}
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setEpisodeSearch('');
+                  setEpisodePage(1);
+                }}
+                className="px-4 py-2 rounded-xl text-xs font-bold bg-sky-600 hover:bg-sky-500 text-white transition-colors cursor-pointer"
+              >
+                {t.clearFilter || 'Clear Search'}
+              </button>
+            </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {seasonData.episodes.map((ep: Episode) => {
+              {paginatedEpisodes.map((ep: Episode) => {
                 const epStill = ep.still_path
                   ? TMDBService.getImageUrl(ep.still_path, 'w500')
                   : backdropUrl;
@@ -745,6 +1007,134 @@ export const SeriesDetailsView: React.FC<SeriesDetailsViewProps> = ({
                   </div>
                 );
               })}
+            </div>
+          )}
+
+          {/* Bottom Pagination Controls Bar */}
+          {!isLoadingSeason && totalPages > 1 && (
+            <div
+              id="episodes-pagination-bar"
+              className={`p-3 rounded-2xl border flex flex-wrap items-center justify-center gap-2 mt-6 ${
+                theme === 'dark' ? 'bg-slate-900/60 border-slate-800' : 'bg-slate-50 border-slate-200'
+              }`}
+            >
+              {/* First Page */}
+              <button
+                type="button"
+                id="episodes-first-page-btn"
+                disabled={episodePage === 1}
+                onClick={() => setEpisodePage(1)}
+                className={`p-2 rounded-xl border text-xs font-bold flex items-center gap-1 transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer ${
+                  theme === 'dark'
+                    ? 'bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white'
+                    : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100 shadow-xs'
+                }`}
+                title={t.firstPage || 'First Page'}
+              >
+                <ChevronsLeft className="w-4 h-4 rtl:rotate-180" />
+              </button>
+
+              {/* Prev Page */}
+              <button
+                type="button"
+                id="episodes-prev-page-btn"
+                disabled={episodePage === 1}
+                onClick={() => setEpisodePage((p) => Math.max(1, p - 1))}
+                className={`px-3 py-2 rounded-xl border text-xs font-bold flex items-center gap-1 transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer ${
+                  theme === 'dark'
+                    ? 'bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white'
+                    : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100 shadow-xs'
+                }`}
+              >
+                <ChevronLeft className="w-4 h-4 rtl:rotate-180" />
+                <span className="hidden sm:inline">{t.previous || 'Previous'}</span>
+              </button>
+
+              {/* Page Number Pills (Smart window around current page) */}
+              <div className="flex items-center gap-1 overflow-x-auto max-w-full py-1">
+                {(() => {
+                  const pages: (number | string)[] = [];
+                  const delta = 2; // Show 2 before and 2 after current
+
+                  if (totalPages <= 7) {
+                    for (let i = 1; i <= totalPages; i++) pages.push(i);
+                  } else {
+                    pages.push(1);
+                    if (episodePage - delta > 2) {
+                      pages.push('...');
+                    }
+                    const start = Math.max(2, episodePage - delta);
+                    const end = Math.min(totalPages - 1, episodePage + delta);
+                    for (let i = start; i <= end; i++) {
+                      pages.push(i);
+                    }
+                    if (episodePage + delta < totalPages - 1) {
+                      pages.push('...');
+                    }
+                    pages.push(totalPages);
+                  }
+
+                  return pages.map((p, idx) => {
+                    if (typeof p === 'string') {
+                      return (
+                        <span key={`ellipsis-${idx}`} className="px-2 text-xs text-slate-500 font-bold">
+                          ...
+                        </span>
+                      );
+                    }
+
+                    const isCurrent = p === episodePage;
+                    return (
+                      <button
+                        key={`page-pill-${p}`}
+                        type="button"
+                        onClick={() => setEpisodePage(p)}
+                        className={`min-w-9 h-9 px-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                          isCurrent
+                            ? 'bg-sky-600 text-white shadow-md shadow-sky-600/30 ring-2 ring-sky-400/40'
+                            : theme === 'dark'
+                            ? 'bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-700'
+                            : 'bg-white text-slate-700 hover:bg-slate-100 hover:text-slate-900 border border-slate-200 shadow-xs'
+                        }`}
+                      >
+                        {p}
+                      </button>
+                    );
+                  });
+                })()}
+              </div>
+
+              {/* Next Page */}
+              <button
+                type="button"
+                id="episodes-next-page-btn"
+                disabled={episodePage === totalPages}
+                onClick={() => setEpisodePage((p) => Math.min(totalPages, p + 1))}
+                className={`px-3 py-2 rounded-xl border text-xs font-bold flex items-center gap-1 transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer ${
+                  theme === 'dark'
+                    ? 'bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white'
+                    : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100 shadow-xs'
+                }`}
+              >
+                <span className="hidden sm:inline">{t.next || 'Next'}</span>
+                <ChevronRight className="w-4 h-4 rtl:rotate-180" />
+              </button>
+
+              {/* Last Page */}
+              <button
+                type="button"
+                id="episodes-last-page-btn"
+                disabled={episodePage === totalPages}
+                onClick={() => setEpisodePage(totalPages)}
+                className={`p-2 rounded-xl border text-xs font-bold flex items-center gap-1 transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer ${
+                  theme === 'dark'
+                    ? 'bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white'
+                    : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100 shadow-xs'
+                }`}
+                title={t.lastPage || 'Last Page'}
+              >
+                <ChevronsRight className="w-4 h-4 rtl:rotate-180" />
+              </button>
             </div>
           )}
         </section>
