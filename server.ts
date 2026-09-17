@@ -2,29 +2,11 @@ import express, { Request, Response } from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
 import dotenv from "dotenv";
-import { initDatabase, db } from "./server/db";
-import authRouter from "./server/authRoutes";
 
 dotenv.config();
 
 const app = express();
 const PORT = 3000;
-
-// Parse JSON request bodies for Auth and User API
-app.use(express.json());
-
-// Authentication and User Data API routes
-app.use("/api/auth", authRouter);
-app.use("/api/user", authRouter);
-app.use("/api", authRouter);
-
-// Database status endpoint
-app.get("/api/db/status", (_req, res) => {
-  res.json({
-    status: "connected",
-    engine: db.isPostgres() ? "postgresql" : "file-persistent-json",
-  });
-});
 
 // Simple in-memory cache for API requests to enhance speed & avoid rate limits
 const cache = new Map<string, { data: any; timestamp: number }>();
@@ -129,9 +111,6 @@ app.get("/api/health", (_req, res) => {
 });
 
 async function start() {
-  // Initialize persistent database (PostgreSQL if DATABASE_URL is set, or local file store)
-  await initDatabase();
-
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
       server: { middlewareMode: true },

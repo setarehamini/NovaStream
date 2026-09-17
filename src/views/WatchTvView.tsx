@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Server, ChevronLeft, ChevronRight, Play, Layers, AlertCircle, Maximize2, Minimize2, Lock, Bookmark, Heart, Check, Sparkles, LogIn } from 'lucide-react';
+import { ArrowLeft, Server, ChevronLeft, ChevronRight, Play, Layers, AlertCircle, Maximize2, Minimize2 } from 'lucide-react';
 import { Episode, RouteState, SeasonDetails, Theme, TVDetails, Language } from '../types';
-import { SeriesService, TMDBService, VideoService } from '../services';
+import { SeriesService, VideoService } from '../services';
 import { StreamServer } from '../services/videoService';
 import { translations } from '../i18n/translations';
-import { useAuth } from '../context/AuthContext';
 
 interface WatchTvViewProps {
   id: number;
@@ -23,18 +22,6 @@ export const WatchTvView: React.FC<WatchTvViewProps> = ({
   language,
   theme,
 }) => {
-  const {
-    isAuthenticated,
-    openAuthModal,
-    logWatchHistory,
-    addToWatchlist,
-    removeFromWatchlist,
-    isInWatchlist,
-    addToFavorites,
-    removeFromFavorites,
-    isFavorite,
-  } = useAuth();
-
   const [series, setSeries] = useState<TVDetails | null>(null);
   const [seasonData, setSeasonData] = useState<SeasonDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -71,65 +58,7 @@ export const WatchTvView: React.FC<WatchTvViewProps> = ({
     return () => { isMounted = false; };
   }, [id, season, language]);
 
-  const totalEpisodesInSeason = seasonData?.episodes?.length || 0;
-  const currentEpData = seasonData?.episodes?.find((e: Episode) => e.episode_number === episode);
-
-  // Log watch history to database once authenticated and series loaded
-  useEffect(() => {
-    if (isAuthenticated && series) {
-      logWatchHistory({
-        mediaId: id,
-        mediaType: 'tv',
-        name: series.name,
-        posterPath: series.poster_path,
-        season,
-        episode,
-        episodeTitle: currentEpData?.name || `Episode ${episode}`,
-        progressPercent: 100,
-      });
-    }
-  }, [isAuthenticated, series, id, season, episode, currentEpData?.name, logWatchHistory]);
-
   const embedUrl = VideoService.getTvEmbedUrl(id, season, episode, activeServer);
-
-  const inQueue = isInWatchlist('tv', id);
-  const isFav = isFavorite('tv', id);
-
-  const handleToggleWatchlist = () => {
-    if (!series) return;
-    if (inQueue) {
-      removeFromWatchlist('tv', id);
-    } else {
-      addToWatchlist({
-        mediaId: id,
-        mediaType: 'tv',
-        name: series.name,
-        posterPath: series.poster_path,
-        backdropPath: series.backdrop_path,
-        voteAverage: series.vote_average,
-        firstAirDate: series.first_air_date,
-        overview: series.overview,
-      });
-    }
-  };
-
-  const handleToggleFavorite = () => {
-    if (!series) return;
-    if (isFav) {
-      removeFromFavorites('tv', id);
-    } else {
-      addToFavorites({
-        mediaId: id,
-        mediaType: 'tv',
-        name: series.name,
-        posterPath: series.poster_path,
-        backdropPath: series.backdrop_path,
-        voteAverage: series.vote_average,
-        firstAirDate: series.first_air_date,
-        overview: series.overview,
-      });
-    }
-  };
 
   const servers: { id: StreamServer; name: string }[] = [
     { id: 'vidcore', name: t.serverPrimary },
@@ -137,6 +66,9 @@ export const WatchTvView: React.FC<WatchTvViewProps> = ({
     { id: 'vidsrc_cc', name: t.serverBackup2 },
     { id: 'embed_su', name: t.serverBackup3 },
   ];
+
+  const totalEpisodesInSeason = seasonData?.episodes?.length || 0;
+  const currentEpData = seasonData?.episodes?.find((e: Episode) => e.episode_number === episode);
 
   const availableSeasons = (series?.seasons || [])
     .slice()
@@ -172,36 +104,6 @@ export const WatchTvView: React.FC<WatchTvViewProps> = ({
 
         {/* Previous & Next Episode controls in header */}
         <div className="flex items-center gap-2">
-          {/* Watchlist Quick Button */}
-          <button
-            onClick={handleToggleWatchlist}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold cursor-pointer transition-colors ${
-              inQueue
-                ? 'bg-rose-600 border-rose-600 text-white'
-                : theme === 'dark'
-                ? 'bg-slate-900 border-slate-800 text-slate-300 hover:text-white'
-                : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50'
-            }`}
-          >
-            {inQueue ? <Check className="w-3.5 h-3.5" /> : <Bookmark className="w-3.5 h-3.5" />}
-            <span className="hidden sm:inline">{inQueue ? t.inWatchlist : t.addToWatchlist}</span>
-          </button>
-
-          {/* Favorite Quick Button */}
-          <button
-            onClick={handleToggleFavorite}
-            className={`p-1.5 rounded-lg border text-xs font-semibold cursor-pointer transition-colors ${
-              isFav
-                ? 'bg-rose-500/10 border-rose-500 text-rose-500'
-                : theme === 'dark'
-                ? 'bg-slate-900 border-slate-800 text-slate-400 hover:text-rose-500'
-                : 'bg-white border-slate-300 text-slate-500 hover:text-rose-500'
-            }`}
-            title={t.favorites}
-          >
-            <Heart className={`w-4 h-4 ${isFav ? 'fill-rose-500 text-rose-500' : ''}`} />
-          </button>
-
           <button
             id="watch-prev-ep-btn"
             disabled={!hasPrevEpisode}
@@ -255,67 +157,15 @@ export const WatchTvView: React.FC<WatchTvViewProps> = ({
       {/* Actual Video Streaming Player Container */}
       <div className={`${isWideTheater ? 'w-full px-2 sm:px-6' : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'} transition-all duration-300`}>
         <div className="relative w-full aspect-16/9 bg-black rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border border-slate-800/80">
-          {isAuthenticated ? (
-            <iframe
-              id="tv-streaming-iframe"
-              key={`${id}-${season}-${episode}-${activeServer}`}
-              src={embedUrl}
-              title={series ? `${series.name} S${season}E${episode}` : "TV Player"}
-              className="w-full h-full border-0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-            />
-          ) : (
-            /* Auth Required Lock Screen */
-            <div className="relative w-full h-full flex items-center justify-center p-6 overflow-hidden">
-              {/* Blurred Series Backdrop */}
-              {series?.backdrop_path && (
-                <img
-                  src={TMDBService.getImageUrl(series.backdrop_path, 'original')}
-                  alt="Backdrop"
-                  className="absolute inset-0 w-full h-full object-cover blur-md opacity-25 scale-105"
-                />
-              )}
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/90 to-slate-950/70" />
-
-              {/* Lock Content Box */}
-              <div className="relative z-10 max-w-lg text-center flex flex-col items-center">
-                <div className="w-16 h-16 rounded-3xl bg-sky-600/20 border border-sky-500/40 flex items-center justify-center text-sky-400 mb-4 shadow-lg shadow-sky-500/20 animate-pulse">
-                  <Lock className="w-8 h-8" />
-                </div>
-
-                <span className="text-xs font-bold uppercase tracking-widest text-sky-400 mb-2">
-                  {t.streamingLocked}
-                </span>
-
-                <h2 className="text-xl sm:text-2xl font-black text-white mb-2">
-                  {series?.name ? `${series.name} - S${season}:E${episode}` : t.watchNow}
-                </h2>
-
-                <p className="text-xs sm:text-sm text-slate-300 mb-6 max-w-md">
-                  {t.loginRequiredDesc}
-                </p>
-
-                <div className="flex flex-wrap items-center justify-center gap-3">
-                  <button
-                    onClick={() => openAuthModal('login', t.loginRequiredDesc)}
-                    className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-600 to-sky-500 hover:from-sky-500 hover:to-sky-600 text-white font-bold text-xs sm:text-sm shadow-xl shadow-sky-500/30 flex items-center gap-2 cursor-pointer transition-all hover:scale-105"
-                  >
-                    <LogIn className="w-4 h-4" />
-                    <span>{t.loginRequiredToWatch}</span>
-                  </button>
-
-                  <button
-                    onClick={() => openAuthModal('register', t.loginRequiredDesc)}
-                    className="px-6 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold text-xs sm:text-sm flex items-center gap-2 cursor-pointer transition-all hover:scale-105 backdrop-blur-md"
-                  >
-                    <Sparkles className="w-4 h-4 text-amber-400" />
-                    <span>{t.signUp}</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+          <iframe
+            id="tv-streaming-iframe"
+            key={`${id}-${season}-${episode}-${activeServer}`}
+            src={embedUrl}
+            title={series ? `${series.name} S${season}E${episode}` : "TV Player"}
+            className="w-full h-full border-0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
         </div>
 
         {/* Server & Next/Prev Navigation Bar */}
@@ -332,13 +182,7 @@ export const WatchTvView: React.FC<WatchTvViewProps> = ({
               <button
                 key={srv.id}
                 id={`tv-server-btn-${srv.id}`}
-                onClick={() => {
-                  if (!isAuthenticated) {
-                    openAuthModal('login', t.loginRequiredDesc);
-                  } else {
-                    setActiveServer(srv.id);
-                  }
-                }}
+                onClick={() => setActiveServer(srv.id)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   activeServer === srv.id
                     ? 'bg-sky-600 text-white shadow-md shadow-sky-600/30'
