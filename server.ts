@@ -1,9 +1,17 @@
 import express, { Request, Response } from "express";
 import path from "path";
+import dns from "node:dns";
 import { createServer as createViteServer } from "vite";
 import dotenv from "dotenv";
 import { initDatabase, db } from "./server/db";
 import authRouter from "./server/authRoutes";
+
+// Ensure Node.js resolves IPv4 first (prevents undici ETIMEDOUT IPv6 blackhole in Docker containers)
+try {
+  dns.setDefaultResultOrder("ipv4first");
+} catch {
+  // Ignore in environments where not supported
+}
 
 dotenv.config();
 
@@ -58,7 +66,7 @@ app.use("/api/tmdb", async (req: Request, res: Response) => {
 
     let activeApiKey = isUserKeyValid ? rawApiKey : FALLBACK_DEMO_KEY;
 
-    const buildTmdbFetch = (keyToUse: string) => {
+    const buildTmdbFetch = async (keyToUse: string, retries = 2) => {
       const url = new URL(`${TMDB_BASE_URL}/${rawPath}`);
       for (const [key, value] of Object.entries(req.query)) {
         if (value !== undefined && value !== null && key !== "api_key") {
@@ -77,7 +85,27 @@ app.use("/api/tmdb", async (req: Request, res: Response) => {
         url.searchParams.set("api_key", keyToUse);
       }
 
-      return fetch(url.toString(), { method: "GET", headers });
+      let lastError: any = null;
+      for (let attempt = 0; attempt <= retries; attempt++) {
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout per attempt
+          const response = await fetch(url.toString(), {
+            method: "GET",
+            headers,
+            signal: controller.signal,
+          });
+          clearTimeout(timeoutId);
+          return response;
+        } catch (err: any) {
+          lastError = err;
+          if (attempt < retries) {
+            console.warn(`[TMDB Proxy] Attempt ${attempt + 1} timed out or failed (${err?.message || err}). Retrying in 1s...`);
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+          }
+        }
+      }
+      throw lastError;
     };
 
     let tmdbResponse = await buildTmdbFetch(activeApiKey);

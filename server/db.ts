@@ -114,8 +114,15 @@ function writeLocalDb(data: LocalDatabaseSchema): void {
 }
 
 export async function initDatabase(): Promise<void> {
-  const dbUrl = process.env.DATABASE_URL?.trim();
+  let dbUrl = process.env.DATABASE_URL?.trim();
   if (dbUrl && dbUrl !== 'undefined' && dbUrl !== 'null') {
+    // Check if running inside a Docker container
+    const isInsideDocker = fs.existsSync('/.dockerenv') || process.env.IS_DOCKER === 'true';
+    if (isInsideDocker && (dbUrl.includes('localhost') || dbUrl.includes('127.0.0.1'))) {
+      console.log(`[Database] Detected Docker environment with 'localhost' in DATABASE_URL. Automatically routing to Docker service 'db'...`);
+      dbUrl = dbUrl.replace('@localhost:', '@db:').replace('@127.0.0.1:', '@db:');
+    }
+
     const isLocalOrInternal =
       dbUrl.includes('localhost') ||
       dbUrl.includes('127.0.0.1') ||
@@ -126,10 +133,10 @@ export async function initDatabase(): Promise<void> {
     const maxRetries = 3;
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
-        console.log(`Attempting PostgreSQL connection (attempt ${attempt}/${maxRetries})...`);
+        console.log(`Attempting PostgreSQL connection (attempt ${attempt}/${maxRetries}) to ${dbUrl.replace(/:[^:@]+@/, ':****@')}...`);
         const pool = new pg.Pool({
           connectionString: dbUrl,
-          connectionTimeoutMillis: 3500,
+          connectionTimeoutMillis: 4000,
           ssl: isLocalOrInternal ? false : (dbUrl.includes('sslmode=require') ? { rejectUnauthorized: false } : false),
         });
 
