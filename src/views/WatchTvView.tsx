@@ -40,6 +40,7 @@ export const WatchTvView: React.FC<WatchTvViewProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [activeServer, setActiveServer] = useState<StreamServer>('vidcore');
   const [isWideTheater, setIsWideTheater] = useState(false);
+  const hasLoggedRef = React.useRef<string | null>(null);
 
   const t = translations[language];
 
@@ -76,7 +77,9 @@ export const WatchTvView: React.FC<WatchTvViewProps> = ({
 
   // Log watch history to database once authenticated and series loaded
   useEffect(() => {
-    if (isAuthenticated && series) {
+    const epKey = `${id}-${season}-${episode}`;
+    if (isAuthenticated && series && hasLoggedRef.current !== epKey) {
+      hasLoggedRef.current = epKey;
       logWatchHistory({
         mediaId: id,
         mediaType: 'tv',

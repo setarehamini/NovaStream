@@ -36,6 +36,7 @@ export const WatchMovieView: React.FC<WatchMovieViewProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [activeServer, setActiveServer] = useState<StreamServer>('vidcore');
   const [isWideTheater, setIsWideTheater] = useState(false);
+  const hasLoggedRef = React.useRef<number | null>(null);
 
   const t = translations[language];
 
@@ -62,7 +63,8 @@ export const WatchMovieView: React.FC<WatchMovieViewProps> = ({
 
   // Log watch history to database once authenticated and movie loaded
   useEffect(() => {
-    if (isAuthenticated && movie) {
+    if (isAuthenticated && movie && hasLoggedRef.current !== id) {
+      hasLoggedRef.current = id;
       logWatchHistory({
         mediaId: id,
         mediaType: 'movie',

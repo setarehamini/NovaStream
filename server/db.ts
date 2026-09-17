@@ -115,81 +115,104 @@ function writeLocalDb(data: LocalDatabaseSchema): void {
 
 export async function initDatabase(): Promise<void> {
   const dbUrl = process.env.DATABASE_URL?.trim();
-  if (dbUrl) {
-    try {
-      console.log('Connecting to PostgreSQL database specified in DATABASE_URL...');
-      pgPool = new pg.Pool({
-        connectionString: dbUrl,
-        ssl: dbUrl.includes('localhost') || dbUrl.includes('@db:') ? false : { rejectUnauthorized: false },
-      });
+  if (dbUrl && dbUrl !== 'undefined' && dbUrl !== 'null') {
+    const isLocalOrInternal =
+      dbUrl.includes('localhost') ||
+      dbUrl.includes('127.0.0.1') ||
+      dbUrl.includes('@db:') ||
+      dbUrl.includes('@postgres:');
 
-      await pgPool.query(`
-        CREATE TABLE IF NOT EXISTS users (
-          id VARCHAR(64) PRIMARY KEY,
-          email VARCHAR(255) UNIQUE NOT NULL,
-          password_hash VARCHAR(255) NOT NULL,
-          name VARCHAR(255) NOT NULL,
-          avatar VARCHAR(500),
-          created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-        );
+    // Attempt connection with retries (useful in Docker Compose while Postgres initializes)
+    const maxRetries = 3;
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        console.log(`Attempting PostgreSQL connection (attempt ${attempt}/${maxRetries})...`);
+        const pool = new pg.Pool({
+          connectionString: dbUrl,
+          connectionTimeoutMillis: 3500,
+          ssl: isLocalOrInternal ? false : (dbUrl.includes('sslmode=require') ? { rejectUnauthorized: false } : false),
+        });
 
-        CREATE TABLE IF NOT EXISTS watchlist (
-          id VARCHAR(64) PRIMARY KEY,
-          user_id VARCHAR(64) NOT NULL,
-          media_id INT NOT NULL,
-          media_type VARCHAR(20) NOT NULL,
-          title VARCHAR(255),
-          name VARCHAR(255),
-          poster_path VARCHAR(255),
-          backdrop_path VARCHAR(255),
-          vote_average NUMERIC,
-          release_date VARCHAR(50),
-          first_air_date VARCHAR(50),
-          overview TEXT,
-          added_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-          UNIQUE(user_id, media_id, media_type)
-        );
+        // Attach error handler so uncaught pool errors do not terminate process
+        pool.on('error', (err) => {
+          console.warn('PostgreSQL pool background error, switching to local file store:', err.message);
+          isPgActive = false;
+        });
 
-        CREATE TABLE IF NOT EXISTS favorites (
-          id VARCHAR(64) PRIMARY KEY,
-          user_id VARCHAR(64) NOT NULL,
-          media_id INT NOT NULL,
-          media_type VARCHAR(20) NOT NULL,
-          title VARCHAR(255),
-          name VARCHAR(255),
-          poster_path VARCHAR(255),
-          backdrop_path VARCHAR(255),
-          vote_average NUMERIC,
-          release_date VARCHAR(50),
-          first_air_date VARCHAR(50),
-          overview TEXT,
-          added_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-          UNIQUE(user_id, media_id, media_type)
-        );
+        await pool.query(`
+          CREATE TABLE IF NOT EXISTS users (
+            id VARCHAR(64) PRIMARY KEY,
+            email VARCHAR(255) UNIQUE NOT NULL,
+            password_hash VARCHAR(255) NOT NULL,
+            name VARCHAR(255) NOT NULL,
+            avatar VARCHAR(500),
+            created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+          );
 
-        CREATE TABLE IF NOT EXISTS watch_history (
-          id VARCHAR(64) PRIMARY KEY,
-          user_id VARCHAR(64) NOT NULL,
-          media_id INT NOT NULL,
-          media_type VARCHAR(20) NOT NULL,
-          title VARCHAR(255),
-          name VARCHAR(255),
-          poster_path VARCHAR(255),
-          season INT,
-          episode INT,
-          episode_title VARCHAR(255),
-          progress_percent INT DEFAULT 0,
-          watched_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-        );
-      `);
+          CREATE TABLE IF NOT EXISTS watchlist (
+            id VARCHAR(64) PRIMARY KEY,
+            user_id VARCHAR(64) NOT NULL,
+            media_id INT NOT NULL,
+            media_type VARCHAR(20) NOT NULL,
+            title VARCHAR(255),
+            name VARCHAR(255),
+            poster_path VARCHAR(255),
+            backdrop_path VARCHAR(255),
+            vote_average NUMERIC,
+            release_date VARCHAR(50),
+            first_air_date VARCHAR(50),
+            overview TEXT,
+            added_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE(user_id, media_id, media_type)
+          );
 
-      isPgActive = true;
-      console.log('PostgreSQL database connected and tables initialized successfully');
-      return;
-    } catch (err) {
-      console.warn('PostgreSQL connection failed, falling back to local file database:', err);
-      isPgActive = false;
+          CREATE TABLE IF NOT EXISTS favorites (
+            id VARCHAR(64) PRIMARY KEY,
+            user_id VARCHAR(64) NOT NULL,
+            media_id INT NOT NULL,
+            media_type VARCHAR(20) NOT NULL,
+            title VARCHAR(255),
+            name VARCHAR(255),
+            poster_path VARCHAR(255),
+            backdrop_path VARCHAR(255),
+            vote_average NUMERIC,
+            release_date VARCHAR(50),
+            first_air_date VARCHAR(50),
+            overview TEXT,
+            added_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE(user_id, media_id, media_type)
+          );
+
+          CREATE TABLE IF NOT EXISTS watch_history (
+            id VARCHAR(64) PRIMARY KEY,
+            user_id VARCHAR(64) NOT NULL,
+            media_id INT NOT NULL,
+            media_type VARCHAR(20) NOT NULL,
+            title VARCHAR(255),
+            name VARCHAR(255),
+            poster_path VARCHAR(255),
+            season INT,
+            episode INT,
+            episode_title VARCHAR(255),
+            progress_percent INT DEFAULT 0,
+            watched_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+          );
+        `);
+
+        pgPool = pool;
+        isPgActive = true;
+        console.log('PostgreSQL database connected and tables initialized successfully');
+        return;
+      } catch (err: any) {
+        console.warn(`PostgreSQL attempt ${attempt} failed: ${err?.message || err}`);
+        if (attempt < maxRetries) {
+          // Wait 1.5 seconds before retrying
+          await new Promise((resolve) => setTimeout(resolve, 1500));
+        }
+      }
     }
+    console.warn('All PostgreSQL connection attempts failed. Falling back to zero-config persistent local file database.');
+    isPgActive = false;
   }
 
   // Fallback to local persistent JSON file

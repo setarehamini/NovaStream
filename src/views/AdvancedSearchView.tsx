@@ -187,7 +187,7 @@ export const AdvancedSearchView: React.FC<AdvancedSearchViewProps> = ({
       {/* Advanced Filter Panel */}
       <div
         className={`p-5 rounded-2xl border flex flex-wrap items-center gap-3 sm:gap-4 transition-colors ${
-          theme === 'dark' ? 'bg-slate-900/60 border-slate-800' : 'bg-white border-slate-200 shadow-sm'
+          theme === 'dark' ? 'bg-slate-900/80 border-slate-800' : 'bg-slate-50 border-slate-200 shadow-xs'
         }`}
       >
         <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-rose-500 mr-2 rtl:mr-0 rtl:ml-2">
@@ -200,7 +200,7 @@ export const AdvancedSearchView: React.FC<AdvancedSearchViewProps> = ({
           className={`flex items-center p-1 rounded-xl border transition-colors ${
             theme === 'dark'
               ? 'bg-slate-950/60 border-slate-800'
-              : 'bg-slate-100 border-slate-200'
+              : 'bg-white border-slate-300 shadow-xs'
           }`}
         >
           <button
@@ -211,7 +211,7 @@ export const AdvancedSearchView: React.FC<AdvancedSearchViewProps> = ({
                 ? 'bg-rose-600 text-white shadow-sm'
                 : theme === 'dark'
                 ? 'text-slate-400 hover:text-white'
-                : 'text-slate-700 hover:text-slate-950 hover:bg-slate-200/60'
+                : 'text-slate-700 hover:text-slate-950 hover:bg-slate-100'
             }`}
           >
             {t.all}
@@ -224,7 +224,7 @@ export const AdvancedSearchView: React.FC<AdvancedSearchViewProps> = ({
                 ? 'bg-rose-600 text-white shadow-sm'
                 : theme === 'dark'
                 ? 'text-slate-400 hover:text-white'
-                : 'text-slate-700 hover:text-slate-950 hover:bg-slate-200/60'
+                : 'text-slate-700 hover:text-slate-950 hover:bg-slate-100'
             }`}
           >
             <Film className="w-3 h-3" />
@@ -238,7 +238,7 @@ export const AdvancedSearchView: React.FC<AdvancedSearchViewProps> = ({
                 ? 'bg-sky-600 text-white shadow-sm'
                 : theme === 'dark'
                 ? 'text-slate-400 hover:text-white'
-                : 'text-slate-700 hover:text-slate-950 hover:bg-slate-200/60'
+                : 'text-slate-700 hover:text-slate-950 hover:bg-slate-100'
             }`}
           >
             <Tv className="w-3 h-3" />
@@ -251,17 +251,17 @@ export const AdvancedSearchView: React.FC<AdvancedSearchViewProps> = ({
           value={selectedGenre}
           onChange={(e) => { setSelectedGenre(e.target.value); setPage(1); }}
           disabled={Boolean(query.trim())}
-          className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold border transition-colors cursor-pointer outline-hidden disabled:opacity-50 disabled:cursor-not-allowed ${
+          className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-medium border transition-colors cursor-pointer outline-hidden disabled:cursor-not-allowed ${
             theme === 'dark'
-              ? 'bg-slate-950 border-slate-700 text-slate-200 disabled:bg-slate-900/50'
-              : 'bg-white border-slate-300 text-slate-900 disabled:bg-slate-100 disabled:text-slate-400 shadow-xs'
+              ? 'bg-slate-950 border-slate-700 text-slate-100 disabled:bg-slate-900/50 disabled:text-slate-500'
+              : 'bg-white border-slate-300 text-slate-900 disabled:bg-slate-200/70 disabled:text-slate-600 shadow-xs'
           }`}
         >
-          <option value="all" className={theme === 'dark' ? 'bg-slate-900 text-slate-100' : 'bg-white text-slate-900'}>
+          <option value="all" className={theme === 'dark' ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}>
             {t.allGenres}
           </option>
           {genres.map((g) => (
-            <option key={g.id} value={g.id} className={theme === 'dark' ? 'bg-slate-900 text-slate-100' : 'bg-white text-slate-900'}>
+            <option key={g.id} value={g.id} className={theme === 'dark' ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}>
               {g.name}
             </option>
           ))}
@@ -271,14 +271,14 @@ export const AdvancedSearchView: React.FC<AdvancedSearchViewProps> = ({
         <select
           value={selectedYear}
           onChange={(e) => { setSelectedYear(e.target.value); setPage(1); }}
-          className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold border transition-colors cursor-pointer outline-hidden ${
+          className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-medium border transition-colors cursor-pointer outline-hidden ${
             theme === 'dark'
-              ? 'bg-slate-950 border-slate-700 text-slate-200'
+              ? 'bg-slate-950 border-slate-700 text-slate-100'
               : 'bg-white border-slate-300 text-slate-900 shadow-xs'
           }`}
         >
           {yearsList.map((y) => (
-            <option key={y.value} value={y.value} className={theme === 'dark' ? 'bg-slate-900 text-slate-100' : 'bg-white text-slate-900'}>
+            <option key={y.value} value={y.value} className={theme === 'dark' ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}>
               {y.label}
             </option>
           ))}
@@ -289,10 +289,10 @@ export const AdvancedSearchView: React.FC<AdvancedSearchViewProps> = ({
           value={selectedRating}
           onChange={(e) => { setSelectedRating(e.target.value); setPage(1); }}
           disabled={Boolean(query.trim())}
-          className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold border transition-colors cursor-pointer outline-hidden disabled:opacity-50 disabled:cursor-not-allowed ${
+          className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-medium border transition-colors cursor-pointer outline-hidden disabled:cursor-not-allowed ${
             theme === 'dark'
-              ? 'bg-slate-950 border-slate-700 text-slate-200 disabled:bg-slate-900/50'
-              : 'bg-white border-slate-300 text-slate-900 disabled:bg-slate-100 disabled:text-slate-400 shadow-xs'
+              ? 'bg-slate-950 border-slate-700 text-slate-100 disabled:bg-slate-900/50 disabled:text-slate-500'
+              : 'bg-white border-slate-300 text-slate-900 disabled:bg-slate-200/70 disabled:text-slate-600 shadow-xs'
           }`}
         >
           {ratingList.map((r) => (
@@ -307,10 +307,10 @@ export const AdvancedSearchView: React.FC<AdvancedSearchViewProps> = ({
           value={sortBy}
           onChange={(e) => { setSortBy(e.target.value); setPage(1); }}
           disabled={Boolean(query.trim())}
-          className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold border transition-colors cursor-pointer outline-hidden disabled:opacity-50 disabled:cursor-not-allowed ${
+          className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-medium border transition-colors cursor-pointer outline-hidden disabled:cursor-not-allowed ${
             theme === 'dark'
-              ? 'bg-slate-950 border-slate-700 text-slate-200 disabled:bg-slate-900/50'
-              : 'bg-white border-slate-300 text-slate-900 disabled:bg-slate-100 disabled:text-slate-400 shadow-xs'
+              ? 'bg-slate-950 border-slate-700 text-slate-100 disabled:bg-slate-900/50 disabled:text-slate-500'
+              : 'bg-white border-slate-300 text-slate-900 disabled:bg-slate-200/70 disabled:text-slate-600 shadow-xs'
           }`}
         >
           {sortOptions.map((s) => (

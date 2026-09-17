@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from 'react';
 import { User, UserWatchlistItem, UserHistoryItem } from '../types';
 
 interface AuthContextType {
@@ -107,33 +107,42 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // Check existing session on mount
   useEffect(() => {
+    let isMounted = true;
     async function verifySession() {
-      if (!token) {
-        setIsLoading(false);
+      const savedToken = localStorage.getItem(TOKEN_KEY);
+      if (!savedToken) {
+        if (isMounted) setIsLoading(false);
         return;
       }
       try {
         const res = await fetch('/api/auth/me', {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${savedToken}` },
         });
         if (res.ok) {
           const data = await res.json();
-          setUser(data.user);
-          await refreshUserData(token);
+          if (isMounted) {
+            setUser(data.user);
+            setToken(savedToken);
+          }
+          await refreshUserData(savedToken);
         } else {
-          // Token expired or invalid
           localStorage.removeItem(TOKEN_KEY);
-          setToken(null);
-          setUser(null);
+          if (isMounted) {
+            setToken(null);
+            setUser(null);
+          }
         }
       } catch (err) {
         console.error('Session verify failed:', err);
       } finally {
-        setIsLoading(false);
+        if (isMounted) setIsLoading(false);
       }
     }
     verifySession();
-  }, [token, refreshUserData]);
+    return () => {
+      isMounted = false;
+    };
+  }, [refreshUserData]);
 
   const openAuthModal = useCallback((mode: 'login' | 'register' = 'login', prompt?: string, onAuthSuccess?: () => void) => {
     setAuthModalMode(mode);
@@ -148,7 +157,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setAuthCallback(null);
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = useCallback(async (email: string, password: string) => {
     try {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
@@ -173,9 +182,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } catch (error: any) {
       return { success: false, message: error?.message || 'Network error during login' };
     }
-  };
+  }, [authCallback, closeAuthModal, refreshUserData]);
 
-  const register = async (email: string, password: string, name?: string) => {
+  const register = useCallback(async (email: string, password: string, name?: string) => {
     try {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
@@ -200,18 +209,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } catch (error: any) {
       return { success: false, message: error?.message || 'Network error during registration' };
     }
-  };
+  }, [authCallback, closeAuthModal, refreshUserData]);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     localStorage.removeItem(TOKEN_KEY);
     setToken(null);
     setUser(null);
     setWatchlist([]);
     setFavorites([]);
     setHistory([]);
-  };
+  }, []);
 
-  const addToWatchlist = async (item: {
+  const addToWatchlist = useCallback(async (item: {
     mediaId: number;
     mediaType: 'movie' | 'tv';
     title?: string;
@@ -252,9 +261,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       console.error('Add to watchlist failed:', err);
       return false;
     }
-  };
+  }, [token, openAuthModal]);
 
-  const removeFromWatchlist = async (mediaType: 'movie' | 'tv', mediaId: number) => {
+  const removeFromWatchlist = useCallback(async (mediaType: 'movie' | 'tv', mediaId: number) => {
     if (!token) return false;
     try {
       const res = await fetch(`/api/user/watchlist/${mediaType}/${mediaId}`, {
@@ -272,13 +281,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       console.error('Remove from watchlist failed:', err);
       return false;
     }
-  };
+  }, [token]);
 
-  const isInWatchlist = (mediaType: string, mediaId: number): boolean => {
+  const isInWatchlist = useCallback((mediaType: string, mediaId: number): boolean => {
     return watchlist.some((w) => w.mediaId === mediaId && w.mediaType === mediaType);
-  };
+  }, [watchlist]);
 
-  const addToFavorites = async (item: {
+  const addToFavorites = useCallback(async (item: {
     mediaId: number;
     mediaType: 'movie' | 'tv';
     title?: string;
@@ -319,9 +328,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       console.error('Add to favorites failed:', err);
       return false;
     }
-  };
+  }, [token, openAuthModal]);
 
-  const removeFromFavorites = async (mediaType: 'movie' | 'tv', mediaId: number) => {
+  const removeFromFavorites = useCallback(async (mediaType: 'movie' | 'tv', mediaId: number) => {
     if (!token) return false;
     try {
       const res = await fetch(`/api/user/favorites/${mediaType}/${mediaId}`, {
@@ -339,13 +348,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       console.error('Remove from favorites failed:', err);
       return false;
     }
-  };
+  }, [token]);
 
-  const isFavorite = (mediaType: string, mediaId: number): boolean => {
+  const isFavorite = useCallback((mediaType: string, mediaId: number): boolean => {
     return favorites.some((f) => f.mediaId === mediaId && f.mediaType === mediaType);
-  };
+  }, [favorites]);
 
-  const logWatchHistory = async (item: {
+  const logWatchHistory = useCallback(async (item: {
     mediaId: number;
     mediaType: 'movie' | 'tv';
     title?: string;
@@ -378,9 +387,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } catch (err) {
       console.error('Log watch history failed:', err);
     }
-  };
+  }, [token]);
 
-  const clearHistory = async () => {
+  const clearHistory = useCallback(async () => {
     if (!token) return;
     try {
       const res = await fetch('/api/user/history', {
@@ -393,36 +402,59 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } catch (err) {
       console.error('Clear history failed:', err);
     }
-  };
+  }, [token]);
+
+  const contextValue = useMemo(() => ({
+    user,
+    token,
+    isAuthenticated: Boolean(user),
+    isLoading,
+    watchlist,
+    favorites,
+    history,
+    login,
+    register,
+    logout,
+    addToWatchlist,
+    removeFromWatchlist,
+    isInWatchlist,
+    addToFavorites,
+    removeFromFavorites,
+    isFavorite,
+    logWatchHistory,
+    clearHistory,
+    isAuthModalOpen,
+    authModalMode,
+    authPromptMessage,
+    openAuthModal,
+    closeAuthModal,
+  }), [
+    user,
+    token,
+    isLoading,
+    watchlist,
+    favorites,
+    history,
+    login,
+    register,
+    logout,
+    addToWatchlist,
+    removeFromWatchlist,
+    isInWatchlist,
+    addToFavorites,
+    removeFromFavorites,
+    isFavorite,
+    logWatchHistory,
+    clearHistory,
+    isAuthModalOpen,
+    authModalMode,
+    authPromptMessage,
+    openAuthModal,
+    closeAuthModal,
+  ]);
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        token,
-        isAuthenticated: Boolean(user),
-        isLoading,
-        watchlist,
-        favorites,
-        history,
-        login,
-        register,
-        logout,
-        addToWatchlist,
-        removeFromWatchlist,
-        isInWatchlist,
-        addToFavorites,
-        removeFromFavorites,
-        isFavorite,
-        logWatchHistory,
-        clearHistory,
-        isAuthModalOpen,
-        authModalMode,
-        authPromptMessage,
-        openAuthModal,
-        closeAuthModal,
-      }}
-    >
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );

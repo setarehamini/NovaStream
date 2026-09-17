@@ -47,36 +47,47 @@ app.use("/api/tmdb", async (req: Request, res: Response) => {
       return res.json(cached.data);
     }
 
-    const apiKey = (process.env.TMDB_API_KEY && process.env.TMDB_API_KEY.trim() !== "" && process.env.TMDB_API_KEY !== "your_api_key")
-      ? process.env.TMDB_API_KEY.trim()
-      : FALLBACK_DEMO_KEY;
+    // Clean and validate TMDB API key (strip quotes, trim whitespace/newlines)
+    const rawApiKey = (process.env.TMDB_API_KEY || '').trim().replace(/^["']|["']$/g, '').trim();
+    const isUserKeyValid =
+      rawApiKey.length > 5 &&
+      rawApiKey !== 'your_api_key' &&
+      rawApiKey !== 'your_tmdb_api_key_here' &&
+      rawApiKey !== 'undefined' &&
+      rawApiKey !== 'null';
 
-    const url = new URL(`${TMDB_BASE_URL}/${rawPath}`);
-    
-    // Copy query parameters from incoming request
-    const queryEntries = Object.entries(req.query);
-    for (const [key, value] of queryEntries) {
-      if (value !== undefined && value !== null && key !== "api_key") {
-        url.searchParams.set(key, String(value));
+    let activeApiKey = isUserKeyValid ? rawApiKey : FALLBACK_DEMO_KEY;
+
+    const buildTmdbFetch = (keyToUse: string) => {
+      const url = new URL(`${TMDB_BASE_URL}/${rawPath}`);
+      for (const [key, value] of Object.entries(req.query)) {
+        if (value !== undefined && value !== null && key !== "api_key") {
+          url.searchParams.set(key, String(value));
+        }
       }
-    }
 
-    const headers: Record<string, string> = {
-      "Accept": "application/json",
-      "User-Agent": "NovaStream-Web/1.0",
+      const headers: Record<string, string> = {
+        "Accept": "application/json",
+        "User-Agent": "NovaStream-Web/1.0",
+      };
+
+      if (keyToUse.length > 50) {
+        headers["Authorization"] = `Bearer ${keyToUse}`;
+      } else {
+        url.searchParams.set("api_key", keyToUse);
+      }
+
+      return fetch(url.toString(), { method: "GET", headers });
     };
 
-    // If apiKey is a v4 Read Access Token (long string) vs v3 api_key
-    if (apiKey.length > 50) {
-      headers["Authorization"] = `Bearer ${apiKey}`;
-    } else {
-      url.searchParams.set("api_key", apiKey);
-    }
+    let tmdbResponse = await buildTmdbFetch(activeApiKey);
 
-    const tmdbResponse = await fetch(url.toString(), {
-      method: "GET",
-      headers,
-    });
+    // If user's key resulted in 401 Unauthorized, automatically fall back to demo key so films load
+    if (tmdbResponse.status === 401 && activeApiKey !== FALLBACK_DEMO_KEY) {
+      console.warn(`[TMDB Proxy] Provided TMDB_API_KEY was rejected (HTTP 401). Falling back to demo key to ensure movies load.`);
+      activeApiKey = FALLBACK_DEMO_KEY;
+      tmdbResponse = await buildTmdbFetch(activeApiKey);
+    }
 
     if (!tmdbResponse.ok) {
       const errorText = await tmdbResponse.text();
