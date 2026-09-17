@@ -11,6 +11,9 @@ import { WatchMovieView } from './views/WatchMovieView';
 import { WatchTvView } from './views/WatchTvView';
 import { ActorDetailsView } from './views/ActorDetailsView';
 import { AdvancedSearchView } from './views/AdvancedSearchView';
+import { WatchlistView } from './views/WatchlistView';
+import { AuthProvider } from './context/AuthContext';
+import { AuthModal } from './components/AuthModal';
 
 export default function App() {
   // Routing state
@@ -49,6 +52,12 @@ export default function App() {
     if (parts[0] === 'series') {
       return { view: 'series' };
     }
+    if (parts[0] === 'watchlist') {
+      return { view: 'watchlist' };
+    }
+    if (parts[0] === 'history') {
+      return { view: 'history' };
+    }
     if (parts[0] === 'movie' && parts[1]) {
       return { view: 'movie-detail', id: parseInt(parts[1], 10) };
     }
@@ -85,6 +94,10 @@ export default function App() {
       url = route.query ? `/movies?genre=${encodeURIComponent(route.query)}` : '/movies';
     } else if (route.view === 'series') {
       url = '/series';
+    } else if (route.view === 'watchlist') {
+      url = '/watchlist';
+    } else if (route.view === 'history') {
+      url = '/history';
     } else if (route.view === 'movie-detail' && route.id) {
       url = `/movie/${route.id}`;
     } else if (route.view === 'series-detail' && route.id) {
@@ -122,109 +135,123 @@ export default function App() {
   };
 
   return (
-    <div className={`min-h-screen flex flex-col font-sans transition-colors duration-200 ${
-      theme === 'dark' ? 'bg-slate-950 text-slate-100' : 'bg-slate-50 text-slate-900'
-    }`}>
-      {/* Global Navbar */}
-      <Navbar
-        currentRoute={currentRoute}
-        onNavigate={navigate}
-        language={language}
-        onToggleLanguage={handleToggleLanguage}
-        theme={theme}
-        onToggleTheme={handleToggleTheme}
-      />
+    <AuthProvider>
+      <div className={`min-h-screen flex flex-col font-sans transition-colors duration-200 ${
+        theme === 'dark' ? 'bg-slate-950 text-slate-100' : 'bg-slate-50 text-slate-900'
+      }`}>
+        {/* Global Auth Modal */}
+        <AuthModal language={language} theme={theme} />
 
-      {/* Main Content Area */}
-      <main className="flex-1">
-        {currentRoute.view === 'home' && (
-          <HomeView
-            onNavigate={navigate}
-            language={language}
-            theme={theme}
-          />
-        )}
+        {/* Global Navbar */}
+        <Navbar
+          currentRoute={currentRoute}
+          onNavigate={navigate}
+          language={language}
+          onToggleLanguage={handleToggleLanguage}
+          theme={theme}
+          onToggleTheme={handleToggleTheme}
+        />
 
-        {currentRoute.view === 'movies' && (
-          <MoviesView
-            onNavigate={navigate}
-            language={language}
-            theme={theme}
-            initialGenreId={currentRoute.query}
-          />
-        )}
+        {/* Main Content Area */}
+        <main className="flex-1">
+          {currentRoute.view === 'home' && (
+            <HomeView
+              onNavigate={navigate}
+              language={language}
+              theme={theme}
+            />
+          )}
 
-        {currentRoute.view === 'series' && (
-          <SeriesView
-            onNavigate={navigate}
-            language={language}
-            theme={theme}
-          />
-        )}
+          {currentRoute.view === 'movies' && (
+            <MoviesView
+              onNavigate={navigate}
+              language={language}
+              theme={theme}
+              initialGenreId={currentRoute.query}
+            />
+          )}
 
-        {currentRoute.view === 'movie-detail' && currentRoute.id && (
-          <MovieDetailsView
-            id={currentRoute.id}
-            onNavigate={navigate}
-            language={language}
-            theme={theme}
-          />
-        )}
+          {currentRoute.view === 'series' && (
+            <SeriesView
+              onNavigate={navigate}
+              language={language}
+              theme={theme}
+            />
+          )}
 
-        {currentRoute.view === 'series-detail' && currentRoute.id && (
-          <SeriesDetailsView
-            id={currentRoute.id}
-            onNavigate={navigate}
-            language={language}
-            theme={theme}
-          />
-        )}
+          {(currentRoute.view === 'watchlist' || currentRoute.view === 'history') && (
+            <WatchlistView
+              initialTab={currentRoute.view === 'history' ? 'history' : 'watchlist'}
+              onNavigate={navigate}
+              language={language}
+              theme={theme}
+            />
+          )}
 
-        {currentRoute.view === 'watch-movie' && currentRoute.id && (
-          <WatchMovieView
-            id={currentRoute.id}
-            onNavigate={navigate}
-            language={language}
-            theme={theme}
-          />
-        )}
+          {currentRoute.view === 'movie-detail' && currentRoute.id && (
+            <MovieDetailsView
+              id={currentRoute.id}
+              onNavigate={navigate}
+              language={language}
+              theme={theme}
+            />
+          )}
 
-        {currentRoute.view === 'watch-tv' && currentRoute.id && (
-          <WatchTvView
-            id={currentRoute.id}
-            season={currentRoute.season || 1}
-            episode={currentRoute.episode || 1}
-            onNavigate={navigate}
-            language={language}
-            theme={theme}
-          />
-        )}
+          {currentRoute.view === 'series-detail' && currentRoute.id && (
+            <SeriesDetailsView
+              id={currentRoute.id}
+              onNavigate={navigate}
+              language={language}
+              theme={theme}
+            />
+          )}
 
-        {currentRoute.view === 'actor-detail' && currentRoute.id && (
-          <ActorDetailsView
-            id={currentRoute.id}
-            onNavigate={navigate}
-            language={language}
-            theme={theme}
-          />
-        )}
+          {currentRoute.view === 'watch-movie' && currentRoute.id && (
+            <WatchMovieView
+              id={currentRoute.id}
+              onNavigate={navigate}
+              language={language}
+              theme={theme}
+            />
+          )}
 
-        {currentRoute.view === 'search' && (
-          <AdvancedSearchView
-            initialQuery={currentRoute.query}
-            onNavigate={navigate}
-            language={language}
-            theme={theme}
-          />
-        )}
-      </main>
+          {currentRoute.view === 'watch-tv' && currentRoute.id && (
+            <WatchTvView
+              id={currentRoute.id}
+              season={currentRoute.season || 1}
+              episode={currentRoute.episode || 1}
+              onNavigate={navigate}
+              language={language}
+              theme={theme}
+            />
+          )}
 
-      {/* Global Footer */}
-      <Footer
-        onNavigate={navigate}
-        language={language}
-        theme={theme}
-      />
-    </div>
+          {currentRoute.view === 'actor-detail' && currentRoute.id && (
+            <ActorDetailsView
+              id={currentRoute.id}
+              onNavigate={navigate}
+              language={language}
+              theme={theme}
+            />
+          )}
+
+          {currentRoute.view === 'search' && (
+            <AdvancedSearchView
+              initialQuery={currentRoute.query}
+              onNavigate={navigate}
+              language={language}
+              theme={theme}
+            />
+          )}
+        </main>
+
+        {/* Global Footer */}
+        <Footer
+          onNavigate={navigate}
+          language={language}
+          theme={theme}
+        />
+      </div>
+    </AuthProvider>
   );
 }

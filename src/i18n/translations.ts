@@ -75,6 +75,30 @@ export interface Dictionary {
   of: string;
   footerRights: string;
   footerDisclaimer: string;
+  signIn: string;
+  signUp: string;
+  createAccount: string;
+  alreadyHaveAccount: string;
+  dontHaveAccount: string;
+  email: string;
+  password: string;
+  name: string;
+  signOut: string;
+  watchlist: string;
+  favorites: string;
+  history: string;
+  addToWatchlist: string;
+  removeFromWatchlist: string;
+  inWatchlist: string;
+  loginRequiredToWatch: string;
+  loginRequiredDesc: string;
+  emptyWatchlist: string;
+  emptyWatchlistDesc: string;
+  emptyHistory: string;
+  clearHistory: string;
+  streamingLocked: string;
+  unlockStreaming: string;
+  library: string;
 }
 
 export const translations: Record<'en' | 'fa', Dictionary> = {
@@ -155,6 +179,30 @@ export const translations: Record<'en' | 'fa', Dictionary> = {
     of: "of",
     footerRights: "All rights reserved.",
     footerDisclaimer: "NovaStream is a modern streaming discovery catalog and player interface. All media is dynamically streamed from public third-party video providers.",
+    signIn: "Sign In",
+    signUp: "Sign Up",
+    createAccount: "Create Account",
+    alreadyHaveAccount: "Already have an account?",
+    dontHaveAccount: "Don't have an account?",
+    email: "Email address",
+    password: "Password",
+    name: "Full Name",
+    signOut: "Sign Out",
+    watchlist: "My Watchlist",
+    favorites: "Favorites",
+    history: "Watch History",
+    addToWatchlist: "Add to Watchlist",
+    removeFromWatchlist: "Remove from Watchlist",
+    inWatchlist: "In Watchlist",
+    loginRequiredToWatch: "Sign In to Watch",
+    loginRequiredDesc: "Exclusive Member Streaming: Please log in or create a free account to play this title.",
+    emptyWatchlist: "Your Watchlist is empty",
+    emptyWatchlistDesc: "Explore movies and TV shows and click 'Add to Watchlist' to save your queue.",
+    emptyHistory: "No watch history recorded yet",
+    clearHistory: "Clear History",
+    streamingLocked: "Member Authentication Required",
+    unlockStreaming: "Sign in to unlock player & stream in Full HD",
+    library: "Library",
   },
   fa: {
     appName: "نوااستریم",
@@ -233,5 +281,29 @@ export const translations: Record<'en' | 'fa', Dictionary> = {
     of: "از",
     footerRights: "تمامی حقوق محفوظ است.",
     footerDisclaimer: "نوااستریم یک پلتفرم جامع کاوش و پخش استریمینگ آنلاین است. پخش ویدیوها از طریق سرورهای شخص ثالث امن تامین می‌گردد.",
+    signIn: "ورود به حساب",
+    signUp: "ثبت‌نام",
+    createAccount: "ایجاد حساب کاربری جدید",
+    alreadyHaveAccount: "قبلاً حساب کاربری ساخته‌اید؟",
+    dontHaveAccount: "هنوز حساب کاربری ندارید؟",
+    email: "آدرس ایمیل",
+    password: "رمز عبور",
+    name: "نام و نام خانوادگی",
+    signOut: "خروج از حساب",
+    watchlist: "لیست تماشای من",
+    favorites: "علاقه‌مندی‌ها",
+    history: "تاریخچه تماشا",
+    addToWatchlist: "افزودن به لیست تماشا",
+    removeFromWatchlist: "حذف از لیست تماشا",
+    inWatchlist: "در لیست تماشا",
+    loginRequiredToWatch: "ورود برای تماشا",
+    loginRequiredDesc: "پخش اختصاصی اعضا: لطفاً برای تماشای آنلاین وارد حساب کاربری خود شوید یا حساب جدید بسازید.",
+    emptyWatchlist: "لیست تماشای شما خالی است",
+    emptyWatchlistDesc: "فیلم‌ها و سریال‌های دلخواه خود را مرور کنید و روی دکمه افزودن به لیست تماشا بزنید.",
+    emptyHistory: "هنوز تاریخچه‌ای ثبت نشده است",
+    clearHistory: "پاک کردن کل تاریخچه",
+    streamingLocked: "نیازمند ورود به حساب کاربری",
+    unlockStreaming: "برای فعال‌سازی پخش و تماشای آنلاین با کیفیت بالا وارد شوید",
+    library: "کتابخانه من",
   },
 };

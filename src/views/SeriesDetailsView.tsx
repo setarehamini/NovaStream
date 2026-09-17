@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Play, Video, Star, Calendar, ArrowLeft, Users, Tv, Layers, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Play, Video, Star, Calendar, ArrowLeft, Users, Tv, Layers, ChevronLeft, ChevronRight, Bookmark, Heart, Check } from 'lucide-react';
 import { Episode, RouteState, SeasonDetails, Theme, TVDetails, VideoItem, Language } from '../types';
 import { SeriesService, TMDBService, VideoService } from '../services';
 import { MovieCard } from '../components/MovieCard';
 import { TrailerModal } from '../components/TrailerModal';
 import { SkeletonGrid } from '../components/SkeletonGrid';
 import { translations } from '../i18n/translations';
+import { useAuth } from '../context/AuthContext';
 
 interface SeriesDetailsViewProps {
   id: number;
@@ -20,6 +21,14 @@ export const SeriesDetailsView: React.FC<SeriesDetailsViewProps> = ({
   language,
   theme,
 }) => {
+  const {
+    addToWatchlist,
+    removeFromWatchlist,
+    isInWatchlist,
+    addToFavorites,
+    removeFromFavorites,
+    isFavorite,
+  } = useAuth();
   const [series, setSeries] = useState<TVDetails | null>(null);
   const [selectedSeasonNum, setSelectedSeasonNum] = useState<number>(1);
   const [seasonData, setSeasonData] = useState<SeasonDetails | null>(null);
@@ -319,7 +328,7 @@ export const SeriesDetailsView: React.FC<SeriesDetailsViewProps> = ({
                 ))}
               </div>
 
-              {/* Action Buttons: ▶ Watch First Episode & Watch Trailer */}
+              {/* Action Buttons: ▶ Watch First Episode & Watch Trailer & Watchlist */}
               <div className="pt-3 flex flex-wrap items-center justify-center md:justify-start gap-3">
                 <button
                   id="watch-series-first-ep-btn"
@@ -344,6 +353,69 @@ export const SeriesDetailsView: React.FC<SeriesDetailsViewProps> = ({
                     <span>{t.trailer}</span>
                   </button>
                 )}
+
+                {/* Watchlist Button */}
+                <button
+                  id="series-watchlist-toggle-btn"
+                  onClick={() => {
+                    if (isInWatchlist('tv', series.id)) {
+                      removeFromWatchlist('tv', series.id);
+                    } else {
+                      addToWatchlist({
+                        mediaId: series.id,
+                        mediaType: 'tv',
+                        title: series.name,
+                        posterPath: series.poster_path,
+                        voteAverage: series.vote_average,
+                        releaseDate: series.first_air_date,
+                      });
+                    }
+                  }}
+                  className={`px-5 py-3.5 rounded-xl text-sm font-semibold flex items-center gap-2 border transition-all cursor-pointer ${
+                    isInWatchlist('tv', series.id)
+                      ? 'bg-sky-500 text-white border-sky-500 shadow-lg shadow-sky-500/25'
+                      : theme === 'dark'
+                      ? 'bg-slate-900/80 hover:bg-slate-800 text-slate-200 border-slate-700'
+                      : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-300 shadow-xs'
+                  }`}
+                  title={isInWatchlist('tv', series.id) ? t.inWatchlist : t.addToWatchlist}
+                >
+                  {isInWatchlist('tv', series.id) ? (
+                    <Check className="w-4 h-4 text-white" />
+                  ) : (
+                    <Bookmark className="w-4 h-4 text-sky-500" />
+                  )}
+                  <span>{isInWatchlist('tv', series.id) ? t.inWatchlist : t.addToWatchlist}</span>
+                </button>
+
+                {/* Favorite Heart Button */}
+                <button
+                  id="series-favorite-toggle-btn"
+                  onClick={() => {
+                    if (isFavorite('tv', series.id)) {
+                      removeFromFavorites('tv', series.id);
+                    } else {
+                      addToFavorites({
+                        mediaId: series.id,
+                        mediaType: 'tv',
+                        title: series.name,
+                        posterPath: series.poster_path,
+                        voteAverage: series.vote_average,
+                        releaseDate: series.first_air_date,
+                      });
+                    }
+                  }}
+                  className={`p-3.5 rounded-xl border transition-all cursor-pointer ${
+                    isFavorite('tv', series.id)
+                      ? 'bg-sky-500/20 text-sky-500 border-sky-500/50'
+                      : theme === 'dark'
+                      ? 'bg-slate-900/80 hover:bg-slate-800 text-slate-400 border-slate-700'
+                      : 'bg-white hover:bg-slate-50 text-slate-500 border-slate-300 shadow-xs'
+                  }`}
+                  title={isFavorite('tv', series.id) ? 'Favorited' : 'Add to Favorites'}
+                >
+                  <Heart className={`w-5 h-5 ${isFavorite('tv', series.id) ? 'fill-sky-500 text-sky-500' : ''}`} />
+                </button>
               </div>
             </div>
           </div>

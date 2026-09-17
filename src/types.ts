@@ -161,8 +161,47 @@ export interface FilterOptions {
 export type Language = 'en' | 'fa';
 export type Theme = 'dark' | 'light';
 
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  avatar?: string;
+  createdAt: string;
+}
+
+export interface UserWatchlistItem {
+  id: string;
+  userId: string;
+  mediaId: number;
+  mediaType: 'movie' | 'tv';
+  title?: string;
+  name?: string;
+  posterPath?: string | null;
+  backdropPath?: string | null;
+  voteAverage?: number;
+  releaseDate?: string;
+  firstAirDate?: string;
+  overview?: string;
+  addedAt: string;
+}
+
+export interface UserHistoryItem {
+  id: string;
+  userId: string;
+  mediaId: number;
+  mediaType: 'movie' | 'tv';
+  title?: string;
+  name?: string;
+  posterPath?: string | null;
+  season?: number;
+  episode?: number;
+  episodeTitle?: string;
+  progressPercent?: number;
+  watchedAt: string;
+}
+
 export interface RouteState {
-  view: 'home' | 'movies' | 'series' | 'movie-detail' | 'series-detail' | 'actor-detail' | 'watch-movie' | 'watch-tv' | 'search';
+  view: 'home' | 'movies' | 'series' | 'movie-detail' | 'series-detail' | 'actor-detail' | 'watch-movie' | 'watch-tv' | 'search' | 'watchlist' | 'history';
   id?: number;
   season?: number;
   episode?: number;

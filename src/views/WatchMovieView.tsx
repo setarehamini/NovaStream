@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Server, Star, Calendar, Maximize2, Minimize2, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Server, Star, Calendar, Maximize2, Minimize2, AlertCircle, Lock, Bookmark, Heart, Check, Sparkles, LogIn } from 'lucide-react';
 import { MovieDetails, RouteState, Theme, Language } from '../types';
-import { MovieService, VideoService } from '../services';
+import { MovieService, TMDBService, VideoService } from '../services';
 import { StreamServer } from '../services/videoService';
 import { MovieCard } from '../components/MovieCard';
 import { translations } from '../i18n/translations';
+import { useAuth } from '../context/AuthContext';
 
 interface WatchMovieViewProps {
   id: number;
@@ -19,6 +20,18 @@ export const WatchMovieView: React.FC<WatchMovieViewProps> = ({
   language,
   theme,
 }) => {
+  const {
+    isAuthenticated,
+    openAuthModal,
+    logWatchHistory,
+    addToWatchlist,
+    removeFromWatchlist,
+    isInWatchlist,
+    addToFavorites,
+    removeFromFavorites,
+    isFavorite,
+  } = useAuth();
+
   const [movie, setMovie] = useState<MovieDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeServer, setActiveServer] = useState<StreamServer>('vidcore');
@@ -47,7 +60,59 @@ export const WatchMovieView: React.FC<WatchMovieViewProps> = ({
     return () => { isMounted = false; };
   }, [id, language]);
 
+  // Log watch history to database once authenticated and movie loaded
+  useEffect(() => {
+    if (isAuthenticated && movie) {
+      logWatchHistory({
+        mediaId: id,
+        mediaType: 'movie',
+        title: movie.title,
+        posterPath: movie.poster_path,
+        progressPercent: 100,
+      });
+    }
+  }, [isAuthenticated, movie, id, logWatchHistory]);
+
   const embedUrl = VideoService.getMovieEmbedUrl(id, activeServer);
+
+  const inQueue = isInWatchlist('movie', id);
+  const isFav = isFavorite('movie', id);
+
+  const handleToggleWatchlist = () => {
+    if (!movie) return;
+    if (inQueue) {
+      removeFromWatchlist('movie', id);
+    } else {
+      addToWatchlist({
+        mediaId: id,
+        mediaType: 'movie',
+        title: movie.title,
+        posterPath: movie.poster_path,
+        backdropPath: movie.backdrop_path,
+        voteAverage: movie.vote_average,
+        releaseDate: movie.release_date,
+        overview: movie.overview,
+      });
+    }
+  };
+
+  const handleToggleFavorite = () => {
+    if (!movie) return;
+    if (isFav) {
+      removeFromFavorites('movie', id);
+    } else {
+      addToFavorites({
+        mediaId: id,
+        mediaType: 'movie',
+        title: movie.title,
+        posterPath: movie.poster_path,
+        backdropPath: movie.backdrop_path,
+        voteAverage: movie.vote_average,
+        releaseDate: movie.release_date,
+        overview: movie.overview,
+      });
+    }
+  };
 
   const servers: { id: StreamServer; name: string }[] = [
     { id: 'vidcore', name: t.serverPrimary },
@@ -69,33 +134,118 @@ export const WatchMovieView: React.FC<WatchMovieViewProps> = ({
           <span>{movie ? `${t.moreInfo}: ${movie.title}` : t.movies}</span>
         </button>
 
-        {/* Theater mode button */}
-        <button
-          id="toggle-theater-btn"
-          onClick={() => setIsWideTheater(!isWideTheater)}
-          className={`hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold cursor-pointer transition-colors ${
-            theme === 'dark'
-              ? 'bg-slate-900 border-slate-800 text-slate-300 hover:text-white'
-              : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50'
-          }`}
-        >
-          {isWideTheater ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
-          <span>{isWideTheater ? 'Standard View' : 'Theater View'}</span>
-        </button>
+        {/* Action Controls */}
+        <div className="flex items-center gap-2">
+          {/* Watchlist Quick Button */}
+          <button
+            onClick={handleToggleWatchlist}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold cursor-pointer transition-colors ${
+              inQueue
+                ? 'bg-rose-600 border-rose-600 text-white'
+                : theme === 'dark'
+                ? 'bg-slate-900 border-slate-800 text-slate-300 hover:text-white'
+                : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50'
+            }`}
+          >
+            {inQueue ? <Check className="w-3.5 h-3.5" /> : <Bookmark className="w-3.5 h-3.5" />}
+            <span className="hidden sm:inline">{inQueue ? t.inWatchlist : t.addToWatchlist}</span>
+          </button>
+
+          {/* Favorite Quick Button */}
+          <button
+            onClick={handleToggleFavorite}
+            className={`p-1.5 rounded-lg border text-xs font-semibold cursor-pointer transition-colors ${
+              isFav
+                ? 'bg-rose-500/10 border-rose-500 text-rose-500'
+                : theme === 'dark'
+                ? 'bg-slate-900 border-slate-800 text-slate-400 hover:text-rose-500'
+                : 'bg-white border-slate-300 text-slate-500 hover:text-rose-500'
+            }`}
+            title={t.favorites}
+          >
+            <Heart className={`w-4 h-4 ${isFav ? 'fill-rose-500 text-rose-500' : ''}`} />
+          </button>
+
+          {/* Theater mode button */}
+          <button
+            id="toggle-theater-btn"
+            onClick={() => setIsWideTheater(!isWideTheater)}
+            className={`hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold cursor-pointer transition-colors ${
+              theme === 'dark'
+                ? 'bg-slate-900 border-slate-800 text-slate-300 hover:text-white'
+                : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50'
+            }`}
+          >
+            {isWideTheater ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
+            <span>{isWideTheater ? 'Standard View' : 'Theater View'}</span>
+          </button>
+        </div>
       </div>
 
       {/* Actual Video Streaming Player Container */}
       <div className={`${isWideTheater ? 'w-full px-2 sm:px-6' : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'} transition-all duration-300`}>
         <div className="relative w-full aspect-16/9 bg-black rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border border-slate-800/80">
-          <iframe
-            id="movie-streaming-iframe"
-            key={`${id}-${activeServer}`}
-            src={embedUrl}
-            title={movie?.title || "Movie Player"}
-            className="w-full h-full border-0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-          />
+          {isAuthenticated ? (
+            <iframe
+              id="movie-streaming-iframe"
+              key={`${id}-${activeServer}`}
+              src={embedUrl}
+              title={movie?.title || "Movie Player"}
+              className="w-full h-full border-0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            />
+          ) : (
+            /* Auth Required Lock Screen */
+            <div className="relative w-full h-full flex items-center justify-center p-6 overflow-hidden">
+              {/* Blurred Movie Backdrop */}
+              {movie?.backdrop_path && (
+                <img
+                  src={TMDBService.getImageUrl(movie.backdrop_path, 'original')}
+                  alt="Backdrop"
+                  className="absolute inset-0 w-full h-full object-cover blur-md opacity-25 scale-105"
+                />
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/90 to-slate-950/70" />
+
+              {/* Lock Content Box */}
+              <div className="relative z-10 max-w-lg text-center flex flex-col items-center">
+                <div className="w-16 h-16 rounded-3xl bg-rose-600/20 border border-rose-500/40 flex items-center justify-center text-rose-500 mb-4 shadow-lg shadow-rose-500/20 animate-pulse">
+                  <Lock className="w-8 h-8" />
+                </div>
+
+                <span className="text-xs font-bold uppercase tracking-widest text-rose-500 mb-2">
+                  {t.streamingLocked}
+                </span>
+
+                <h2 className="text-xl sm:text-2xl font-black text-white mb-2">
+                  {movie?.title ? `${t.watchMovie}: ${movie.title}` : t.watchNow}
+                </h2>
+
+                <p className="text-xs sm:text-sm text-slate-300 mb-6 max-w-md">
+                  {t.loginRequiredDesc}
+                </p>
+
+                <div className="flex flex-wrap items-center justify-center gap-3">
+                  <button
+                    onClick={() => openAuthModal('login', t.loginRequiredDesc)}
+                    className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-600 text-white font-bold text-xs sm:text-sm shadow-xl shadow-rose-500/30 flex items-center gap-2 cursor-pointer transition-all hover:scale-105"
+                  >
+                    <LogIn className="w-4 h-4" />
+                    <span>{t.loginRequiredToWatch}</span>
+                  </button>
+
+                  <button
+                    onClick={() => openAuthModal('register', t.loginRequiredDesc)}
+                    className="px-6 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold text-xs sm:text-sm flex items-center gap-2 cursor-pointer transition-all hover:scale-105 backdrop-blur-md"
+                  >
+                    <Sparkles className="w-4 h-4 text-amber-400" />
+                    <span>{t.signUp}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Server Switcher Bar */}
@@ -112,7 +262,13 @@ export const WatchMovieView: React.FC<WatchMovieViewProps> = ({
               <button
                 key={srv.id}
                 id={`server-btn-${srv.id}`}
-                onClick={() => setActiveServer(srv.id)}
+                onClick={() => {
+                  if (!isAuthenticated) {
+                    openAuthModal('login', t.loginRequiredDesc);
+                  } else {
+                    setActiveServer(srv.id);
+                  }
+                }}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   activeServer === srv.id
                     ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30'
@@ -173,8 +329,8 @@ export const WatchMovieView: React.FC<WatchMovieViewProps> = ({
                   <MovieCard
                     key={item.id}
                     item={item}
-                    mediaTypeFallback="movie"
                     onNavigate={onNavigate}
+                    language={language}
                     theme={theme}
                   />
                 ))}

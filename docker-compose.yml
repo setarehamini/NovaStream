@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  # NovaStream Application (Frontend + Express API Server)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: novastream-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/novastream
+      - JWT_SECRET=novastream_super_secret_jwt_key_docker_2026
+      - TMDB_API_KEY=${TMDB_API_KEY:-}
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - app_data:/app/data
+
+  # PostgreSQL Database Service
+  db:
+    image: postgres:16-alpine
+    container_name: novastream-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=novastream
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d novastream"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+    driver: local
+  app_data:
+    driver: local

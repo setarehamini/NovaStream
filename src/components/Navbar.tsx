@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Film, Tv, Search, Moon, Sun, Globe, Menu, X, Play } from 'lucide-react';
+import { Film, Tv, Search, Moon, Sun, Globe, Menu, X, Play, Bookmark, LogIn, LogOut, User as UserIcon } from 'lucide-react';
 import { Language, RouteState, Theme } from '../types';
 import { translations } from '../i18n/translations';
+import { useAuth } from '../context/AuthContext';
 
 interface NavbarProps {
   currentRoute: RouteState;
@@ -22,6 +23,9 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [quickSearch, setQuickSearch] = useState('');
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+
+  const { user, isAuthenticated, watchlist, logout, openAuthModal } = useAuth();
   const t = translations[language];
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -37,6 +41,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     { label: t.home, view: 'home' as const, icon: Play },
     { label: t.movies, view: 'movies' as const, icon: Film },
     { label: t.series, view: 'series' as const, icon: Tv },
+    { label: t.watchlist, view: 'watchlist' as const, icon: Bookmark, badge: watchlist.length },
     { label: t.search, view: 'search' as const, icon: Search },
   ];
 
@@ -80,7 +85,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 key={link.view}
                 id={`nav-link-${link.view}`}
                 onClick={() => onNavigate({ view: link.view })}
-                className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-150 flex items-center gap-2 cursor-pointer ${
+                className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-150 flex items-center gap-2 cursor-pointer relative ${
                   isActive
                     ? 'bg-rose-500/15 text-rose-500 font-semibold'
                     : theme === 'dark'
@@ -90,6 +95,11 @@ export const Navbar: React.FC<NavbarProps> = ({
               >
                 <Icon className={`w-4 h-4 ${isActive ? 'text-rose-500' : 'opacity-70'}`} />
                 <span>{link.label}</span>
+                {typeof link.badge === 'number' && link.badge > 0 && (
+                  <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-rose-600 text-white font-bold">
+                    {link.badge}
+                  </span>
+                )}
               </button>
             );
           })}
@@ -104,7 +114,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               value={quickSearch}
               onChange={(e) => setQuickSearch(e.target.value)}
               placeholder={t.searchPlaceholder.slice(0, 22) + "..."}
-              className={`w-48 lg:w-64 pl-9 pr-3 rtl:pr-9 rtl:pl-3 py-1.5 text-xs rounded-full border transition-all duration-200 focus:outline-hidden focus:w-60 lg:focus:w-72 ${
+              className={`w-40 lg:w-56 pl-9 pr-3 rtl:pr-9 rtl:pl-3 py-1.5 text-xs rounded-full border transition-all duration-200 focus:outline-hidden focus:w-52 lg:focus:w-64 ${
                 theme === 'dark'
                   ? 'bg-slate-900/90 border-slate-700/70 text-slate-200 placeholder-slate-400 focus:border-rose-500 focus:ring-1 focus:ring-rose-500'
                   : 'bg-slate-100 border-slate-300 text-slate-800 placeholder-slate-500 focus:border-rose-500 focus:bg-white focus:ring-1 focus:ring-rose-500'
@@ -141,10 +151,83 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </button>
+
+          {/* Auth Button: Sign In or User Profile */}
+          {isAuthenticated ? (
+            <div className="relative">
+              <button
+                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                className={`flex items-center gap-2 pl-2 pr-3 rtl:pr-2 rtl:pl-3 py-1.5 rounded-full border text-xs font-semibold cursor-pointer transition-colors ${
+                  theme === 'dark'
+                    ? 'border-slate-700 bg-slate-900 text-slate-200 hover:border-rose-500'
+                    : 'border-slate-300 bg-slate-50 text-slate-800 hover:border-rose-500'
+                }`}
+              >
+                <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-rose-500 to-amber-500 text-white flex items-center justify-center text-[11px] font-bold">
+                  {(user?.name || user?.email || 'U').charAt(0).toUpperCase()}
+                </div>
+                <span className="max-w-[100px] truncate">{user?.name || user?.email?.split('@')[0]}</span>
+              </button>
+
+              {/* User Dropdown */}
+              {isUserMenuOpen && (
+                <div
+                  className={`absolute ltr:right-0 rtl:left-0 mt-2 w-48 rounded-2xl border shadow-xl py-2 z-50 transition-all ${
+                    theme === 'dark' ? 'bg-slate-900 border-slate-800 text-slate-200' : 'bg-white border-slate-200 text-slate-800'
+                  }`}
+                  onMouseLeave={() => setIsUserMenuOpen(false)}
+                >
+                  <div className="px-4 py-2 border-b border-slate-700/50 text-xs">
+                    <p className="font-bold truncate">{user?.name || 'NovaStream Member'}</p>
+                    <p className="text-[11px] text-slate-400 truncate">{user?.email}</p>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      onNavigate({ view: 'watchlist' });
+                      setIsUserMenuOpen(false);
+                    }}
+                    className="w-full px-4 py-2 text-xs flex items-center gap-2.5 hover:bg-rose-500/10 hover:text-rose-500 cursor-pointer text-left rtl:text-right"
+                  >
+                    <Bookmark className="w-4 h-4" />
+                    <span>{t.watchlist}</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      logout();
+                      setIsUserMenuOpen(false);
+                    }}
+                    className="w-full px-4 py-2 text-xs flex items-center gap-2.5 text-rose-500 hover:bg-rose-500/10 cursor-pointer text-left rtl:text-right"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span>{t.signOut}</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <button
+              onClick={() => openAuthModal('login')}
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-600 text-white font-semibold text-xs shadow-md shadow-rose-500/25 flex items-center gap-1.5 cursor-pointer transition-all"
+            >
+              <LogIn className="w-3.5 h-3.5" />
+              <span>{t.signIn}</span>
+            </button>
+          )}
         </div>
 
         {/* Mobile menu trigger */}
         <div className="flex sm:hidden items-center gap-2">
+          {!isAuthenticated && (
+            <button
+              onClick={() => openAuthModal('login')}
+              className="px-2.5 py-1.5 rounded-lg bg-rose-600 text-white text-xs font-semibold flex items-center gap-1"
+            >
+              <LogIn className="w-3.5 h-3.5" />
+              <span>{t.signIn}</span>
+            </button>
+          )}
           <button
             id="mobile-theme-toggle"
             onClick={onToggleTheme}
@@ -197,7 +280,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onNavigate({ view: link.view });
                     setIsMobileMenuOpen(false);
                   }}
-                  className={`w-full px-3 py-2.5 rounded-lg text-sm font-medium flex items-center gap-3 text-left rtl:text-right ${
+                  className={`w-full px-3 py-2.5 rounded-lg text-sm font-medium flex items-center justify-between text-left rtl:text-right ${
                     isActive
                       ? 'bg-rose-500/15 text-rose-500 font-semibold'
                       : theme === 'dark'
@@ -205,11 +288,42 @@ export const Navbar: React.FC<NavbarProps> = ({
                       : 'text-slate-700 hover:bg-slate-100'
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
-                  <span>{link.label}</span>
+                  <div className="flex items-center gap-3">
+                    <Icon className="w-4 h-4" />
+                    <span>{link.label}</span>
+                  </div>
+                  {typeof link.badge === 'number' && link.badge > 0 && (
+                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-rose-600 text-white font-bold">
+                      {link.badge}
+                    </span>
+                  )}
                 </button>
               );
             })}
+
+            {isAuthenticated ? (
+              <button
+                onClick={() => {
+                  logout();
+                  setIsMobileMenuOpen(false);
+                }}
+                className="w-full px-3 py-2.5 rounded-lg text-sm font-medium text-rose-500 flex items-center gap-3 text-left rtl:text-right mt-2"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>{t.signOut} ({user?.name || user?.email?.split('@')[0]})</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  openAuthModal('login');
+                  setIsMobileMenuOpen(false);
+                }}
+                className="w-full px-3 py-2.5 rounded-lg text-sm font-semibold bg-rose-600 text-white flex items-center justify-center gap-2 mt-2"
+              >
+                <LogIn className="w-4 h-4" />
+                <span>{t.signIn} / {t.signUp}</span>
+              </button>
+            )}
           </div>
 
           <div className="mt-4 pt-3 border-t border-slate-800/60 flex items-center justify-between">
@@ -229,3 +343,4 @@ export const Navbar: React.FC<NavbarProps> = ({
     </header>
   );
 };
+

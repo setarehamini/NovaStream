@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Play, Video, Star, Clock, Calendar, ArrowLeft, Users, Film } from 'lucide-react';
+import { Play, Video, Star, Clock, Calendar, ArrowLeft, Users, Film, Bookmark, Heart, Check } from 'lucide-react';
 import { MovieDetails, RouteState, Theme, Language, VideoItem } from '../types';
 import { MovieService, TMDBService, VideoService } from '../services';
 import { MovieCard } from '../components/MovieCard';
 import { TrailerModal } from '../components/TrailerModal';
 import { SkeletonGrid } from '../components/SkeletonGrid';
 import { translations } from '../i18n/translations';
+import { useAuth } from '../context/AuthContext';
 
 interface MovieDetailsViewProps {
   id: number;
@@ -20,6 +21,14 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
   language,
   theme,
 }) => {
+  const {
+    addToWatchlist,
+    removeFromWatchlist,
+    isInWatchlist,
+    addToFavorites,
+    removeFromFavorites,
+    isFavorite,
+  } = useAuth();
   const [movie, setMovie] = useState<MovieDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -189,7 +198,7 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
                 ))}
               </div>
 
-              {/* Action Buttons: ▶ Watch Movie & Watch Trailer */}
+              {/* Action Buttons: ▶ Watch Movie & Watch Trailer & Watchlist */}
               <div className="pt-3 flex flex-wrap items-center justify-center md:justify-start gap-3">
                 <button
                   id="watch-movie-action-btn"
@@ -214,6 +223,69 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
                     <span>{t.trailer}</span>
                   </button>
                 )}
+
+                {/* Watchlist Button */}
+                <button
+                  id="movie-watchlist-toggle-btn"
+                  onClick={() => {
+                    if (isInWatchlist('movie', movie.id)) {
+                      removeFromWatchlist('movie', movie.id);
+                    } else {
+                      addToWatchlist({
+                        mediaId: movie.id,
+                        mediaType: 'movie',
+                        title: movie.title,
+                        posterPath: movie.poster_path,
+                        voteAverage: movie.vote_average,
+                        releaseDate: movie.release_date,
+                      });
+                    }
+                  }}
+                  className={`px-5 py-3.5 rounded-xl text-sm font-semibold flex items-center gap-2 border transition-all cursor-pointer ${
+                    isInWatchlist('movie', movie.id)
+                      ? 'bg-rose-500 text-white border-rose-500 shadow-lg shadow-rose-500/25'
+                      : theme === 'dark'
+                      ? 'bg-slate-900/80 hover:bg-slate-800 text-slate-200 border-slate-700'
+                      : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-300 shadow-xs'
+                  }`}
+                  title={isInWatchlist('movie', movie.id) ? t.inWatchlist : t.addToWatchlist}
+                >
+                  {isInWatchlist('movie', movie.id) ? (
+                    <Check className="w-4 h-4 text-white" />
+                  ) : (
+                    <Bookmark className="w-4 h-4 text-rose-500" />
+                  )}
+                  <span>{isInWatchlist('movie', movie.id) ? t.inWatchlist : t.addToWatchlist}</span>
+                </button>
+
+                {/* Favorite Heart Button */}
+                <button
+                  id="movie-favorite-toggle-btn"
+                  onClick={() => {
+                    if (isFavorite('movie', movie.id)) {
+                      removeFromFavorites('movie', movie.id);
+                    } else {
+                      addToFavorites({
+                        mediaId: movie.id,
+                        mediaType: 'movie',
+                        title: movie.title,
+                        posterPath: movie.poster_path,
+                        voteAverage: movie.vote_average,
+                        releaseDate: movie.release_date,
+                      });
+                    }
+                  }}
+                  className={`p-3.5 rounded-xl border transition-all cursor-pointer ${
+                    isFavorite('movie', movie.id)
+                      ? 'bg-rose-500/20 text-rose-500 border-rose-500/50'
+                      : theme === 'dark'
+                      ? 'bg-slate-900/80 hover:bg-slate-800 text-slate-400 border-slate-700'
+                      : 'bg-white hover:bg-slate-50 text-slate-500 border-slate-300 shadow-xs'
+                  }`}
+                  title={isFavorite('movie', movie.id) ? 'Favorited' : 'Add to Favorites'}
+                >
+                  <Heart className={`w-5 h-5 ${isFavorite('movie', movie.id) ? 'fill-rose-500 text-rose-500' : ''}`} />
+                </button>
               </div>
             </div>
           </div>
