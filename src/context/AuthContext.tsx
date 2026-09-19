@@ -67,6 +67,8 @@ interface AuthContextType {
     progressPercent?: number;
   }) => Promise<void>;
   clearHistory: () => Promise<void>;
+  updateProfile: (updates: { name?: string; avatar?: string }) => Promise<{ success: boolean; message?: string; user?: User }>;
+  changePassword: (currentPassword: string, newPassword: string) => Promise<{ success: boolean; message?: string }>;
   // Auth Modal Controls
   isAuthModalOpen: boolean;
   authModalMode: 'login' | 'register';
@@ -241,6 +243,55 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setFavorites([]);
     setHistory([]);
   }, []);
+
+  const updateProfile = useCallback(async (updates: { name?: string; avatar?: string }) => {
+    if (!token) {
+      return { success: false, message: 'Authentication required' };
+    }
+    try {
+      const res = await fetch('/api/auth/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(updates),
+      });
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        return { success: false, message: data.message || 'Failed to update profile' };
+      }
+      if (data.user) {
+        setUser(data.user);
+      }
+      return { success: true, message: data.message || 'Profile updated successfully', user: data.user };
+    } catch (error: any) {
+      return { success: false, message: error?.message || 'Network error while updating profile' };
+    }
+  }, [token]);
+
+  const changePassword = useCallback(async (currentPassword: string, newPassword: string) => {
+    if (!token) {
+      return { success: false, message: 'Authentication required' };
+    }
+    try {
+      const res = await fetch('/api/auth/change-password', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ currentPassword, newPassword }),
+      });
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        return { success: false, message: data.message || 'Failed to change password' };
+      }
+      return { success: true, message: data.message || 'Password changed successfully' };
+    } catch (error: any) {
+      return { success: false, message: error?.message || 'Network error while changing password' };
+    }
+  }, [token]);
 
   const addToWatchlist = useCallback(async (item: {
     mediaId: number;
@@ -516,6 +567,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     isFavorite,
     logWatchHistory,
     clearHistory,
+    updateProfile,
+    changePassword,
     isAuthModalOpen,
     authModalMode,
     authPromptMessage,
@@ -532,6 +585,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     login,
     register,
     logout,
+    updateProfile,
+    changePassword,
     addToWatchlist,
     removeFromWatchlist,
     isInWatchlist,

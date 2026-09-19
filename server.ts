@@ -18,8 +18,9 @@ dotenv.config();
 const app = express();
 const PORT = 3000;
 
-// Parse JSON request bodies for Auth and User API
-app.use(express.json());
+// Parse JSON request bodies for Auth and User API (10mb limit for profile image uploads)
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 // Authentication and User Data API routes
 app.use("/api/auth", authRouter);

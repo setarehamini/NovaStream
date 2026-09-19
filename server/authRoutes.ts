@@ -159,6 +159,98 @@ router.get('/me', requireAuth, async (req: AuthenticatedRequest, res: Response) 
   }
 });
 
+// PUT & POST /api/auth/profile (Update Name & Avatar)
+const handleUpdateProfile = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { name, avatar } = req.body;
+    const userId = req.user!.id;
+
+    const updates: { name?: string; avatar?: string } = {};
+
+    if (name !== undefined) {
+      if (typeof name !== 'string' || !name.trim()) {
+        return res.status(400).json({ error: true, message: 'Display name cannot be empty.' });
+      }
+      updates.name = name.trim();
+    }
+
+    if (avatar !== undefined) {
+      if (typeof avatar !== 'string') {
+        return res.status(400).json({ error: true, message: 'Invalid avatar format.' });
+      }
+      updates.avatar = avatar;
+    }
+
+    const updatedUser = await db.updateUserProfile(userId, updates);
+    if (!updatedUser) {
+      return res.status(404).json({ error: true, message: 'User account not found.' });
+    }
+
+    return res.json({
+      success: true,
+      message: 'Profile updated successfully',
+      user: sanitizeUser(updatedUser),
+    });
+  } catch (error: any) {
+    console.error('Update profile error:', error);
+    return res.status(500).json({ error: true, message: error?.message || 'Failed to update profile' });
+  }
+};
+
+router.put('/profile', requireAuth, handleUpdateProfile);
+router.post('/profile', requireAuth, handleUpdateProfile);
+
+// PUT & POST /api/auth/change-password
+const handleChangePassword = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    const userId = req.user!.id;
+
+    if (!currentPassword || typeof currentPassword !== 'string') {
+      return res.status(400).json({ error: true, message: 'Current password is required.' });
+    }
+
+    if (!newPassword || typeof newPassword !== 'string' || newPassword.length < 6) {
+      return res.status(400).json({ error: true, message: 'New password must be at least 6 characters long.' });
+    }
+
+    const user = await db.findUserById(userId);
+    if (!user) {
+      return res.status(404).json({ error: true, message: 'User account not found.' });
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.passwordHash);
+    if (!isMatch) {
+      return res.status(400).json({ error: true, message: 'The current password you entered is incorrect.' });
+    }
+
+    const isSame = await bcrypt.compare(newPassword, user.passwordHash);
+    if (isSame) {
+      return res.status(400).json({ error: true, message: 'New password cannot be the same as your current password.' });
+    }
+
+    const newHash = await bcrypt.hash(newPassword, 10);
+    const updated = await db.updateUserPassword(userId, newHash);
+
+    if (!updated) {
+      return res.status(500).json({ error: true, message: 'Failed to update password.' });
+    }
+
+    return res.json({
+      success: true,
+      message: 'Password changed successfully.',
+    });
+  } catch (error: any) {
+    console.error('Change password error:', error);
+    return res.status(500).json({ error: true, message: error?.message || 'Failed to change password' });
+  }
+};
+
+router.put('/change-password', requireAuth, handleChangePassword);
+router.post('/change-password', requireAuth, handleChangePassword);
+router.put('/password', requireAuth, handleChangePassword);
+router.post('/password', requireAuth, handleChangePassword);
+
 // WATCHLIST ENDPOINTS
 router.get('/watchlist', requireAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {

@@ -119,6 +119,23 @@ export interface Dictionary {
   personalLibrary: string;
   accountSettings: string;
   allLists: string;
+  uploadProfile: string;
+  changeAvatar: string;
+  chooseFile: string;
+  dragAndDrop: string;
+  avatarSaved: string;
+  changePassword: string;
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+  passwordChangedSuccess: string;
+  passwordMismatch: string;
+  passwordLengthError: string;
+  saveChanges: string;
+  updating: string;
+  editProfile: string;
+  choosePresetAvatar: string;
+  removePhoto: string;
 }
 
 export const translations: Record<'en' | 'fa', Dictionary> = {
@@ -243,6 +260,23 @@ export const translations: Record<'en' | 'fa', Dictionary> = {
     personalLibrary: "Personal Library",
     accountSettings: "Settings & Preferences",
     allLists: "All Collections",
+    uploadProfile: "Upload Profile Picture",
+    changeAvatar: "Change Avatar",
+    chooseFile: "Choose Image",
+    dragAndDrop: "or drag & drop here",
+    avatarSaved: "Profile updated successfully",
+    changePassword: "Change Password",
+    currentPassword: "Current Password",
+    newPassword: "New Password",
+    confirmPassword: "Confirm New Password",
+    passwordChangedSuccess: "Password changed successfully",
+    passwordMismatch: "New passwords do not match",
+    passwordLengthError: "Password must be at least 6 characters",
+    saveChanges: "Save Changes",
+    updating: "Updating...",
+    editProfile: "Edit Profile",
+    choosePresetAvatar: "Or Choose a Preset Avatar",
+    removePhoto: "Remove Photo",
   },
   fa: {
     appName: "نوااستریم",
@@ -365,5 +399,22 @@ export const translations: Record<'en' | 'fa', Dictionary> = {
     personalLibrary: "کتابخانه شخصی",
     accountSettings: "تنظیمات و ترجیحات",
     allLists: "تمامی لیست‌ها",
+    uploadProfile: "آپلود تصویر پروفایل",
+    changeAvatar: "تغییر تصویر نمایه",
+    chooseFile: "انتخاب تصویر",
+    dragAndDrop: "یا تصویر را اینجا بکشید و رها کنید",
+    avatarSaved: "اطلاعات پروفایل با موفقیت به‌روز شد",
+    changePassword: "تغییر رمز عبور",
+    currentPassword: "رمز عبور فعلی",
+    newPassword: "رمز عبور جدید",
+    confirmPassword: "تکرار رمز عبور جدید",
+    passwordChangedSuccess: "رمز عبور با موفقیت به‌روز شد",
+    passwordMismatch: "رمز عبور جدید و تکرار آن یکسان نیستند",
+    passwordLengthError: "رمز عبور باید حداقل ۶ کاراکتر باشد",
+    saveChanges: "ذخیره تغییرات",
+    updating: "در حال ثبت...",
+    editProfile: "ویرایش پروفایل",
+    choosePresetAvatar: "یا یک آواتار آماده انتخاب کنید",
+    removePhoto: "حذف تصویر",
   },
 };

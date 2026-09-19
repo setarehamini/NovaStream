@@ -157,7 +157,7 @@ export async function initDatabase(): Promise<void> {
             email VARCHAR(255) UNIQUE NOT NULL,
             password_hash VARCHAR(255) NOT NULL,
             name VARCHAR(255) NOT NULL,
-            avatar VARCHAR(500),
+            avatar TEXT,
             created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
           );
 
@@ -302,6 +302,70 @@ export const db = {
     local.users.push(user);
     writeLocalDb(local);
     return user;
+  },
+
+  async updateUserProfile(userId: string, updates: { name?: string; avatar?: string }): Promise<UserRecord | null> {
+    if (isPgActive && pgPool) {
+      const fields: string[] = [];
+      const values: any[] = [];
+      let idx = 1;
+
+      if (updates.name !== undefined) {
+        fields.push(`name = $${idx++}`);
+        values.push(updates.name);
+      }
+      if (updates.avatar !== undefined) {
+        fields.push(`avatar = $${idx++}`);
+        values.push(updates.avatar);
+      }
+
+      if (fields.length === 0) {
+        return this.findUserById(userId);
+      }
+
+      values.push(userId);
+      const query = `UPDATE users SET ${fields.join(', ')} WHERE id = $${idx} RETURNING *`;
+      const res = await pgPool.query(query, values);
+      if (res.rows.length === 0) return null;
+      const row = res.rows[0];
+      return {
+        id: row.id,
+        email: row.email,
+        passwordHash: row.password_hash,
+        name: row.name,
+        avatar: row.avatar,
+        createdAt: row.created_at?.toISOString() || new Date().toISOString(),
+      };
+    }
+
+    const local = readLocalDb();
+    const userIndex = local.users.findIndex((u) => u.id === userId);
+    if (userIndex === -1) return null;
+
+    if (updates.name !== undefined) {
+      local.users[userIndex].name = updates.name;
+    }
+    if (updates.avatar !== undefined) {
+      local.users[userIndex].avatar = updates.avatar;
+    }
+
+    writeLocalDb(local);
+    return local.users[userIndex];
+  },
+
+  async updateUserPassword(userId: string, newPasswordHash: string): Promise<boolean> {
+    if (isPgActive && pgPool) {
+      const res = await pgPool.query('UPDATE users SET password_hash = $1 WHERE id = $2', [newPasswordHash, userId]);
+      return (res.rowCount ?? 0) > 0;
+    }
+
+    const local = readLocalDb();
+    const user = local.users.find((u) => u.id === userId);
+    if (!user) return false;
+
+    user.passwordHash = newPasswordHash;
+    writeLocalDb(local);
+    return true;
   },
 
   // Watchlist

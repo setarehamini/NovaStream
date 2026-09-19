@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   User as UserIcon,
   Bookmark,
@@ -19,6 +19,14 @@ import {
   CheckCircle,
   Search,
   ChevronRight,
+  Upload,
+  Camera,
+  Lock,
+  Eye,
+  EyeOff,
+  AlertCircle,
+  Check,
+  Image as ImageIcon,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { RouteState, Language, Theme, UserWatchlistItem, UserHistoryItem } from '../types';
@@ -33,6 +41,15 @@ interface AccountViewProps {
   theme: Theme;
   onToggleTheme?: () => void;
 }
+
+const PRESET_AVATARS = [
+  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&h=250&q=80',
+  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=250&h=250&q=80',
+  'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=250&h=250&q=80',
+  'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=250&h=250&q=80',
+  'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=250&h=250&q=80',
+  'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=250&h=250&q=80',
+];
 
 export const AccountView: React.FC<AccountViewProps> = ({
   initialTab = 'profile',
@@ -53,6 +70,8 @@ export const AccountView: React.FC<AccountViewProps> = ({
     removeFromWatchLater,
     removeFromFavorites,
     clearHistory,
+    updateProfile,
+    changePassword,
     logout,
     openAuthModal,
   } = useAuth();
@@ -61,12 +80,193 @@ export const AccountView: React.FC<AccountViewProps> = ({
   const [filterType, setFilterType] = useState<'all' | 'movie' | 'tv'>('all');
   const [searchFilter, setSearchFilter] = useState('');
 
+  // Profile Edit & Avatar Upload State
+  const [displayName, setDisplayName] = useState(user?.name || '');
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(user?.avatar || null);
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
+  const [profileMessage, setProfileMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [isDragOver, setIsDragOver] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Change Password State
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [passwordMessage, setPasswordMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  // Sync state if user changes
+  useEffect(() => {
+    if (user) {
+      setDisplayName(user.name || '');
+      setAvatarPreview(user.avatar || null);
+    }
+  }, [user]);
+
   // Keep activeTab in sync with initialTab if it changes from outside navigation
   useEffect(() => {
     if (initialTab) {
       setActiveTab(initialTab);
     }
   }, [initialTab]);
+
+  const processImageFile = (file: File) => {
+    if (!file.type.startsWith('image/')) {
+      setProfileMessage({
+        type: 'error',
+        text: language === 'fa' ? 'لطفاً یک فایل تصویری (JPG، PNG، WebP) انتخاب کنید.' : 'Please select a valid image file (JPG, PNG, WebP).',
+      });
+      return;
+    }
+
+    if (file.size > 8 * 1024 * 1024) {
+      setProfileMessage({
+        type: 'error',
+        text: language === 'fa' ? 'حجم تصویر نباید بیشتر از ۸ مگابایت باشد.' : 'Image size cannot exceed 8MB.',
+      });
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const maxDim = 320;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > maxDim) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          }
+        } else {
+          if (height > maxDim) {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+          setAvatarPreview(compressedDataUrl);
+          setProfileMessage(null);
+        }
+      };
+      img.src = e.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      processImageFile(file);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      processImageFile(file);
+    }
+  };
+
+  const handleSaveProfile = async () => {
+    setIsSavingProfile(true);
+    setProfileMessage(null);
+    try {
+      const res = await updateProfile({
+        name: displayName.trim() || user?.name,
+        avatar: avatarPreview || '',
+      });
+      if (res.success) {
+        setProfileMessage({
+          type: 'success',
+          text: t.avatarSaved,
+        });
+        setTimeout(() => setProfileMessage(null), 4000);
+      } else {
+        setProfileMessage({
+          type: 'error',
+          text: res.message || 'Failed to update profile',
+        });
+      }
+    } catch (err: any) {
+      setProfileMessage({
+        type: 'error',
+        text: err?.message || 'Error updating profile',
+      });
+    } finally {
+      setIsSavingProfile(false);
+    }
+  };
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPasswordMessage(null);
+
+    if (!currentPassword) {
+      setPasswordMessage({
+        type: 'error',
+        text: language === 'fa' ? 'لطفاً رمز عبور فعلی خود را وارد کنید.' : 'Please enter your current password.',
+      });
+      return;
+    }
+
+    if (!newPassword || newPassword.length < 6) {
+      setPasswordMessage({
+        type: 'error',
+        text: t.passwordLengthError,
+      });
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setPasswordMessage({
+        type: 'error',
+        text: t.passwordMismatch,
+      });
+      return;
+    }
+
+    setIsChangingPassword(true);
+    try {
+      const res = await changePassword(currentPassword, newPassword);
+      if (res.success) {
+        setPasswordMessage({
+          type: 'success',
+          text: t.passwordChangedSuccess,
+        });
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
+        setTimeout(() => setPasswordMessage(null), 5000);
+      } else {
+        setPasswordMessage({
+          type: 'error',
+          text: res.message || (language === 'fa' ? 'خطا در تغییر رمز عبور' : 'Failed to change password'),
+        });
+      }
+    } catch (err: any) {
+      setPasswordMessage({
+        type: 'error',
+        text: err?.message || 'Error changing password',
+      });
+    } finally {
+      setIsChangingPassword(false);
+    }
+  };
 
   const t = translations[language];
 
@@ -185,8 +385,25 @@ export const AccountView: React.FC<AccountViewProps> = ({
       }`}>
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
           <div className="flex items-center gap-4 sm:gap-6">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-rose-600 via-rose-500 to-amber-500 flex items-center justify-center text-white text-2xl sm:text-3xl font-extrabold shadow-xl shadow-rose-500/25 shrink-0">
-              {userInitial}
+            <div
+              onClick={() => setActiveTab('profile')}
+              className="relative group cursor-pointer shrink-0"
+              title={t.changeAvatar}
+            >
+              {user?.avatar ? (
+                <img
+                  src={user.avatar}
+                  alt={user.name || 'User Avatar'}
+                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover shadow-xl shadow-rose-500/25 border-2 border-rose-500/40"
+                />
+              ) : (
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-rose-600 via-rose-500 to-amber-500 flex items-center justify-center text-white text-2xl sm:text-3xl font-extrabold shadow-xl shadow-rose-500/25">
+                  {userInitial}
+                </div>
+              )}
+              <div className="absolute inset-0 rounded-2xl bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+                <Camera className="w-6 h-6" />
+              </div>
             </div>
             <div>
               <div className="flex flex-wrap items-center gap-2 mb-1.5">
@@ -416,100 +633,432 @@ export const AccountView: React.FC<AccountViewProps> = ({
 
       {/* Profile & Preferences Tab */}
       {activeTab === 'profile' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Account Details Card */}
-          <div className={`p-6 rounded-3xl border ${theme === 'dark' ? 'bg-slate-900/60 border-slate-800' : 'bg-white border-slate-200 shadow-sm'}`}>
-            <div className="flex items-center gap-2.5 mb-5">
-              <div className="w-8 h-8 rounded-xl bg-rose-500/10 flex items-center justify-center text-rose-500">
-                <UserIcon className="w-4 h-4" />
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* 1. Profile Photo & Display Name Card */}
+            <div className={`p-6 rounded-3xl border ${theme === 'dark' ? 'bg-slate-900/60 border-slate-800' : 'bg-white border-slate-200 shadow-sm'}`}>
+              <div className="flex items-center gap-2.5 mb-5 pb-3 border-b border-slate-800/40">
+                <div className="w-8 h-8 rounded-xl bg-rose-500/10 flex items-center justify-center text-rose-500">
+                  <Camera className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-base sm:text-lg">{t.uploadProfile}</h3>
+                  <p className="text-xs text-slate-500">{t.changeAvatar}</p>
+                </div>
               </div>
-              <h3 className="font-bold text-base sm:text-lg">{t.accountOverview}</h3>
+
+              {/* Hidden file input */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/png,image/jpeg,image/webp,image/gif"
+                className="hidden"
+                onChange={handleFileChange}
+              />
+
+              {/* Avatar Drag & Drop / Preview Box */}
+              <div
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  setIsDragOver(true);
+                }}
+                onDragLeave={() => setIsDragOver(false)}
+                onDrop={handleDrop}
+                className={`p-5 rounded-2xl border-2 border-dashed transition-all mb-5 flex flex-col sm:flex-row items-center gap-5 ${
+                  isDragOver
+                    ? 'border-rose-500 bg-rose-500/10'
+                    : theme === 'dark'
+                    ? 'border-slate-700/60 bg-slate-950/40'
+                    : 'border-slate-300 bg-slate-50'
+                }`}
+              >
+                {/* Avatar Preview */}
+                <div className="relative group shrink-0">
+                  {avatarPreview ? (
+                    <img
+                      src={avatarPreview}
+                      alt="Avatar Preview"
+                      className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover shadow-lg border-2 border-rose-500/50"
+                    />
+                  ) : (
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-tr from-rose-600 via-rose-500 to-amber-500 text-white flex items-center justify-center text-3xl font-black shadow-lg">
+                      {userInitial}
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="absolute inset-0 rounded-2xl bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white cursor-pointer"
+                  >
+                    <Upload className="w-5 h-5 mb-1" />
+                    <span className="text-[10px] font-semibold">{t.chooseFile}</span>
+                  </button>
+                </div>
+
+                {/* Upload Action Buttons & Drag Prompt */}
+                <div className="flex-1 text-center sm:text-left rtl:sm:text-right">
+                  <div className="flex flex-wrap items-center justify-center sm:justify-start rtl:sm:justify-start gap-2 mb-2">
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition-all shadow-md shadow-rose-600/20 cursor-pointer"
+                    >
+                      <Upload className="w-3.5 h-3.5" />
+                      <span>{t.chooseFile}</span>
+                    </button>
+                    {avatarPreview && (
+                      <button
+                        type="button"
+                        onClick={() => setAvatarPreview(null)}
+                        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-rose-500/20 text-rose-500 hover:bg-rose-500/10 text-xs font-semibold transition-colors cursor-pointer"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>{t.removePhoto}</span>
+                      </button>
+                    )}
+                  </div>
+                  <p className="text-xs text-slate-500">
+                    {language === 'fa'
+                      ? 'تصاویر JPG، PNG یا WebP تا حداکثر ۸ مگابایت (فایل را بکشید و رها کنید)'
+                      : 'JPG, PNG, or WebP up to 8MB. Auto-optimized for crisp quality.'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Preset Cinema Avatars */}
+              <div className="mb-5">
+                <label className="block text-xs font-bold text-slate-400 mb-2">
+                  {t.choosePresetAvatar}
+                </label>
+                <div className="grid grid-cols-6 gap-2">
+                  {PRESET_AVATARS.map((presetUrl, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => {
+                        setAvatarPreview(presetUrl);
+                        setProfileMessage(null);
+                      }}
+                      className={`relative rounded-xl overflow-hidden aspect-square border-2 transition-all cursor-pointer group hover:scale-105 ${
+                        avatarPreview === presetUrl
+                          ? 'border-rose-500 ring-2 ring-rose-500/30 shadow-md'
+                          : 'border-transparent hover:border-slate-500'
+                      }`}
+                    >
+                      <img
+                        src={presetUrl}
+                        alt={`Avatar preset ${idx + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                      {avatarPreview === presetUrl && (
+                        <div className="absolute inset-0 bg-rose-600/40 flex items-center justify-center text-white">
+                          <Check className="w-3.5 h-3.5 stroke-[3]" />
+                        </div>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Display Name Input */}
+              <div className="mb-5">
+                <label className="block text-xs font-bold text-slate-400 mb-1.5">
+                  {t.name}
+                </label>
+                <input
+                  type="text"
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  placeholder="Your display name"
+                  maxLength={50}
+                  className={`w-full px-4 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-rose-500 ${
+                    theme === 'dark'
+                      ? 'bg-slate-950/60 border-slate-800 text-slate-200 placeholder-slate-500'
+                      : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
+                  }`}
+                />
+              </div>
+
+              {/* Feedback Message */}
+              {profileMessage && (
+                <div
+                  className={`p-3 rounded-xl mb-4 text-xs font-medium flex items-center gap-2 ${
+                    profileMessage.type === 'success'
+                      ? 'bg-emerald-500/15 border border-emerald-500/30 text-emerald-400'
+                      : 'bg-rose-500/15 border border-rose-500/30 text-rose-400'
+                  }`}
+                >
+                  {profileMessage.type === 'success' ? (
+                    <CheckCircle className="w-4 h-4 shrink-0" />
+                  ) : (
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                  )}
+                  <span>{profileMessage.text}</span>
+                </div>
+              )}
+
+              {/* Save Profile Button */}
+              <button
+                type="button"
+                onClick={handleSaveProfile}
+                disabled={isSavingProfile}
+                className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-600 disabled:opacity-50 text-white font-bold text-xs sm:text-sm shadow-md shadow-rose-600/20 transition-all cursor-pointer flex items-center justify-center gap-2"
+              >
+                {isSavingProfile ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span>{t.updating}</span>
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle className="w-4 h-4" />
+                    <span>{t.saveChanges}</span>
+                  </>
+                )}
+              </button>
             </div>
 
-            <div className="space-y-4 text-sm">
-              <div className="flex items-center justify-between py-2.5 border-b border-slate-800/40">
-                <span className="text-slate-500">{t.name}</span>
-                <span className="font-semibold">{user?.name || 'NovaStream Member'}</span>
+            {/* 2. Security & Change Password Card */}
+            <div className={`p-6 rounded-3xl border ${theme === 'dark' ? 'bg-slate-900/60 border-slate-800' : 'bg-white border-slate-200 shadow-sm'}`}>
+              <div className="flex items-center gap-2.5 mb-5 pb-3 border-b border-slate-800/40">
+                <div className="w-8 h-8 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500">
+                  <Lock className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-base sm:text-lg">{t.changePassword}</h3>
+                  <p className="text-xs text-slate-500">{language === 'fa' ? 'امنیت و گذرواژه حساب' : 'Account credentials & security'}</p>
+                </div>
               </div>
-              <div className="flex items-center justify-between py-2.5 border-b border-slate-800/40">
-                <span className="text-slate-500">{t.email}</span>
-                <span className="font-semibold font-mono text-xs">{user?.email}</span>
-              </div>
-              <div className="flex items-center justify-between py-2.5 border-b border-slate-800/40">
-                <span className="text-slate-500">{t.memberSince}</span>
-                <span className="font-semibold">{memberSinceFormatted}</span>
-              </div>
-              <div className="flex items-center justify-between py-2.5">
-                <span className="text-slate-500">{language === 'fa' ? 'وضعیت دسترسی' : 'Streaming Access'}</span>
-                <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-500 bg-emerald-500/10 px-2.5 py-1 rounded-full">
-                  <CheckCircle className="w-3.5 h-3.5" />
-                  {language === 'fa' ? 'پخش با کیفیت بالا نامحدود' : 'Unlimited Full HD'}
-                </span>
-              </div>
+
+              <form onSubmit={handleChangePassword} className="space-y-4">
+                {/* Current Password */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-400 mb-1.5">
+                    {t.currentPassword}
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showCurrentPassword ? 'text' : 'password'}
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
+                      placeholder="••••••••"
+                      required
+                      className={`w-full pl-4 pr-10 rtl:pr-4 rtl:pl-10 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-rose-500 ${
+                        theme === 'dark'
+                          ? 'bg-slate-950/60 border-slate-800 text-slate-200 placeholder-slate-500'
+                          : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
+                      }`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowCurrentPassword((prev) => !prev)}
+                      className="absolute right-3 rtl:right-auto rtl:left-3 top-3 text-slate-400 hover:text-slate-200 transition-colors"
+                      tabIndex={-1}
+                    >
+                      {showCurrentPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* New Password */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-400 mb-1.5">
+                    {t.newPassword}
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showNewPassword ? 'text' : 'password'}
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      placeholder="••••••••"
+                      minLength={6}
+                      required
+                      className={`w-full pl-4 pr-10 rtl:pr-4 rtl:pl-10 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-rose-500 ${
+                        theme === 'dark'
+                          ? 'bg-slate-950/60 border-slate-800 text-slate-200 placeholder-slate-500'
+                          : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
+                      }`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowNewPassword((prev) => !prev)}
+                      className="absolute right-3 rtl:right-auto rtl:left-3 top-3 text-slate-400 hover:text-slate-200 transition-colors"
+                      tabIndex={-1}
+                    >
+                      {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                  <p className="text-[11px] text-slate-500 mt-1">
+                    {language === 'fa' ? 'حداقل ۶ کاراکتر باشد.' : 'Must be at least 6 characters.'}
+                  </p>
+                </div>
+
+                {/* Confirm New Password */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-400 mb-1.5">
+                    {t.confirmPassword}
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="••••••••"
+                      minLength={6}
+                      required
+                      className={`w-full pl-4 pr-10 rtl:pr-4 rtl:pl-10 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-rose-500 ${
+                        theme === 'dark'
+                          ? 'bg-slate-950/60 border-slate-800 text-slate-200 placeholder-slate-500'
+                          : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
+                      }`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword((prev) => !prev)}
+                      className="absolute right-3 rtl:right-auto rtl:left-3 top-3 text-slate-400 hover:text-slate-200 transition-colors"
+                      tabIndex={-1}
+                    >
+                      {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Feedback Message */}
+                {passwordMessage && (
+                  <div
+                    className={`p-3 rounded-xl text-xs font-medium flex items-center gap-2 ${
+                      passwordMessage.type === 'success'
+                        ? 'bg-emerald-500/15 border border-emerald-500/30 text-emerald-400'
+                        : 'bg-rose-500/15 border border-rose-500/30 text-rose-400'
+                    }`}
+                  >
+                    {passwordMessage.type === 'success' ? (
+                      <CheckCircle className="w-4 h-4 shrink-0" />
+                    ) : (
+                      <AlertCircle className="w-4 h-4 shrink-0" />
+                    )}
+                    <span>{passwordMessage.text}</span>
+                  </div>
+                )}
+
+                {/* Submit Password Change Button */}
+                <button
+                  type="submit"
+                  disabled={isChangingPassword || !currentPassword || !newPassword}
+                  className="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-white font-bold text-xs sm:text-sm border border-slate-700 transition-all cursor-pointer flex items-center justify-center gap-2"
+                >
+                  {isChangingPassword ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <span>{t.updating}</span>
+                    </>
+                  ) : (
+                    <>
+                      <Lock className="w-4 h-4 text-rose-500" />
+                      <span>{t.changePassword}</span>
+                    </>
+                  )}
+                </button>
+              </form>
             </div>
           </div>
 
-          {/* Preferences Card */}
-          <div className={`p-6 rounded-3xl border ${theme === 'dark' ? 'bg-slate-900/60 border-slate-800' : 'bg-white border-slate-200 shadow-sm'}`}>
-            <div className="flex items-center gap-2.5 mb-5">
-              <div className="w-8 h-8 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500">
-                <Sparkles className="w-4 h-4" />
+          {/* 3. Account Details & Preferences (Bottom Grid) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Account Details Card */}
+            <div className={`p-6 rounded-3xl border ${theme === 'dark' ? 'bg-slate-900/60 border-slate-800' : 'bg-white border-slate-200 shadow-sm'}`}>
+              <div className="flex items-center gap-2.5 mb-5">
+                <div className="w-8 h-8 rounded-xl bg-rose-500/10 flex items-center justify-center text-rose-500">
+                  <UserIcon className="w-4 h-4" />
+                </div>
+                <h3 className="font-bold text-base sm:text-lg">{t.accountOverview}</h3>
               </div>
-              <h3 className="font-bold text-base sm:text-lg">{t.accountSettings}</h3>
+
+              <div className="space-y-4 text-sm">
+                <div className="flex items-center justify-between py-2.5 border-b border-slate-800/40">
+                  <span className="text-slate-500">{t.name}</span>
+                  <span className="font-semibold">{user?.name || 'NovaStream Member'}</span>
+                </div>
+                <div className="flex items-center justify-between py-2.5 border-b border-slate-800/40">
+                  <span className="text-slate-500">{t.email}</span>
+                  <span className="font-semibold font-mono text-xs">{user?.email}</span>
+                </div>
+                <div className="flex items-center justify-between py-2.5 border-b border-slate-800/40">
+                  <span className="text-slate-500">{t.memberSince}</span>
+                  <span className="font-semibold">{memberSinceFormatted}</span>
+                </div>
+                <div className="flex items-center justify-between py-2.5">
+                  <span className="text-slate-500">{language === 'fa' ? 'وضعیت دسترسی' : 'Streaming Access'}</span>
+                  <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-500 bg-emerald-500/10 px-2.5 py-1 rounded-full">
+                    <CheckCircle className="w-3.5 h-3.5" />
+                    {language === 'fa' ? 'پخش با کیفیت بالا نامحدود' : 'Unlimited Full HD'}
+                  </span>
+                </div>
+              </div>
             </div>
 
-            <div className="space-y-4 text-sm">
-              {/* Language Switcher */}
-              <div className="flex items-center justify-between py-2.5 border-b border-slate-800/40">
-                <div>
-                  <div className="font-semibold">{language === 'fa' ? 'زبان رابط کاربری' : 'Interface Language'}</div>
-                  <div className="text-xs text-slate-500">{language === 'en' ? 'English (LTR)' : 'فارسی (RTL)'}</div>
+            {/* Preferences Card */}
+            <div className={`p-6 rounded-3xl border ${theme === 'dark' ? 'bg-slate-900/60 border-slate-800' : 'bg-white border-slate-200 shadow-sm'}`}>
+              <div className="flex items-center gap-2.5 mb-5">
+                <div className="w-8 h-8 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500">
+                  <Sparkles className="w-4 h-4" />
                 </div>
-                {onToggleLanguage && (
-                  <button
-                    onClick={onToggleLanguage}
-                    className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl border text-xs font-semibold text-rose-500 border-rose-500/30 hover:bg-rose-500/10 cursor-pointer transition-colors"
-                  >
-                    <Globe className="w-3.5 h-3.5" />
-                    <span>{language === 'en' ? 'فارسی' : 'English'}</span>
-                  </button>
-                )}
+                <h3 className="font-bold text-base sm:text-lg">{t.accountSettings}</h3>
               </div>
 
-              {/* Theme Switcher */}
-              <div className="flex items-center justify-between py-2.5 border-b border-slate-800/40">
-                <div>
-                  <div className="font-semibold">{language === 'fa' ? 'پوسته ظاهری' : 'Appearance'}</div>
-                  <div className="text-xs text-slate-500">{theme === 'dark' ? (language === 'fa' ? 'حالت تاریک' : 'Dark Mode') : (language === 'fa' ? 'حالت روشن' : 'Light Mode')}</div>
+              <div className="space-y-4 text-sm">
+                {/* Language Switcher */}
+                <div className="flex items-center justify-between py-2.5 border-b border-slate-800/40">
+                  <div>
+                    <div className="font-semibold">{language === 'fa' ? 'زبان رابط کاربری' : 'Interface Language'}</div>
+                    <div className="text-xs text-slate-500">{language === 'en' ? 'English (LTR)' : 'فارسی (RTL)'}</div>
+                  </div>
+                  {onToggleLanguage && (
+                    <button
+                      onClick={onToggleLanguage}
+                      className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl border text-xs font-semibold text-rose-500 border-rose-500/30 hover:bg-rose-500/10 cursor-pointer transition-colors"
+                    >
+                      <Globe className="w-3.5 h-3.5" />
+                      <span>{language === 'en' ? 'فارسی' : 'English'}</span>
+                    </button>
+                  )}
                 </div>
-                {onToggleTheme && (
-                  <button
-                    onClick={onToggleTheme}
-                    className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl border text-xs font-semibold cursor-pointer transition-colors ${
-                      theme === 'dark'
-                        ? 'border-slate-700 bg-slate-800 text-amber-400 hover:bg-slate-700'
-                        : 'border-slate-300 bg-slate-100 text-slate-700 hover:bg-slate-200'
-                    }`}
-                  >
-                    {theme === 'dark' ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
-                    <span>{theme === 'dark' ? (language === 'fa' ? 'روشن' : 'Light') : (language === 'fa' ? 'تاریک' : 'Dark')}</span>
-                  </button>
-                )}
-              </div>
 
-              {/* Security & Sign out */}
-              <div className="flex items-center justify-between py-2.5">
-                <div>
-                  <div className="font-semibold">{language === 'fa' ? 'نشست کاربری' : 'Active Session'}</div>
-                  <div className="text-xs text-slate-500">{language === 'fa' ? 'اتصال ایمن با شناسه امن' : 'Encrypted JWT token session'}</div>
+                {/* Theme Switcher */}
+                <div className="flex items-center justify-between py-2.5 border-b border-slate-800/40">
+                  <div>
+                    <div className="font-semibold">{language === 'fa' ? 'پوسته ظاهری' : 'Appearance'}</div>
+                    <div className="text-xs text-slate-500">{theme === 'dark' ? (language === 'fa' ? 'حالت تاریک' : 'Dark Mode') : (language === 'fa' ? 'حالت روشن' : 'Light Mode')}</div>
+                  </div>
+                  {onToggleTheme && (
+                    <button
+                      onClick={onToggleTheme}
+                      className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl border text-xs font-semibold cursor-pointer transition-colors ${
+                        theme === 'dark'
+                          ? 'border-slate-700 bg-slate-800 text-amber-400 hover:bg-slate-700'
+                          : 'border-slate-300 bg-slate-100 text-slate-700 hover:bg-slate-200'
+                      }`}
+                    >
+                      {theme === 'dark' ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
+                      <span>{theme === 'dark' ? (language === 'fa' ? 'روشن' : 'Light') : (language === 'fa' ? 'تاریک' : 'Dark')}</span>
+                    </button>
+                  )}
                 </div>
-                <button
-                  onClick={() => logout()}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-rose-500 hover:bg-rose-500/10 cursor-pointer transition-colors"
-                >
-                  <LogOut className="w-3.5 h-3.5" />
-                  <span>{t.signOut}</span>
-                </button>
+
+                {/* Security & Sign out */}
+                <div className="flex items-center justify-between py-2.5">
+                  <div>
+                    <div className="font-semibold">{language === 'fa' ? 'نشست کاربری' : 'Active Session'}</div>
+                    <div className="text-xs text-slate-500">{language === 'fa' ? 'اتصال ایمن با شناسه امن' : 'Encrypted JWT token session'}</div>
+                  </div>
+                  <button
+                    onClick={() => logout()}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-rose-500 hover:bg-rose-500/10 cursor-pointer transition-colors"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>{t.signOut}</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>

@@ -193,9 +193,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }`}
                 title={t.myAccount}
               >
-                <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-rose-500 to-amber-500 text-white flex items-center justify-center text-[11px] font-bold shadow-xs">
-                  {(user?.name || user?.email || 'U').charAt(0).toUpperCase()}
-                </div>
+                {user?.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt={user.name || 'User'}
+                    className="w-6 h-6 rounded-full object-cover shadow-xs border border-rose-500/40 shrink-0"
+                  />
+                ) : (
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-rose-500 to-amber-500 text-white flex items-center justify-center text-[11px] font-bold shadow-xs shrink-0">
+                    {(user?.name || user?.email || 'U').charAt(0).toUpperCase()}
+                  </div>
+                )}
                 <span className="max-w-[100px] truncate">{user?.name || user?.email?.split('@')[0]}</span>
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isUserMenuOpen ? 'rotate-180 text-rose-500' : 'text-slate-400'}`} />
               </button>
@@ -203,7 +211,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               {/* User Dropdown */}
               {isUserMenuOpen && (
                 <div
-                  className={`absolute ltr:right-0 rtl:left-0 top-full mt-2 w-56 rounded-2xl border shadow-2xl py-2 z-50 transition-all ${
+                  className={`absolute ltr:right-0 rtl:left-0 top-full mt-2 w-60 rounded-2xl border shadow-2xl py-2 z-50 transition-all ${
                     theme === 'dark' ? 'bg-slate-900 border-slate-800 text-slate-200 shadow-slate-950/80' : 'bg-white border-slate-200 text-slate-800'
                   }`}
                 >
@@ -212,13 +220,26 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onNavigate({ view: 'account', tab: 'profile' });
                       setIsUserMenuOpen(false);
                     }}
-                    className="px-4 py-2.5 border-b border-slate-700/50 hover:bg-slate-800/40 cursor-pointer transition-colors"
+                    className="px-4 py-2.5 border-b border-slate-700/50 hover:bg-slate-800/40 cursor-pointer transition-colors flex items-center gap-3"
                   >
-                    <p className="font-bold text-xs truncate">{user?.name || 'NovaStream Member'}</p>
-                    <p className="text-[11px] text-slate-400 truncate">{user?.email}</p>
-                    <span className="inline-block mt-1 text-[10px] font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md">
-                      {t.myAccount} →
-                    </span>
+                    {user?.avatar ? (
+                      <img
+                        src={user.avatar}
+                        alt={user.name || 'User'}
+                        className="w-8 h-8 rounded-full object-cover shrink-0 border border-rose-500/40"
+                      />
+                    ) : (
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-rose-500 to-amber-500 text-white flex items-center justify-center text-xs font-bold shrink-0">
+                        {(user?.name || user?.email || 'U').charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <p className="font-bold text-xs truncate">{user?.name || 'NovaStream Member'}</p>
+                      <p className="text-[11px] text-slate-400 truncate">{user?.email}</p>
+                      <span className="inline-block mt-0.5 text-[10px] font-semibold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.2 rounded-md">
+                        {t.myAccount} →
+                      </span>
+                    </div>
                   </div>
 
                   <button
