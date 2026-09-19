@@ -12,6 +12,7 @@ import { WatchTvView } from './views/WatchTvView';
 import { ActorDetailsView } from './views/ActorDetailsView';
 import { AdvancedSearchView } from './views/AdvancedSearchView';
 import { WatchlistView } from './views/WatchlistView';
+import { AccountView } from './views/AccountView';
 import { AuthProvider } from './context/AuthContext';
 import { AuthModal } from './components/AuthModal';
 
@@ -52,11 +53,15 @@ export default function App() {
     if (parts[0] === 'series') {
       return { view: 'series' };
     }
+    if (parts[0] === 'account') {
+      const tabParam = params.get('tab') as any;
+      return { view: 'account', tab: tabParam || 'profile' };
+    }
     if (parts[0] === 'watchlist') {
-      return { view: 'watchlist' };
+      return { view: 'account', tab: 'watchlist' };
     }
     if (parts[0] === 'history') {
-      return { view: 'history' };
+      return { view: 'account', tab: 'history' };
     }
     if (parts[0] === 'movie' && parts[1]) {
       return { view: 'movie-detail', id: parseInt(parts[1], 10) };
@@ -94,10 +99,12 @@ export default function App() {
       url = route.query ? `/movies?genre=${encodeURIComponent(route.query)}` : '/movies';
     } else if (route.view === 'series') {
       url = '/series';
+    } else if (route.view === 'account') {
+      url = route.tab ? `/account?tab=${route.tab}` : '/account';
     } else if (route.view === 'watchlist') {
-      url = '/watchlist';
+      url = '/account?tab=watchlist';
     } else if (route.view === 'history') {
-      url = '/history';
+      url = '/account?tab=history';
     } else if (route.view === 'movie-detail' && route.id) {
       url = `/movie/${route.id}`;
     } else if (route.view === 'series-detail' && route.id) {
@@ -179,12 +186,14 @@ export default function App() {
             />
           )}
 
-          {(currentRoute.view === 'watchlist' || currentRoute.view === 'history') && (
-            <WatchlistView
-              initialTab={currentRoute.view === 'history' ? 'history' : 'watchlist'}
+          {(currentRoute.view === 'account' || currentRoute.view === 'watchlist' || currentRoute.view === 'history') && (
+            <AccountView
+              initialTab={currentRoute.tab || (currentRoute.view === 'watchlist' ? 'watchlist' : currentRoute.view === 'history' ? 'history' : 'profile')}
               onNavigate={navigate}
               language={language}
+              onToggleLanguage={handleToggleLanguage}
               theme={theme}
+              onToggleTheme={handleToggleTheme}
             />
           )}
 

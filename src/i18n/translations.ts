@@ -110,6 +110,15 @@ export interface Dictionary {
   streamingLocked: string;
   unlockStreaming: string;
   library: string;
+  account: string;
+  myAccount: string;
+  profile: string;
+  accountOverview: string;
+  member: string;
+  memberSince: string;
+  personalLibrary: string;
+  accountSettings: string;
+  allLists: string;
 }
 
 export const translations: Record<'en' | 'fa', Dictionary> = {
@@ -172,10 +181,10 @@ export const translations: Record<'en' | 'fa', Dictionary> = {
     nextEpisode: "Next Episode",
     prevEpisode: "Previous Episode",
     server: "Server",
-    serverPrimary: "Server 1 (VidCore)",
-    serverBackup1: "Server 2 (VidSrc)",
-    serverBackup2: "Server 3 (VidCC)",
-    serverBackup3: "Server 4 (EmbedSU)",
+    serverPrimary: "Server 1 (Ultra HD)",
+    serverBackup1: "Server 2 (Fast HD)",
+    serverBackup2: "Server 3 (Direct)",
+    serverBackup3: "Server 4 (Alternative)",
     streamingNotice: "Free dynamic stream player. If one server is buffering, switch to a backup server.",
     searchPlaceholder: "Search movies, TV series, or actors...",
     searchTitle: "Advanced Discovery & Search",
@@ -189,7 +198,7 @@ export const translations: Record<'en' | 'fa', Dictionary> = {
     page: "Page",
     of: "of",
     footerRights: "All rights reserved.",
-    footerDisclaimer: "NovaStream is a modern streaming discovery catalog and player interface. All media is dynamically streamed from public third-party video providers.",
+    footerDisclaimer: "NovaStream is a modern streaming discovery catalog and cinema interface. Browse and stream high-definition movies and series smoothly.",
     signIn: "Sign In",
     signUp: "Sign Up",
     createAccount: "Create Account",
@@ -225,6 +234,15 @@ export const translations: Record<'en' | 'fa', Dictionary> = {
     streamingLocked: "Member Authentication Required",
     unlockStreaming: "Sign in to unlock player & stream in Full HD",
     library: "Library",
+    account: "Account",
+    myAccount: "My Account",
+    profile: "Profile",
+    accountOverview: "Account Overview",
+    member: "NovaStream Member",
+    memberSince: "Member Since",
+    personalLibrary: "Personal Library",
+    accountSettings: "Settings & Preferences",
+    allLists: "All Collections",
   },
   fa: {
     appName: "نوااستریم",
@@ -285,11 +303,11 @@ export const translations: Record<'en' | 'fa', Dictionary> = {
     nextEpisode: "قسمت بعدی",
     prevEpisode: "قسمت قبلی",
     server: "سرور پخش",
-    serverPrimary: "سرور ۱ (VidCore)",
-    serverBackup1: "سرور ۲ (VidSrc)",
-    serverBackup2: "سرور ۳ (VidCC)",
-    serverBackup3: "سرور ۴ (EmbedSU)",
-    streamingNotice: "پخش‌کننده آنلاین رایگان. در صورت کندی یا مشکل، از سرورهای جایگزین استفاده کنید.",
+    serverPrimary: "سرور ۱ (کیفیت بالا)",
+    serverBackup1: "سرور ۲ (پخش سریع)",
+    serverBackup2: "سرور ۳ (مستقیم)",
+    serverBackup3: "سرور ۴ (جایگزین)",
+    streamingNotice: "پخش‌کننده آنلاین سریع و روان. در صورت کندی یا قطعی، از سرورهای جایگزین استفاده کنید.",
     searchPlaceholder: "جستجوی نام فیلم، سریال یا بازیگر...",
     searchTitle: "جستجوی پیشرفته و فیلترها",
     searchFilterType: "نوع محتوا",
@@ -302,7 +320,7 @@ export const translations: Record<'en' | 'fa', Dictionary> = {
     page: "صفحه",
     of: "از",
     footerRights: "تمامی حقوق محفوظ است.",
-    footerDisclaimer: "نوااستریم یک پلتفرم جامع کاوش و پخش استریمینگ آنلاین است. پخش ویدیوها از طریق سرورهای شخص ثالث امن تامین می‌گردد.",
+    footerDisclaimer: "نوااستریم یک پلتفرم جامع کاوش و پخش استریمینگ آنلاین است. از تماشای جدیدترین فیلم‌ها و سریال‌ها لذت ببرید.",
     signIn: "ورود به حساب",
     signUp: "ثبت‌نام",
     createAccount: "ایجاد حساب کاربری جدید",
@@ -338,5 +356,14 @@ export const translations: Record<'en' | 'fa', Dictionary> = {
     streamingLocked: "نیازمند ورود به حساب کاربری",
     unlockStreaming: "برای فعال‌سازی پخش و تماشای آنلاین با کیفیت بالا وارد شوید",
     library: "کتابخانه من",
+    account: "حساب کاربری",
+    myAccount: "حساب کاربری من",
+    profile: "پروفایل",
+    accountOverview: "نمای کلی حساب",
+    member: "عضو نوااستریم",
+    memberSince: "عضویت از",
+    personalLibrary: "کتابخانه شخصی",
+    accountSettings: "تنظیمات و ترجیحات",
+    allLists: "تمامی لیست‌ها",
   },
 };

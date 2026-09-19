@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Film, Tv, Search, Moon, Sun, Globe, Menu, X, Play, Bookmark, LogIn, LogOut, User as UserIcon } from 'lucide-react';
+import { Film, Tv, Search, Moon, Sun, Globe, Menu, X, Play, Bookmark, Clock, Heart, History, LogIn, LogOut, User as UserIcon } from 'lucide-react';
 import { Language, RouteState, Theme } from '../types';
 import { translations } from '../i18n/translations';
 import { useAuth } from '../context/AuthContext';
@@ -25,7 +25,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [quickSearch, setQuickSearch] = useState('');
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
-  const { user, isAuthenticated, watchlist, logout, openAuthModal } = useAuth();
+  const { user, isAuthenticated, watchlist, watchLater, favorites, history, logout, openAuthModal } = useAuth();
   const t = translations[language];
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -37,11 +37,11 @@ export const Navbar: React.FC<NavbarProps> = ({
     }
   };
 
+  // Main navigation items for media catalog (clean & focused)
   const navLinks = [
     { label: t.home, view: 'home' as const, icon: Play },
     { label: t.movies, view: 'movies' as const, icon: Film },
     { label: t.series, view: 'series' as const, icon: Tv },
-    { label: t.watchlist, view: 'watchlist' as const, icon: Bookmark, badge: watchlist.length },
     { label: t.search, view: 'search' as const, icon: Search },
   ];
 
@@ -95,11 +95,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               >
                 <Icon className={`w-4 h-4 ${isActive ? 'text-rose-500' : 'opacity-70'}`} />
                 <span>{link.label}</span>
-                {typeof link.badge === 'number' && link.badge > 0 && (
-                  <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-rose-600 text-white font-bold">
-                    {link.badge}
-                  </span>
-                )}
               </button>
             );
           })}
@@ -154,16 +149,21 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Auth Button: Sign In or User Profile */}
           {isAuthenticated ? (
-            <div className="relative">
+            <div className="relative" onMouseLeave={() => setIsUserMenuOpen(false)}>
               <button
-                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                className={`flex items-center gap-2 pl-2 pr-3 rtl:pr-2 rtl:pl-3 py-1.5 rounded-full border text-xs font-semibold cursor-pointer transition-colors ${
-                  theme === 'dark'
+                id="user-profile-menu-btn"
+                onClick={() => onNavigate({ view: 'account' })}
+                onMouseEnter={() => setIsUserMenuOpen(true)}
+                className={`flex items-center gap-2 pl-2 pr-3 rtl:pr-2 rtl:pl-3 py-1.5 rounded-full border text-xs font-semibold cursor-pointer transition-all ${
+                  currentRoute.view === 'account'
+                    ? 'border-rose-500 bg-rose-500/10 text-rose-500 ring-2 ring-rose-500/20'
+                    : theme === 'dark'
                     ? 'border-slate-700 bg-slate-900 text-slate-200 hover:border-rose-500'
                     : 'border-slate-300 bg-slate-50 text-slate-800 hover:border-rose-500'
                 }`}
+                title={t.myAccount}
               >
-                <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-rose-500 to-amber-500 text-white flex items-center justify-center text-[11px] font-bold">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-rose-500 to-amber-500 text-white flex items-center justify-center text-[11px] font-bold shadow-xs">
                   {(user?.name || user?.email || 'U').charAt(0).toUpperCase()}
                 </div>
                 <span className="max-w-[100px] truncate">{user?.name || user?.email?.split('@')[0]}</span>
@@ -172,26 +172,108 @@ export const Navbar: React.FC<NavbarProps> = ({
               {/* User Dropdown */}
               {isUserMenuOpen && (
                 <div
-                  className={`absolute ltr:right-0 rtl:left-0 mt-2 w-48 rounded-2xl border shadow-xl py-2 z-50 transition-all ${
-                    theme === 'dark' ? 'bg-slate-900 border-slate-800 text-slate-200' : 'bg-white border-slate-200 text-slate-800'
+                  className={`absolute ltr:right-0 rtl:left-0 mt-2 w-56 rounded-2xl border shadow-2xl py-2 z-50 transition-all ${
+                    theme === 'dark' ? 'bg-slate-900 border-slate-800 text-slate-200 shadow-slate-950/80' : 'bg-white border-slate-200 text-slate-800'
                   }`}
-                  onMouseLeave={() => setIsUserMenuOpen(false)}
                 >
-                  <div className="px-4 py-2 border-b border-slate-700/50 text-xs">
-                    <p className="font-bold truncate">{user?.name || 'NovaStream Member'}</p>
+                  <div
+                    onClick={() => {
+                      onNavigate({ view: 'account', tab: 'profile' });
+                      setIsUserMenuOpen(false);
+                    }}
+                    className="px-4 py-2.5 border-b border-slate-700/50 hover:bg-slate-800/40 cursor-pointer transition-colors"
+                  >
+                    <p className="font-bold text-xs truncate">{user?.name || 'NovaStream Member'}</p>
                     <p className="text-[11px] text-slate-400 truncate">{user?.email}</p>
+                    <span className="inline-block mt-1 text-[10px] font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md">
+                      {t.myAccount} →
+                    </span>
                   </div>
 
                   <button
                     onClick={() => {
-                      onNavigate({ view: 'watchlist' });
+                      onNavigate({ view: 'account', tab: 'profile' });
                       setIsUserMenuOpen(false);
                     }}
                     className="w-full px-4 py-2 text-xs flex items-center gap-2.5 hover:bg-rose-500/10 hover:text-rose-500 cursor-pointer text-left rtl:text-right"
                   >
-                    <Bookmark className="w-4 h-4" />
-                    <span>{t.watchlist}</span>
+                    <UserIcon className="w-4 h-4 text-slate-400" />
+                    <span>{t.accountOverview}</span>
                   </button>
+
+                  <button
+                    onClick={() => {
+                      onNavigate({ view: 'account', tab: 'watchlist' });
+                      setIsUserMenuOpen(false);
+                    }}
+                    className="w-full px-4 py-2 text-xs flex items-center justify-between hover:bg-rose-500/10 hover:text-rose-500 cursor-pointer text-left rtl:text-right"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Bookmark className="w-4 h-4 text-rose-500" />
+                      <span>{t.watchlist}</span>
+                    </div>
+                    {watchlist.length > 0 && (
+                      <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold">
+                        {watchlist.length}
+                      </span>
+                    )}
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      onNavigate({ view: 'account', tab: 'watchlater' });
+                      setIsUserMenuOpen(false);
+                    }}
+                    className="w-full px-4 py-2 text-xs flex items-center justify-between hover:bg-rose-500/10 hover:text-rose-500 cursor-pointer text-left rtl:text-right"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Clock className="w-4 h-4 text-amber-500" />
+                      <span>{t.watchLater}</span>
+                    </div>
+                    {watchLater.length > 0 && (
+                      <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold">
+                        {watchLater.length}
+                      </span>
+                    )}
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      onNavigate({ view: 'account', tab: 'favorites' });
+                      setIsUserMenuOpen(false);
+                    }}
+                    className="w-full px-4 py-2 text-xs flex items-center justify-between hover:bg-rose-500/10 hover:text-rose-500 cursor-pointer text-left rtl:text-right"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Heart className="w-4 h-4 text-rose-500" />
+                      <span>{t.favorites}</span>
+                    </div>
+                    {favorites.length > 0 && (
+                      <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold">
+                        {favorites.length}
+                      </span>
+                    )}
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      onNavigate({ view: 'account', tab: 'history' });
+                      setIsUserMenuOpen(false);
+                    }}
+                    className="w-full px-4 py-2 text-xs flex items-center justify-between hover:bg-rose-500/10 hover:text-rose-500 cursor-pointer text-left rtl:text-right"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <History className="w-4 h-4 text-blue-500" />
+                      <span>{t.history}</span>
+                    </div>
+                    {history.length > 0 && (
+                      <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold">
+                        {history.length}
+                      </span>
+                    )}
+                  </button>
+
+                  <div className="my-1 border-t border-slate-700/50" />
 
                   <button
                     onClick={() => {
@@ -292,26 +374,104 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <Icon className="w-4 h-4" />
                     <span>{link.label}</span>
                   </div>
-                  {typeof link.badge === 'number' && link.badge > 0 && (
-                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-rose-600 text-white font-bold">
-                      {link.badge}
-                    </span>
-                  )}
                 </button>
               );
             })}
 
             {isAuthenticated ? (
-              <button
-                onClick={() => {
-                  logout();
-                  setIsMobileMenuOpen(false);
-                }}
-                className="w-full px-3 py-2.5 rounded-lg text-sm font-medium text-rose-500 flex items-center gap-3 text-left rtl:text-right mt-2"
-              >
-                <LogOut className="w-4 h-4" />
-                <span>{t.signOut} ({user?.name || user?.email?.split('@')[0]})</span>
-              </button>
+              <div className="mt-3 pt-3 border-t border-slate-700/50 flex flex-col gap-1">
+                <div className="px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-rose-500">
+                  {t.myAccount}
+                </div>
+                <button
+                  onClick={() => {
+                    onNavigate({ view: 'account', tab: 'profile' });
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="w-full px-3 py-2 rounded-lg text-sm font-medium flex items-center gap-3 text-left rtl:text-right hover:bg-slate-800/40"
+                >
+                  <UserIcon className="w-4 h-4 text-slate-400" />
+                  <span>{t.accountOverview} ({user?.name || user?.email?.split('@')[0]})</span>
+                </button>
+                <button
+                  onClick={() => {
+                    onNavigate({ view: 'account', tab: 'watchlist' });
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="w-full px-3 py-2 rounded-lg text-sm font-medium flex items-center justify-between text-left rtl:text-right hover:bg-slate-800/40"
+                >
+                  <div className="flex items-center gap-3">
+                    <Bookmark className="w-4 h-4 text-rose-500" />
+                    <span>{t.watchlist}</span>
+                  </div>
+                  {watchlist.length > 0 && (
+                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-300 font-bold">
+                      {watchlist.length}
+                    </span>
+                  )}
+                </button>
+                <button
+                  onClick={() => {
+                    onNavigate({ view: 'account', tab: 'watchlater' });
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="w-full px-3 py-2 rounded-lg text-sm font-medium flex items-center justify-between text-left rtl:text-right hover:bg-slate-800/40"
+                >
+                  <div className="flex items-center gap-3">
+                    <Clock className="w-4 h-4 text-amber-500" />
+                    <span>{t.watchLater}</span>
+                  </div>
+                  {watchLater.length > 0 && (
+                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-300 font-bold">
+                      {watchLater.length}
+                    </span>
+                  )}
+                </button>
+                <button
+                  onClick={() => {
+                    onNavigate({ view: 'account', tab: 'favorites' });
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="w-full px-3 py-2 rounded-lg text-sm font-medium flex items-center justify-between text-left rtl:text-right hover:bg-slate-800/40"
+                >
+                  <div className="flex items-center gap-3">
+                    <Heart className="w-4 h-4 text-rose-500" />
+                    <span>{t.favorites}</span>
+                  </div>
+                  {favorites.length > 0 && (
+                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-300 font-bold">
+                      {favorites.length}
+                    </span>
+                  )}
+                </button>
+                <button
+                  onClick={() => {
+                    onNavigate({ view: 'account', tab: 'history' });
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="w-full px-3 py-2 rounded-lg text-sm font-medium flex items-center justify-between text-left rtl:text-right hover:bg-slate-800/40"
+                >
+                  <div className="flex items-center gap-3">
+                    <History className="w-4 h-4 text-blue-500" />
+                    <span>{t.history}</span>
+                  </div>
+                  {history.length > 0 && (
+                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-300 font-bold">
+                      {history.length}
+                    </span>
+                  )}
+                </button>
+                <button
+                  onClick={() => {
+                    logout();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="w-full px-3 py-2.5 rounded-lg text-sm font-medium text-rose-500 flex items-center gap-3 text-left rtl:text-right mt-1 hover:bg-rose-500/10"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>{t.signOut}</span>
+                </button>
+              </div>
             ) : (
               <button
                 onClick={() => {

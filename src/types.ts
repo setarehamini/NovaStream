@@ -201,10 +201,10 @@ export interface UserHistoryItem {
 }
 
 export interface RouteState {
-  view: 'home' | 'movies' | 'series' | 'movie-detail' | 'series-detail' | 'actor-detail' | 'watch-movie' | 'watch-tv' | 'search' | 'watchlist' | 'history';
+  view: 'home' | 'movies' | 'series' | 'movie-detail' | 'series-detail' | 'actor-detail' | 'watch-movie' | 'watch-tv' | 'search' | 'watchlist' | 'history' | 'account';
   id?: number;
   season?: number;
   episode?: number;
   query?: string;
-  tab?: 'watchlist' | 'watchlater' | 'favorites' | 'history';
+  tab?: 'watchlist' | 'watchlater' | 'favorites' | 'history' | 'profile';
 }

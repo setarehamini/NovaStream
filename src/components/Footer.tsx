@@ -92,8 +92,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, language, theme }) =
               {t.streamingNotice}
             </p>
             <div className="mt-4 flex flex-wrap gap-1.5">
-              <span className="px-2 py-0.5 text-[11px] rounded-md font-mono bg-rose-500/10 text-rose-500 border border-rose-500/20">VidCore HD</span>
-              <span className="px-2 py-0.5 text-[11px] rounded-md font-mono bg-slate-500/10 text-slate-400 border border-slate-500/20">VidSrc</span>
+              <span className="px-2 py-0.5 text-[11px] rounded-md font-mono bg-rose-500/10 text-rose-500 border border-rose-500/20">Server 1 HD</span>
+              <span className="px-2 py-0.5 text-[11px] rounded-md font-mono bg-slate-500/10 text-slate-400 border border-slate-500/20">Server 2 Fast</span>
               <span className="px-2 py-0.5 text-[11px] rounded-md font-mono bg-amber-500/10 text-amber-500 border border-amber-500/20">Ultra 1080p</span>
             </div>
           </div>
