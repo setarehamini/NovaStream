@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Film, Tv, Search, Moon, Sun, Globe, Menu, X, Play, Bookmark, Clock, Heart, History, LogIn, LogOut, User as UserIcon } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Film, Tv, Search, Moon, Sun, Globe, Menu, X, Play, Bookmark, Clock, Heart, History, LogIn, LogOut, User as UserIcon, ChevronDown } from 'lucide-react';
 import { Language, RouteState, Theme } from '../types';
 import { translations } from '../i18n/translations';
 import { useAuth } from '../context/AuthContext';
@@ -24,9 +24,34 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [quickSearch, setQuickSearch] = useState('');
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
 
   const { user, isAuthenticated, watchlist, watchLater, favorites, history, logout, openAuthModal } = useAuth();
   const t = translations[language];
+
+  // Close dropdown when clicking outside or pressing Escape
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setIsUserMenuOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsUserMenuOpen(false);
+      }
+    };
+
+    if (isUserMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleKeyDown);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isUserMenuOpen]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -149,13 +174,18 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Auth Button: Sign In or User Profile */}
           {isAuthenticated ? (
-            <div className="relative" onMouseLeave={() => setIsUserMenuOpen(false)}>
+            <div className="relative" ref={userMenuRef}>
               <button
                 id="user-profile-menu-btn"
-                onClick={() => onNavigate({ view: 'account' })}
-                onMouseEnter={() => setIsUserMenuOpen(true)}
+                type="button"
+                aria-haspopup="true"
+                aria-expanded={isUserMenuOpen}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsUserMenuOpen((prev) => !prev);
+                }}
                 className={`flex items-center gap-2 pl-2 pr-3 rtl:pr-2 rtl:pl-3 py-1.5 rounded-full border text-xs font-semibold cursor-pointer transition-all ${
-                  currentRoute.view === 'account'
+                  isUserMenuOpen || currentRoute.view === 'account'
                     ? 'border-rose-500 bg-rose-500/10 text-rose-500 ring-2 ring-rose-500/20'
                     : theme === 'dark'
                     ? 'border-slate-700 bg-slate-900 text-slate-200 hover:border-rose-500'
@@ -167,12 +197,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                   {(user?.name || user?.email || 'U').charAt(0).toUpperCase()}
                 </div>
                 <span className="max-w-[100px] truncate">{user?.name || user?.email?.split('@')[0]}</span>
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isUserMenuOpen ? 'rotate-180 text-rose-500' : 'text-slate-400'}`} />
               </button>
 
               {/* User Dropdown */}
               {isUserMenuOpen && (
                 <div
-                  className={`absolute ltr:right-0 rtl:left-0 mt-2 w-56 rounded-2xl border shadow-2xl py-2 z-50 transition-all ${
+                  className={`absolute ltr:right-0 rtl:left-0 top-full mt-2 w-56 rounded-2xl border shadow-2xl py-2 z-50 transition-all ${
                     theme === 'dark' ? 'bg-slate-900 border-slate-800 text-slate-200 shadow-slate-950/80' : 'bg-white border-slate-200 text-slate-800'
                   }`}
                 >
