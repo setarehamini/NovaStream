@@ -197,6 +197,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <img
                     src={user.avatar}
                     alt={user.name || 'User'}
+                    referrerPolicy="no-referrer"
                     className="w-6 h-6 rounded-full object-cover shadow-xs border border-rose-500/40 shrink-0"
                   />
                 ) : (
@@ -226,6 +227,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       <img
                         src={user.avatar}
                         alt={user.name || 'User'}
+                        referrerPolicy="no-referrer"
                         className="w-8 h-8 rounded-full object-cover shrink-0 border border-rose-500/40"
                       />
                     ) : (

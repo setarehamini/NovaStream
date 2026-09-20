@@ -42,13 +42,53 @@ interface AccountViewProps {
   onToggleTheme?: () => void;
 }
 
-const PRESET_AVATARS = [
-  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&h=250&q=80',
-  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=250&h=250&q=80',
-  'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=250&h=250&q=80',
-  'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=250&h=250&q=80',
-  'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=250&h=250&q=80',
-  'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=250&h=250&q=80',
+interface PresetAvatar {
+  id: string;
+  name: string;
+  url: string;
+}
+
+const PRESET_AVATARS: PresetAvatar[] = [
+  {
+    id: 'director',
+    name: 'Film Director',
+    url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g_dir%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23e11d48%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%239f1239%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22100%22%20height%3D%22100%22%20rx%3D%2226%22%20fill%3D%22url(%23g_dir)%22%2F%3E%3Cpath%20d%3D%22M22%2032h38v36H22z%22%20rx%3D%226%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%226%22%2F%3E%3Cpath%20d%3D%22M60%2042l18-12v40l-18-12z%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%2241%22%20cy%3D%2250%22%20r%3D%228%22%20fill%3D%22white%22%20fill-opacity%3D%220.8%22%2F%3E%3C%2Fsvg%3E',
+  },
+  {
+    id: 'star',
+    name: 'Golden Star',
+    url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g_star%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23f59e0b%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23b45309%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22100%22%20height%3D%22100%22%20rx%3D%2226%22%20fill%3D%22url(%23g_star)%22%2F%3E%3Cpath%20d%3D%22M50%2018l8.8%2017.8%2019.6%202.9-14.2%2013.8%203.4%2019.5L50%2062.8%2032.4%2072l3.4-19.5-14.2-13.8%2019.6-2.9z%22%20fill%3D%22white%22%2F%3E%3C%2Fsvg%3E',
+  },
+  {
+    id: 'cyber',
+    name: 'Cyberpunk',
+    url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g_cy%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%238b5cf6%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%2306b6d4%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22100%22%20height%3D%22100%22%20rx%3D%2226%22%20fill%3D%22url(%23g_cy)%22%2F%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2246%22%20r%3D%2224%22%20fill%3D%22white%22%20fill-opacity%3D%220.9%22%2F%3E%3Crect%20x%3D%2232%22%20y%3D%2238%22%20width%3D%2236%22%20height%3D%2214%22%20rx%3D%227%22%20fill%3D%22%231e1b4b%22%2F%3E%3Ccircle%20cx%3D%2240%22%20cy%3D%2245%22%20r%3D%223%22%20fill%3D%22%2306b6d4%22%2F%3E%3Ccircle%20cx%3D%2260%22%20cy%3D%2245%22%20r%3D%223%22%20fill%3D%22%2306b6d4%22%2F%3E%3Cpath%20d%3D%22M26%2084c2-12%2012-20%2024-20s22%208%2024%2020%22%20stroke%3D%22white%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E',
+  },
+  {
+    id: 'cosmic',
+    name: 'Cosmic Voyager',
+    url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g_cos%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%236366f1%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%234338ca%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22100%22%20height%3D%22100%22%20rx%3D%2226%22%20fill%3D%22url(%23g_cos)%22%2F%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2218%22%20fill%3D%22white%22%2F%3E%3Cellipse%20cx%3D%2250%22%20cy%3D%2250%22%20rx%3D%2232%22%20ry%3D%2211%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%225%22%20transform%3D%22rotate(-25%2050%2050)%22%2F%3E%3Ccircle%20cx%3D%2226%22%20cy%3D%2226%22%20r%3D%223%22%20fill%3D%22white%22%20fill-opacity%3D%220.8%22%2F%3E%3Ccircle%20cx%3D%2274%22%20cy%3D%2272%22%20r%3D%222%22%20fill%3D%22white%22%20fill-opacity%3D%220.8%22%2F%3E%3C%2Fsvg%3E',
+  },
+  {
+    id: 'popcorn',
+    name: 'Popcorn Pro',
+    url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g_pop%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23f97316%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23c2410c%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22100%22%20height%3D%22100%22%20rx%3D%2226%22%20fill%3D%22url(%23g_pop)%22%2F%3E%3Ccircle%20cx%3D%2240%22%20cy%3D%2232%22%20r%3D%228%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%2252%22%20cy%3D%2227%22%20r%3D%229%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%2263%22%20cy%3D%2232%22%20r%3D%228%22%20fill%3D%22white%22%2F%3E%3Cpath%20d%3D%22M32%2042h36l-5%2036H37z%22%20fill%3D%22white%22%2F%3E%3Cpath%20d%3D%22M43%2042l-2%2036m9-36l-1%2036m9-36l-1%2036%22%20stroke%3D%22%23ea580c%22%20stroke-width%3D%223%22%2F%3E%3C%2Fsvg%3E',
+  },
+  {
+    id: 'hero',
+    name: 'Action Hero',
+    url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g_he%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23f43f5e%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23881337%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22100%22%20height%3D%22100%22%20rx%3D%2226%22%20fill%3D%22url(%23g_he)%22%2F%3E%3Cpath%20d%3D%22M50%2018l24%209v20c0%2016-10%2027-24%2032-14-5-24-16-24-32V27z%22%20fill%3D%22white%22%2F%3E%3Cpath%20d%3D%22M50%2034l4.5%209%2010%201.5-7.2%207%201.7%209.8L50%2056.8l-9%204.5%201.7-9.8-7.2-7%2010-1.5z%22%20fill%3D%22%23be123c%22%2F%3E%3C%2Fsvg%3E',
+  },
+  {
+    id: 'emerald',
+    name: 'Emerald Cinema',
+    url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g_em%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%2310b981%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23047857%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22100%22%20height%3D%22100%22%20rx%3D%2226%22%20fill%3D%22url(%23g_em)%22%2F%3E%3Cpolygon%20points%3D%2250%2022%2078%2038%2078%2070%2050%2086%2022%2070%2022%2038%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%226%22%2F%3E%3Cpolygon%20points%3D%2244%2038%2064%2050%2044%2062%22%20fill%3D%22white%22%2F%3E%3C%2Fsvg%3E',
+  },
+  {
+    id: 'noir',
+    name: 'Midnight Noir',
+    url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g_no%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23334155%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230f172a%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22100%22%20height%3D%22100%22%20rx%3D%2226%22%20fill%3D%22url(%23g_no)%22%2F%3E%3Crect%20x%3D%2222%22%20y%3D%2228%22%20width%3D%2256%22%20height%3D%2244%22%20rx%3D%228%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%225%22%2F%3E%3Cpath%20d%3D%22M22%2042h56M36%2028l-5%2014m19-14l-5%2014m19-14l-5%2014%22%20stroke%3D%22white%22%20stroke-width%3D%224%22%2F%3E%3C%2Fsvg%3E',
+  },
 ];
 
 export const AccountView: React.FC<AccountViewProps> = ({
@@ -97,12 +137,14 @@ export const AccountView: React.FC<AccountViewProps> = ({
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [passwordMessage, setPasswordMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [heroAvatarError, setHeroAvatarError] = useState(false);
 
   // Sync state if user changes
   useEffect(() => {
     if (user) {
       setDisplayName(user.name || '');
       setAvatarPreview(user.avatar || null);
+      setHeroAvatarError(false);
     }
   }, [user]);
 
@@ -114,10 +156,12 @@ export const AccountView: React.FC<AccountViewProps> = ({
   }, [initialTab]);
 
   const processImageFile = (file: File) => {
-    if (!file.type.startsWith('image/')) {
+    const isImageMime = file.type && file.type.startsWith('image/');
+    const isImageExt = /\.(jpe?g|png|webp|gif|svg|bmp|avif)$/i.test(file.name);
+    if (!isImageMime && !isImageExt) {
       setProfileMessage({
         type: 'error',
-        text: language === 'fa' ? 'لطفاً یک فایل تصویری (JPG، PNG، WebP) انتخاب کنید.' : 'Please select a valid image file (JPG, PNG, WebP).',
+        text: language === 'fa' ? 'لطفاً یک فایل تصویری معتبر (JPG، PNG، WebP، SVG) انتخاب کنید.' : 'Please select a valid image file (JPG, PNG, WebP, SVG).',
       });
       return;
     }
@@ -131,38 +175,68 @@ export const AccountView: React.FC<AccountViewProps> = ({
     }
 
     const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const maxDim = 320;
-        let width = img.width;
-        let height = img.height;
-
-        if (width > height) {
-          if (width > maxDim) {
-            height = Math.round((height * maxDim) / width);
-            width = maxDim;
-          }
-        } else {
-          if (height > maxDim) {
-            width = Math.round((width * maxDim) / height);
-            height = maxDim;
-          }
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-          ctx.drawImage(img, 0, 0, width, height);
-          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
-          setAvatarPreview(compressedDataUrl);
-          setProfileMessage(null);
-        }
-      };
-      img.src = e.target?.result as string;
+    reader.onerror = () => {
+      setProfileMessage({
+        type: 'error',
+        text: language === 'fa' ? 'خطا در خواندن فایل تصویری.' : 'Failed to read image file. Please try another image.',
+      });
     };
+
+    reader.onload = (e) => {
+      const rawDataUrl = e.target?.result as string;
+      if (!rawDataUrl) return;
+
+      // 1. Immediately display preview so user gets instant visual confirmation!
+      setAvatarPreview(rawDataUrl);
+      setProfileMessage(null);
+
+      // 2. If already small (<= 250KB) or SVG, no canvas compression needed
+      if (file.size <= 250 * 1024 || (file.type && file.type.includes('svg'))) {
+        return;
+      }
+
+      // 3. For larger images, optimize via canvas down to 320x320
+      try {
+        const img = new Image();
+        img.onload = () => {
+          try {
+            const canvas = document.createElement('canvas');
+            const maxDim = 320;
+            let width = img.width;
+            let height = img.height;
+
+            if (width > height) {
+              if (width > maxDim) {
+                height = Math.round((height * maxDim) / width);
+                width = maxDim;
+              }
+            } else {
+              if (height > maxDim) {
+                width = Math.round((width * maxDim) / height);
+                height = maxDim;
+              }
+            }
+
+            canvas.width = Math.max(1, width);
+            canvas.height = Math.max(1, height);
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+              ctx.drawImage(img, 0, 0, width, height);
+              const compressed = canvas.toDataURL('image/jpeg', 0.85);
+              if (compressed && compressed.length > 50) {
+                setAvatarPreview(compressed);
+              }
+            }
+          } catch (canvasErr) {
+            console.warn('Canvas resize fallback to raw data URL:', canvasErr);
+          }
+        };
+        img.src = rawDataUrl;
+      } catch (err) {
+        console.warn('Image optimization skipped:', err);
+      }
+    };
+
     reader.readAsDataURL(file);
   };
 
@@ -171,6 +245,8 @@ export const AccountView: React.FC<AccountViewProps> = ({
     if (file) {
       processImageFile(file);
     }
+    // Reset value so choosing the exact same file again will still fire onChange
+    e.target.value = '';
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
@@ -186,10 +262,14 @@ export const AccountView: React.FC<AccountViewProps> = ({
     setIsSavingProfile(true);
     setProfileMessage(null);
     try {
+      const finalName = displayName.trim() || user?.name || '';
+      const finalAvatar = avatarPreview || '';
+
       const res = await updateProfile({
-        name: displayName.trim() || user?.name,
-        avatar: avatarPreview || '',
+        name: finalName,
+        avatar: finalAvatar,
       });
+
       if (res.success) {
         setProfileMessage({
           type: 'success',
@@ -390,10 +470,12 @@ export const AccountView: React.FC<AccountViewProps> = ({
               className="relative group cursor-pointer shrink-0"
               title={t.changeAvatar}
             >
-              {user?.avatar ? (
+              {user?.avatar && !heroAvatarError ? (
                 <img
                   src={user.avatar}
                   alt={user.name || 'User Avatar'}
+                  onError={() => setHeroAvatarError(true)}
+                  referrerPolicy="no-referrer"
                   className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover shadow-xl shadow-rose-500/25 border-2 border-rose-500/40"
                 />
               ) : (
@@ -651,7 +733,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
               <input
                 ref={fileInputRef}
                 type="file"
-                accept="image/png,image/jpeg,image/webp,image/gif"
+                accept="image/*"
                 className="hidden"
                 onChange={handleFileChange}
               />
@@ -678,6 +760,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
                     <img
                       src={avatarPreview}
                       alt="Avatar Preview"
+                      referrerPolicy="no-referrer"
                       className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover shadow-lg border-2 border-rose-500/50"
                     />
                   ) : (
@@ -727,32 +810,41 @@ export const AccountView: React.FC<AccountViewProps> = ({
 
               {/* Preset Cinema Avatars */}
               <div className="mb-5">
-                <label className="block text-xs font-bold text-slate-400 mb-2">
-                  {t.choosePresetAvatar}
-                </label>
-                <div className="grid grid-cols-6 gap-2">
-                  {PRESET_AVATARS.map((presetUrl, idx) => (
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-xs font-bold text-slate-400">
+                    {t.choosePresetAvatar}
+                  </label>
+                  <span className="text-[11px] text-slate-500">
+                    {language === 'fa' ? '۸ آواتار سینمایی فوری' : '8 Instant Cinema Avatars'}
+                  </span>
+                </div>
+                <div className="grid grid-cols-4 sm:grid-cols-8 gap-2.5">
+                  {PRESET_AVATARS.map((preset) => (
                     <button
-                      key={idx}
+                      key={preset.id}
                       type="button"
+                      title={preset.name}
                       onClick={() => {
-                        setAvatarPreview(presetUrl);
+                        setAvatarPreview(preset.url);
                         setProfileMessage(null);
                       }}
-                      className={`relative rounded-xl overflow-hidden aspect-square border-2 transition-all cursor-pointer group hover:scale-105 ${
-                        avatarPreview === presetUrl
-                          ? 'border-rose-500 ring-2 ring-rose-500/30 shadow-md'
-                          : 'border-transparent hover:border-slate-500'
+                      className={`relative rounded-2xl overflow-hidden aspect-square border-2 transition-all cursor-pointer group hover:scale-105 active:scale-95 p-1 ${
+                        avatarPreview === preset.url
+                          ? 'border-rose-500 ring-2 ring-rose-500/40 shadow-lg shadow-rose-500/20 bg-rose-500/10'
+                          : theme === 'dark'
+                          ? 'border-slate-800 hover:border-slate-600 bg-slate-900/60'
+                          : 'border-slate-200 hover:border-slate-400 bg-slate-100'
                       }`}
                     >
                       <img
-                        src={presetUrl}
-                        alt={`Avatar preset ${idx + 1}`}
-                        className="w-full h-full object-cover"
+                        src={preset.url}
+                        alt={preset.name}
+                        className="w-full h-full object-contain rounded-xl"
+                        referrerPolicy="no-referrer"
                       />
-                      {avatarPreview === presetUrl && (
-                        <div className="absolute inset-0 bg-rose-600/40 flex items-center justify-center text-white">
-                          <Check className="w-3.5 h-3.5 stroke-[3]" />
+                      {avatarPreview === preset.url && (
+                        <div className="absolute inset-0 bg-rose-600/35 backdrop-blur-[1px] flex items-center justify-center text-white rounded-xl">
+                          <Check className="w-5 h-5 stroke-[3] drop-shadow" />
                         </div>
                       )}
                     </button>
