@@ -228,6 +228,24 @@ export async function initDatabase(): Promise<void> {
           );
         `);
 
+        // Ensure avatar column is TEXT (prevents "value too long for type character varying(500)")
+        try {
+          await pool.query(`
+            DO $$
+            BEGIN
+              IF EXISTS (
+                SELECT 1 FROM information_schema.columns 
+                WHERE table_name = 'users' AND column_name = 'avatar' AND data_type != 'text'
+              ) THEN
+                ALTER TABLE users ALTER COLUMN avatar TYPE TEXT;
+              END IF;
+            END $$;
+          `);
+          console.log('[Database] Verified users.avatar column type is TEXT');
+        } catch (migErr: any) {
+          console.warn('[Database] users.avatar schema check warning:', migErr?.message);
+        }
+
         pgPool = pool;
         isPgActive = true;
         console.log('PostgreSQL database connected and tables initialized successfully');
@@ -325,7 +343,18 @@ export const db = {
 
       values.push(userId);
       const query = `UPDATE users SET ${fields.join(', ')} WHERE id = $${idx} RETURNING *`;
-      const res = await pgPool.query(query, values);
+      let res;
+      try {
+        res = await pgPool.query(query, values);
+      } catch (err: any) {
+        if (err?.code === '22001' || err?.message?.includes('character varying')) {
+          console.log('[Database] Migrating users.avatar column from VARCHAR to TEXT after column length limit...');
+          await pgPool.query('ALTER TABLE users ALTER COLUMN avatar TYPE TEXT;');
+          res = await pgPool.query(query, values);
+        } else {
+          throw err;
+        }
+      }
       if (res.rows.length === 0) return null;
       const row = res.rows[0];
       return {

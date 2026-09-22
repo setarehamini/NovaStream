@@ -190,45 +190,36 @@ export const AccountView: React.FC<AccountViewProps> = ({
       setAvatarPreview(rawDataUrl);
       setProfileMessage(null);
 
-      // 2. If already small (<= 250KB) or SVG, no canvas compression needed
-      if (file.size <= 250 * 1024 || (file.type && file.type.includes('svg'))) {
+      // If SVG, preserve vector code directly
+      if (file.type && file.type.includes('svg')) {
         return;
       }
 
-      // 3. For larger images, optimize via canvas down to 320x320
+      // Optimize raster avatar to a crisp 320x320 square
       try {
         const img = new Image();
         img.onload = () => {
           try {
             const canvas = document.createElement('canvas');
-            const maxDim = 320;
-            let width = img.width;
-            let height = img.height;
-
-            if (width > height) {
-              if (width > maxDim) {
-                height = Math.round((height * maxDim) / width);
-                width = maxDim;
-              }
-            } else {
-              if (height > maxDim) {
-                width = Math.round((width * maxDim) / height);
-                height = maxDim;
-              }
-            }
-
-            canvas.width = Math.max(1, width);
-            canvas.height = Math.max(1, height);
+            const targetSize = 320;
+            canvas.width = targetSize;
+            canvas.height = targetSize;
             const ctx = canvas.getContext('2d');
             if (ctx) {
-              ctx.drawImage(img, 0, 0, width, height);
-              const compressed = canvas.toDataURL('image/jpeg', 0.85);
-              if (compressed && compressed.length > 50) {
+              // Center crop to square
+              const minDim = Math.min(img.width, img.height);
+              const sx = (img.width - minDim) / 2;
+              const sy = (img.height - minDim) / 2;
+              ctx.imageSmoothingEnabled = true;
+              ctx.imageSmoothingQuality = 'high';
+              ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, targetSize, targetSize);
+              const compressed = canvas.toDataURL('image/jpeg', 0.88);
+              if (compressed && compressed.length > 100) {
                 setAvatarPreview(compressed);
               }
             }
           } catch (canvasErr) {
-            console.warn('Canvas resize fallback to raw data URL:', canvasErr);
+            console.warn('Canvas optimization fallback to raw:', canvasErr);
           }
         };
         img.src = rawDataUrl;
