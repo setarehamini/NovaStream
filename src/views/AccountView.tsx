@@ -345,7 +345,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
   if (!isAuthenticated) {
     return (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-24 text-center">
-        <div className="w-20 h-20 mx-auto mb-6 rounded-3xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-500 shadow-xl shadow-rose-500/10">
+        <div className="w-20 h-20 mx-auto mb-6 rounded-3xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 shadow-xl shadow-indigo-500/10">
           <UserIcon className="w-10 h-10" />
         </div>
         <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4">
@@ -359,8 +359,8 @@ export const AccountView: React.FC<AccountViewProps> = ({
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto mb-12">
           <button
-            onClick={() => openAuthModal('login', 'Sign in to access your NovaStream account and personal collections.')}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-600 text-white font-bold text-sm shadow-xl shadow-rose-500/25 transition-all cursor-pointer"
+            onClick={() => openAuthModal('login', 'Sign in to access your Nova account and personal collections.')}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold text-sm shadow-xl shadow-indigo-500/25 transition-all cursor-pointer"
           >
             <LogIn className="w-4 h-4" />
             <span>{t.signIn}</span>
@@ -373,7 +373,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
                 : 'border-slate-300 bg-white hover:bg-slate-100 text-slate-800'
             }`}
           >
-            <Sparkles className="w-4 h-4 text-rose-500" />
+            <Sparkles className="w-4 h-4 text-indigo-400" />
             <span>{t.signUp}</span>
           </button>
         </div>
@@ -381,7 +381,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
         {/* Features preview */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto text-left rtl:text-right">
           <div className={`p-5 rounded-2xl border ${theme === 'dark' ? 'bg-slate-900/40 border-slate-800' : 'bg-white border-slate-200'}`}>
-            <Bookmark className="w-6 h-6 text-rose-500 mb-3" />
+            <Bookmark className="w-6 h-6 text-indigo-400 mb-3" />
             <h3 className="font-bold text-sm mb-1">{t.watchlist}</h3>
             <p className="text-xs text-slate-500">
               {language === 'fa' ? 'عناوین دلخواه خود را ذخیره کنید تا هر زمان به آن‌ها دسترسی داشته باشید.' : 'Save movies & shows you plan to watch across any device.'}
@@ -452,7 +452,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
       <div className={`relative overflow-hidden rounded-3xl border p-6 sm:p-8 mb-8 ${
         theme === 'dark'
           ? 'bg-gradient-to-br from-slate-900 via-slate-900/90 to-slate-950 border-slate-800 shadow-2xl'
-          : 'bg-gradient-to-br from-white via-rose-50/20 to-slate-100 border-slate-200 shadow-xl shadow-rose-500/5'
+          : 'bg-gradient-to-br from-white via-indigo-50/20 to-slate-100 border-slate-200 shadow-xl shadow-indigo-500/5'
       }`}>
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
           <div className="flex items-center gap-4 sm:gap-6">
@@ -467,10 +467,10 @@ export const AccountView: React.FC<AccountViewProps> = ({
                   alt={user.name || 'User Avatar'}
                   onError={() => setHeroAvatarError(true)}
                   referrerPolicy="no-referrer"
-                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover shadow-xl shadow-rose-500/25 border-2 border-rose-500/40"
+                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover shadow-xl shadow-indigo-500/25 border-2 border-indigo-500/40"
                 />
               ) : (
-                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-rose-600 via-rose-500 to-amber-500 flex items-center justify-center text-white text-2xl sm:text-3xl font-extrabold shadow-xl shadow-rose-500/25">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-indigo-400 flex items-center justify-center text-white text-2xl sm:text-3xl font-extrabold shadow-xl shadow-indigo-500/25">
                   {userInitial}
                 </div>
               )}
@@ -481,7 +481,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
             <div>
               <div className="flex flex-wrap items-center gap-2 mb-1.5">
                 <h1 className="text-xl sm:text-3xl font-black tracking-tight">
-                  {user?.name || 'NovaStream Member'}
+                  {user?.name || 'Nova Member'}
                 </h1>
                 <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
                   <ShieldCheck className="w-3.5 h-3.5" />
@@ -500,7 +500,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
           <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={() => logout()}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer border border-rose-500/20"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors cursor-pointer border border-slate-700/60"
               title={t.signOut}
             >
               <LogOut className="w-4 h-4" />
@@ -515,60 +515,60 @@ export const AccountView: React.FC<AccountViewProps> = ({
             onClick={() => setActiveTab('watchlist')}
             className={`p-3.5 rounded-2xl border text-left rtl:text-right transition-all cursor-pointer ${
               activeTab === 'watchlist'
-                ? 'bg-rose-500/15 border-rose-500/50 shadow-md ring-1 ring-rose-500/30'
+                ? 'bg-indigo-500/15 border-indigo-500/50 shadow-md ring-1 ring-indigo-500/30'
                 : theme === 'dark' ? 'bg-slate-900/50 border-slate-800 hover:bg-slate-800/60' : 'bg-white/80 border-slate-200 hover:bg-slate-50'
             }`}
           >
             <div className="flex items-center justify-between mb-1">
               <span className="text-xs font-medium text-slate-500">{t.watchlist}</span>
-              <Bookmark className={`w-4 h-4 ${activeTab === 'watchlist' ? 'text-rose-500' : 'text-slate-400'}`} />
+              <Bookmark className={`w-4 h-4 ${activeTab === 'watchlist' ? 'text-indigo-400' : 'text-slate-400'}`} />
             </div>
-            <div className={`text-xl sm:text-2xl font-black ${activeTab === 'watchlist' ? 'text-rose-500' : ''}`}>{watchlist.length}</div>
+            <div className={`text-xl sm:text-2xl font-black ${activeTab === 'watchlist' ? 'text-indigo-400' : ''}`}>{watchlist.length}</div>
           </button>
 
           <button
             onClick={() => setActiveTab('watchlater')}
             className={`p-3.5 rounded-2xl border text-left rtl:text-right transition-all cursor-pointer ${
               activeTab === 'watchlater'
-                ? 'bg-rose-500/15 border-rose-500/50 shadow-md ring-1 ring-rose-500/30'
+                ? 'bg-indigo-500/15 border-indigo-500/50 shadow-md ring-1 ring-indigo-500/30'
                 : theme === 'dark' ? 'bg-slate-900/50 border-slate-800 hover:bg-slate-800/60' : 'bg-white/80 border-slate-200 hover:bg-slate-50'
             }`}
           >
             <div className="flex items-center justify-between mb-1">
               <span className="text-xs font-medium text-slate-500">{t.watchLater}</span>
-              <Clock className={`w-4 h-4 ${activeTab === 'watchlater' ? 'text-rose-500' : 'text-slate-400'}`} />
+              <Clock className={`w-4 h-4 ${activeTab === 'watchlater' ? 'text-indigo-400' : 'text-slate-400'}`} />
             </div>
-            <div className={`text-xl sm:text-2xl font-black ${activeTab === 'watchlater' ? 'text-rose-500' : ''}`}>{watchLater.length}</div>
+            <div className={`text-xl sm:text-2xl font-black ${activeTab === 'watchlater' ? 'text-indigo-400' : ''}`}>{watchLater.length}</div>
           </button>
 
           <button
             onClick={() => setActiveTab('favorites')}
             className={`p-3.5 rounded-2xl border text-left rtl:text-right transition-all cursor-pointer ${
               activeTab === 'favorites'
-                ? 'bg-rose-500/15 border-rose-500/50 shadow-md ring-1 ring-rose-500/30'
+                ? 'bg-indigo-500/15 border-indigo-500/50 shadow-md ring-1 ring-indigo-500/30'
                 : theme === 'dark' ? 'bg-slate-900/50 border-slate-800 hover:bg-slate-800/60' : 'bg-white/80 border-slate-200 hover:bg-slate-50'
             }`}
           >
             <div className="flex items-center justify-between mb-1">
               <span className="text-xs font-medium text-slate-500">{t.favorites}</span>
-              <Heart className={`w-4 h-4 ${activeTab === 'favorites' ? 'text-rose-500' : 'text-slate-400'}`} />
+              <Heart className={`w-4 h-4 ${activeTab === 'favorites' ? 'text-indigo-400' : 'text-slate-400'}`} />
             </div>
-            <div className={`text-xl sm:text-2xl font-black ${activeTab === 'favorites' ? 'text-rose-500' : ''}`}>{favorites.length}</div>
+            <div className={`text-xl sm:text-2xl font-black ${activeTab === 'favorites' ? 'text-indigo-400' : ''}`}>{favorites.length}</div>
           </button>
 
           <button
             onClick={() => setActiveTab('history')}
             className={`p-3.5 rounded-2xl border text-left rtl:text-right transition-all cursor-pointer ${
               activeTab === 'history'
-                ? 'bg-rose-500/15 border-rose-500/50 shadow-md ring-1 ring-rose-500/30'
+                ? 'bg-indigo-500/15 border-indigo-500/50 shadow-md ring-1 ring-indigo-500/30'
                 : theme === 'dark' ? 'bg-slate-900/50 border-slate-800 hover:bg-slate-800/60' : 'bg-white/80 border-slate-200 hover:bg-slate-50'
             }`}
           >
             <div className="flex items-center justify-between mb-1">
               <span className="text-xs font-medium text-slate-500">{t.history}</span>
-              <History className={`w-4 h-4 ${activeTab === 'history' ? 'text-rose-500' : 'text-slate-400'}`} />
+              <History className={`w-4 h-4 ${activeTab === 'history' ? 'text-indigo-400' : 'text-slate-400'}`} />
             </div>
-            <div className={`text-xl sm:text-2xl font-black ${activeTab === 'history' ? 'text-rose-500' : ''}`}>{history.length}</div>
+            <div className={`text-xl sm:text-2xl font-black ${activeTab === 'history' ? 'text-indigo-400' : ''}`}>{history.length}</div>
           </button>
         </div>
       </div>
@@ -582,7 +582,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
             onClick={() => setActiveTab('profile')}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'profile'
-                ? 'bg-rose-600 text-white shadow-md shadow-rose-600/25 ring-2 ring-rose-400/20'
+                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/25 ring-2 ring-indigo-400/20'
                 : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800/50'
             }`}
           >
@@ -594,7 +594,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
             onClick={() => setActiveTab('watchlist')}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'watchlist'
-                ? 'bg-rose-600 text-white shadow-md shadow-rose-600/25 ring-2 ring-rose-400/20'
+                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/25 ring-2 ring-indigo-400/20'
                 : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800/50'
             }`}
           >
@@ -611,7 +611,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
             onClick={() => setActiveTab('watchlater')}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'watchlater'
-                ? 'bg-rose-600 text-white shadow-md shadow-rose-600/25 ring-2 ring-rose-400/20'
+                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/25 ring-2 ring-indigo-400/20'
                 : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800/50'
             }`}
           >
@@ -628,7 +628,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
             onClick={() => setActiveTab('favorites')}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'favorites'
-                ? 'bg-rose-600 text-white shadow-md shadow-rose-600/25 ring-2 ring-rose-400/20'
+                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/25 ring-2 ring-indigo-400/20'
                 : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800/50'
             }`}
           >
@@ -645,7 +645,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
             onClick={() => setActiveTab('history')}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'history'
-                ? 'bg-rose-600 text-white shadow-md shadow-rose-600/25 ring-2 ring-rose-400/20'
+                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/25 ring-2 ring-indigo-400/20'
                 : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800/50'
             }`}
           >
@@ -684,7 +684,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
                     clearHistory();
                   }
                 }}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-rose-500 hover:bg-rose-500/10 cursor-pointer transition-colors border border-rose-500/20"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800/80 cursor-pointer transition-colors border border-slate-700/60"
               >
                 <Trash2 className="w-3.5 h-3.5" />
                 <span>{t.clearHistory}</span>
@@ -701,7 +701,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
             {/* 1. Profile Photo & Display Name Card */}
             <div className={`p-6 rounded-3xl border ${theme === 'dark' ? 'bg-slate-900/60 border-slate-800' : 'bg-white border-slate-200 shadow-sm'}`}>
               <div className="flex items-center gap-2.5 mb-5 pb-3 border-b border-slate-800/40">
-                <div className="w-8 h-8 rounded-xl bg-rose-500/10 flex items-center justify-center text-rose-500">
+                <div className="w-8 h-8 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400">
                   <Camera className="w-4 h-4" />
                 </div>
                 <div>
@@ -729,7 +729,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
                 onDrop={handleDrop}
                 className={`p-5 rounded-2xl border-2 border-dashed transition-all mb-5 flex flex-col sm:flex-row items-center gap-5 ${
                   isDragOver
-                    ? 'border-rose-500 bg-rose-500/10'
+                    ? 'border-indigo-500 bg-indigo-500/10'
                     : theme === 'dark'
                     ? 'border-slate-700/60 bg-slate-950/40'
                     : 'border-slate-300 bg-slate-50'
@@ -742,10 +742,10 @@ export const AccountView: React.FC<AccountViewProps> = ({
                       src={avatarPreview}
                       alt="Avatar Preview"
                       referrerPolicy="no-referrer"
-                      className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover shadow-lg border-2 border-rose-500/50"
+                      className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover shadow-lg border-2 border-indigo-500/50"
                     />
                   ) : (
-                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-tr from-rose-600 via-rose-500 to-amber-500 text-white flex items-center justify-center text-3xl font-black shadow-lg">
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white flex items-center justify-center text-3xl font-black shadow-lg">
                       {userInitial}
                     </div>
                   )}
@@ -765,7 +765,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition-all shadow-md shadow-rose-600/20 cursor-pointer"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-all shadow-md shadow-indigo-600/20 cursor-pointer"
                     >
                       <Upload className="w-3.5 h-3.5" />
                       <span>{t.chooseFile}</span>
@@ -774,7 +774,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
                       <button
                         type="button"
                         onClick={() => setAvatarPreview(null)}
-                        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-rose-500/20 text-rose-500 hover:bg-rose-500/10 text-xs font-semibold transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-700/60 text-slate-400 hover:text-white hover:bg-slate-800 text-xs font-semibold transition-colors cursor-pointer"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                         <span>{t.removePhoto}</span>
@@ -811,7 +811,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
                       }}
                       className={`relative rounded-2xl overflow-hidden aspect-square border-2 transition-all cursor-pointer group hover:scale-105 active:scale-95 p-1 ${
                         avatarPreview === preset.url
-                          ? 'border-rose-500 ring-2 ring-rose-500/40 shadow-lg shadow-rose-500/20 bg-rose-500/10'
+                          ? 'border-indigo-500 ring-2 ring-indigo-500/40 shadow-lg shadow-indigo-500/20 bg-indigo-500/10'
                           : theme === 'dark'
                           ? 'border-slate-800 hover:border-slate-600 bg-slate-900/60'
                           : 'border-slate-200 hover:border-slate-400 bg-slate-100'
@@ -824,7 +824,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
                         referrerPolicy="no-referrer"
                       />
                       {avatarPreview === preset.url && (
-                        <div className="absolute inset-0 bg-rose-600/35 backdrop-blur-[1px] flex items-center justify-center text-white rounded-xl">
+                        <div className="absolute inset-0 bg-indigo-600/35 backdrop-blur-[1px] flex items-center justify-center text-white rounded-xl">
                           <Check className="w-5 h-5 stroke-[3] drop-shadow" />
                         </div>
                       )}
@@ -844,7 +844,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
                   onChange={(e) => setDisplayName(e.target.value)}
                   placeholder="Your display name"
                   maxLength={50}
-                  className={`w-full px-4 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-rose-500 ${
+                  className={`w-full px-4 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
                     theme === 'dark'
                       ? 'bg-slate-950/60 border-slate-800 text-slate-200 placeholder-slate-500'
                       : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
@@ -858,7 +858,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
                   className={`p-3 rounded-xl mb-4 text-xs font-medium flex items-center gap-2 ${
                     profileMessage.type === 'success'
                       ? 'bg-emerald-500/15 border border-emerald-500/30 text-emerald-400'
-                      : 'bg-rose-500/15 border border-rose-500/30 text-rose-400'
+                      : 'bg-red-500/15 border border-red-500/30 text-red-400'
                   }`}
                 >
                   {profileMessage.type === 'success' ? (
@@ -875,7 +875,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
                 type="button"
                 onClick={handleSaveProfile}
                 disabled={isSavingProfile}
-                className="w-full py-2.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white font-bold text-xs sm:text-sm shadow-md shadow-rose-600/20 transition-all cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-bold text-xs sm:text-sm shadow-md shadow-indigo-600/20 transition-all cursor-pointer flex items-center justify-center gap-2"
               >
                 {isSavingProfile ? (
                   <>
@@ -916,7 +916,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
                       onChange={(e) => setCurrentPassword(e.target.value)}
                       placeholder="••••••••"
                       required
-                      className={`w-full pl-4 pr-10 rtl:pr-4 rtl:pl-10 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-rose-500 ${
+                      className={`w-full pl-4 pr-10 rtl:pr-4 rtl:pl-10 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
                         theme === 'dark'
                           ? 'bg-slate-950/60 border-slate-800 text-slate-200 placeholder-slate-500'
                           : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
@@ -946,7 +946,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
                       placeholder="••••••••"
                       minLength={6}
                       required
-                      className={`w-full pl-4 pr-10 rtl:pr-4 rtl:pl-10 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-rose-500 ${
+                      className={`w-full pl-4 pr-10 rtl:pr-4 rtl:pl-10 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
                         theme === 'dark'
                           ? 'bg-slate-950/60 border-slate-800 text-slate-200 placeholder-slate-500'
                           : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
@@ -979,7 +979,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
                       placeholder="••••••••"
                       minLength={6}
                       required
-                      className={`w-full pl-4 pr-10 rtl:pr-4 rtl:pl-10 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-rose-500 ${
+                      className={`w-full pl-4 pr-10 rtl:pr-4 rtl:pl-10 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
                         theme === 'dark'
                           ? 'bg-slate-950/60 border-slate-800 text-slate-200 placeholder-slate-500'
                           : 'bg-slate-50 border-slate-300 text-slate-800 placeholder-slate-400'
@@ -1002,7 +1002,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
                     className={`p-3 rounded-xl text-xs font-medium flex items-center gap-2 ${
                       passwordMessage.type === 'success'
                         ? 'bg-emerald-500/15 border border-emerald-500/30 text-emerald-400'
-                        : 'bg-rose-500/15 border border-rose-500/30 text-rose-400'
+                        : 'bg-red-500/15 border border-red-500/30 text-red-400'
                     }`}
                   >
                     {passwordMessage.type === 'success' ? (
@@ -1018,7 +1018,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
                 <button
                   type="submit"
                   disabled={isChangingPassword || !currentPassword || !newPassword}
-                  className="w-full py-2.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white font-bold text-xs sm:text-sm shadow-md shadow-rose-600/20 transition-all cursor-pointer flex items-center justify-center gap-2"
+                  className="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-bold text-xs sm:text-sm shadow-md shadow-indigo-600/20 transition-all cursor-pointer flex items-center justify-center gap-2"
                 >
                   {isChangingPassword ? (
                     <>
@@ -1041,7 +1041,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
             {/* Account Details Card */}
             <div className={`p-6 rounded-3xl border ${theme === 'dark' ? 'bg-slate-900/60 border-slate-800' : 'bg-white border-slate-200 shadow-sm'}`}>
               <div className="flex items-center gap-2.5 mb-5">
-                <div className="w-8 h-8 rounded-xl bg-rose-500/10 flex items-center justify-center text-rose-500">
+                <div className="w-8 h-8 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400">
                   <UserIcon className="w-4 h-4" />
                 </div>
                 <h3 className="font-bold text-base sm:text-lg">{t.accountOverview}</h3>
@@ -1050,7 +1050,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
               <div className="space-y-4 text-sm">
                 <div className="flex items-center justify-between py-2.5 border-b border-slate-800/40">
                   <span className="text-slate-500">{t.name}</span>
-                  <span className="font-semibold">{user?.name || 'NovaStream Member'}</span>
+                  <span className="font-semibold">{user?.name || 'Nova Member'}</span>
                 </div>
                 <div className="flex items-center justify-between py-2.5 border-b border-slate-800/40">
                   <span className="text-slate-500">{t.email}</span>
@@ -1089,7 +1089,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
                   {onToggleLanguage && (
                     <button
                       onClick={onToggleLanguage}
-                      className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl border text-xs font-semibold text-rose-500 border-rose-500/30 hover:bg-rose-500/10 cursor-pointer transition-colors"
+                      className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl border text-xs font-semibold text-indigo-400 border-indigo-500/30 hover:bg-indigo-500/10 cursor-pointer transition-colors"
                     >
                       <Globe className="w-3.5 h-3.5" />
                       <span>{language === 'en' ? 'فارسی' : 'English'}</span>
@@ -1126,7 +1126,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
                   </div>
                   <button
                     onClick={() => logout()}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-rose-500 hover:bg-rose-500/10 cursor-pointer transition-colors"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800/80 cursor-pointer transition-colors"
                   >
                     <LogOut className="w-3.5 h-3.5" />
                     <span>{t.signOut}</span>
@@ -1147,7 +1147,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
               onClick={() => setFilterType('all')}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-colors ${
                 filterType === 'all'
-                  ? 'bg-rose-500/10 text-rose-500 border border-rose-500/30'
+                  ? 'bg-indigo-500/15 text-indigo-400 border border-indigo-500/30'
                   : theme === 'dark' ? 'bg-slate-900 text-slate-400 hover:text-white' : 'bg-slate-100 text-slate-700 hover:text-slate-950'
               }`}
             >
@@ -1157,7 +1157,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
               onClick={() => setFilterType('movie')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-colors ${
                 filterType === 'movie'
-                  ? 'bg-rose-500/10 text-rose-500 border border-rose-500/30'
+                  ? 'bg-indigo-500/15 text-indigo-400 border border-indigo-500/30'
                   : theme === 'dark' ? 'bg-slate-900 text-slate-400 hover:text-white' : 'bg-slate-100 text-slate-700 hover:text-slate-950'
               }`}
             >
@@ -1168,7 +1168,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
               onClick={() => setFilterType('tv')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-colors ${
                 filterType === 'tv'
-                  ? 'bg-rose-500/10 text-rose-500 border border-rose-500/30'
+                  ? 'bg-indigo-500/15 text-indigo-400 border border-indigo-500/30'
                   : theme === 'dark' ? 'bg-slate-900 text-slate-400 hover:text-white' : 'bg-slate-100 text-slate-700 hover:text-slate-950'
               }`}
             >
@@ -1213,7 +1213,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
               </p>
               <button
                 onClick={() => onNavigate({ view: 'movies' })}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs sm:text-sm shadow-md transition-all cursor-pointer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs sm:text-sm shadow-md transition-all cursor-pointer"
               >
                 <Sparkles className="w-4 h-4" />
                 <span>{language === 'fa' ? 'کاوش فیلم‌ها و سریال‌ها' : 'Discover Movies & Shows'}</span>
@@ -1269,7 +1269,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
 
                       {/* Play Overlay */}
                       <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <div className="w-12 h-12 rounded-full bg-rose-600 text-white flex items-center justify-center shadow-lg transform scale-75 group-hover:scale-100 transition-transform">
+                        <div className="w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-lg transform scale-75 group-hover:scale-100 transition-transform">
                           <Play className="w-5 h-5 fill-white ml-0.5" />
                         </div>
                       </div>
@@ -1291,7 +1291,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
                             removeFromFavorites(item.mediaType, item.mediaId);
                           }
                         }}
-                        className="absolute top-2.5 ltr:right-2.5 rtl:left-2.5 p-1.5 rounded-full bg-black/70 backdrop-blur-md text-slate-300 hover:text-rose-500 hover:bg-black/90 transition-colors cursor-pointer"
+                        className="absolute top-2.5 ltr:right-2.5 rtl:left-2.5 p-1.5 rounded-full bg-black/70 backdrop-blur-md text-slate-300 hover:text-red-400 hover:bg-black/90 transition-colors cursor-pointer"
                         title={language === 'fa' ? 'حذف از این لیست' : 'Remove item'}
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -1309,7 +1309,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
                               onNavigate({ view: 'series-detail', id: item.mediaId });
                             }
                           }}
-                          className="font-bold text-xs sm:text-sm line-clamp-1 hover:text-rose-500 transition-colors cursor-pointer"
+                          className="font-bold text-xs sm:text-sm line-clamp-1 hover:text-indigo-400 transition-colors cursor-pointer"
                           title={displayTitle}
                         >
                           {displayTitle}
@@ -1322,7 +1322,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
                             <span>★ {voteAvg.toFixed(1)}</span>
                           )}
                           {(item as any).season && (
-                            <span className="text-rose-500 font-semibold">
+                            <span className="text-indigo-400 font-semibold">
                               S{(item as any).season}:E{(item as any).episode || 1}
                             </span>
                           )}
@@ -1344,7 +1344,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
                             });
                           }
                         }}
-                        className="mt-3 w-full py-1.5 rounded-lg bg-rose-600/10 hover:bg-rose-600 text-rose-500 hover:text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                        className="mt-3 w-full py-1.5 rounded-lg bg-indigo-600/15 hover:bg-indigo-600 text-indigo-400 hover:text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                       >
                         <Play className="w-3 h-3 fill-current" />
                         <span>{language === 'fa' ? 'تماشا' : 'Stream'}</span>

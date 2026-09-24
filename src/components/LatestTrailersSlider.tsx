@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, ChevronLeft, ChevronRight, Video } from 'lucide-react';
+import { Play, ChevronLeft, ChevronRight } from 'lucide-react';
 import { MediaItem, Theme, Language } from '../types';
 import { MovieService, SeriesService, TMDBService } from '../services';
 import { translations } from '../i18n/translations';
@@ -101,7 +101,7 @@ export const LatestTrailersSlider: React.FC<LatestTrailersSliderProps> = ({
               onClick={() => setActiveCategory(cat.id)}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
                 activeCategory === cat.id
-                  ? 'bg-rose-600 text-white shadow-sm'
+                  ? 'bg-indigo-600 text-white shadow-sm'
                   : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
             >
@@ -116,7 +116,7 @@ export const LatestTrailersSlider: React.FC<LatestTrailersSliderProps> = ({
         {/* Scroll Left Button */}
         <button
           onClick={() => handleScroll('left')}
-          className="absolute -left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-slate-950/80 hover:bg-rose-600 text-white border border-slate-700/60 shadow-xl backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all cursor-pointer disabled:opacity-0"
+          className="absolute -left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-slate-950/80 hover:bg-indigo-600 text-white border border-slate-700/60 shadow-xl backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all cursor-pointer disabled:opacity-0"
           aria-label="Scroll left"
         >
           <ChevronLeft className="w-5 h-5 rtl:rotate-180" />
@@ -125,7 +125,7 @@ export const LatestTrailersSlider: React.FC<LatestTrailersSliderProps> = ({
         {/* Scroll Right Button */}
         <button
           onClick={() => handleScroll('right')}
-          className="absolute -right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-slate-950/80 hover:bg-rose-600 text-white border border-slate-700/60 shadow-xl backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all cursor-pointer disabled:opacity-0"
+          className="absolute -right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-slate-950/80 hover:bg-indigo-600 text-white border border-slate-700/60 shadow-xl backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all cursor-pointer disabled:opacity-0"
           aria-label="Scroll right"
         >
           <ChevronRight className="w-5 h-5 rtl:rotate-180" />
@@ -156,7 +156,7 @@ export const LatestTrailersSlider: React.FC<LatestTrailersSliderProps> = ({
                   className="w-72 sm:w-84 shrink-0 cursor-pointer group/card flex flex-col snap-start"
                 >
                   {/* Backdrop with Play Button */}
-                  <div className="relative aspect-video rounded-2xl overflow-hidden border border-slate-700/50 shadow-lg bg-slate-900 group-hover/card:border-rose-500/80 transition-all duration-300">
+                  <div className="relative aspect-video rounded-2xl overflow-hidden border border-slate-700/50 shadow-lg bg-slate-900 group-hover/card:border-indigo-500/80 transition-all duration-300">
                     <img
                       src={backdropUrl}
                       alt={title}
@@ -170,7 +170,7 @@ export const LatestTrailersSlider: React.FC<LatestTrailersSliderProps> = ({
 
                     {/* Center Glowing Play Button */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-12 h-12 rounded-full bg-rose-600/90 text-white flex items-center justify-center shadow-xl shadow-rose-600/40 group-hover/card:scale-115 group-hover/card:bg-rose-500 transition-all">
+                      <div className="w-12 h-12 rounded-full bg-indigo-600/90 text-white flex items-center justify-center shadow-xl shadow-indigo-600/40 group-hover/card:scale-115 group-hover/card:bg-indigo-500 transition-all">
                         <Play className="w-5 h-5 fill-white translate-x-0.5" />
                       </div>
                     </div>
@@ -190,7 +190,7 @@ export const LatestTrailersSlider: React.FC<LatestTrailersSliderProps> = ({
 
                   {/* Title & Info */}
                   <div className="mt-2.5 px-1">
-                    <h3 className={`text-sm font-bold truncate group-hover/card:text-rose-500 transition-colors ${
+                    <h3 className={`text-sm font-bold truncate group-hover/card:text-indigo-400 transition-colors ${
                       theme === 'dark' ? 'text-white' : 'text-slate-900'
                     }`}>
                       {title}

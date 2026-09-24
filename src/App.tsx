@@ -33,9 +33,9 @@ export default function App() {
   // Synchronize Theme class on root/body
   useEffect(() => {
     if (theme === 'dark') {
-      document.body.className = "bg-slate-950 text-slate-100 antialiased selection:bg-rose-500 selection:text-white";
+      document.body.className = "bg-slate-950 text-slate-100 antialiased selection:bg-indigo-500 selection:text-white";
     } else {
-      document.body.className = "bg-slate-50 text-slate-900 antialiased selection:bg-rose-500 selection:text-white";
+      document.body.className = "bg-slate-50 text-slate-900 antialiased selection:bg-indigo-500 selection:text-white";
     }
   }, [theme]);
 

@@ -278,7 +278,7 @@ export const SeriesDetailsView: React.FC<SeriesDetailsViewProps> = ({
   if (error || !series) {
     return (
       <div className="max-w-md mx-auto py-24 text-center space-y-4">
-        <p className="text-rose-500 font-bold">{error || 'TV Series not found.'}</p>
+        <p className="text-red-400 font-bold">{error || 'TV Series not found.'}</p>
         <button
           onClick={() => onNavigate({ view: 'series' })}
           className="px-4 py-2 bg-slate-800 text-white rounded-lg text-sm"
@@ -349,20 +349,44 @@ export const SeriesDetailsView: React.FC<SeriesDetailsViewProps> = ({
             <div className="flex-1 space-y-4 text-center md:text-left rtl:md:text-right">
               {/* Badges */}
               <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 text-xs font-semibold">
-                <span className="flex items-center gap-1.5 px-3 py-1 rounded-md uppercase tracking-wider bg-sky-500/25 text-sky-300 border border-sky-400/40 backdrop-blur-md shadow-md">
-                  <Tv className="w-3.5 h-3.5 text-sky-400" />
+                <span
+                  className={`flex items-center gap-1.5 px-3 py-1 rounded-md uppercase tracking-wider text-xs font-bold transition-all shadow-md ${
+                    theme === 'dark'
+                      ? 'bg-sky-500/25 text-sky-300 border border-sky-400/40 backdrop-blur-md'
+                      : 'bg-sky-600 text-white border border-sky-600 shadow-sky-600/20'
+                  }`}
+                >
+                  <Tv className={`w-3.5 h-3.5 ${theme === 'dark' ? 'text-sky-400' : 'text-white'}`} />
                   <span>{t.series}</span>
                 </span>
-                <span className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-900/90 text-amber-400 border border-amber-500/30">
+                <span
+                  className={`flex items-center gap-1 px-2.5 py-1 rounded-md border font-semibold ${
+                    theme === 'dark'
+                      ? 'bg-slate-900/90 text-amber-400 border-amber-500/30'
+                      : 'bg-amber-50 text-amber-700 border-amber-300 shadow-xs'
+                  }`}
+                >
                   <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                   <span>{rating}</span>
                   {series.vote_count ? <span className="opacity-70 text-[10px]">({series.vote_count.toLocaleString()})</span> : null}
                 </span>
-                <span className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-900/80 text-slate-300 border border-slate-700/50">
+                <span
+                  className={`flex items-center gap-1 px-2.5 py-1 rounded-md border ${
+                    theme === 'dark'
+                      ? 'bg-slate-900/80 text-slate-300 border-slate-700/50'
+                      : 'bg-white text-slate-700 border-slate-300 shadow-xs'
+                  }`}
+                >
                   <Calendar className="w-3.5 h-3.5 opacity-70" />
                   <span>{releaseYear}</span>
                 </span>
-                <span className="px-2.5 py-1 rounded-md bg-slate-900/80 text-slate-300 border border-slate-700/50">
+                <span
+                  className={`px-2.5 py-1 rounded-md border ${
+                    theme === 'dark'
+                      ? 'bg-slate-900/80 text-slate-300 border-slate-700/50'
+                      : 'bg-white text-slate-700 border-slate-300 shadow-xs'
+                  }`}
+                >
                   {series.number_of_seasons || 1} {t.seasons} • {series.number_of_episodes || 0} {t.episodes}
                 </span>
               </div>

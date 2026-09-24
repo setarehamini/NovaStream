@@ -44,7 +44,7 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
       <div className="flex items-center justify-between text-xs sm:text-sm font-semibold">
         {isRtl ? (
           <>
-            <span className="text-rose-500 dark:text-rose-400 font-bold dir-ltr">
+            <span className="text-indigo-400 font-bold dir-ltr">
               {formatValue(maxValue)} - {formatValue(minValue)}
             </span>
             <span className={theme === 'dark' ? 'text-slate-200' : 'text-slate-800'}>
@@ -56,7 +56,7 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
             <span className={theme === 'dark' ? 'text-slate-200' : 'text-slate-800'}>
               {label}
             </span>
-            <span className="text-rose-500 dark:text-rose-400 font-bold">
+            <span className="text-indigo-400 font-bold">
               {formatValue(minValue)} - {formatValue(maxValue)}
             </span>
           </>
@@ -74,7 +74,7 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
 
         {/* Active Range Highlight */}
         <div
-          className="absolute h-1.5 bg-rose-600 rounded-full pointer-events-none"
+          className="absolute h-1.5 bg-indigo-600 rounded-full pointer-events-none"
           style={{
             left: `${Math.min(minPos, maxPos)}%`,
             width: `${Math.abs(maxPos - minPos)}%`,
@@ -103,11 +103,11 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
 
         {/* Visual Diamond Thumbs */}
         <div
-          className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-3.5 h-3.5 bg-rose-600 hover:bg-rose-500 rotate-45 rounded-[2px] shadow-sm pointer-events-none transition-transform z-10"
+          className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-3.5 h-3.5 bg-indigo-600 hover:bg-indigo-500 rotate-45 rounded-[2px] shadow-sm pointer-events-none transition-transform z-10"
           style={{ left: `${minPos}%` }}
         />
         <div
-          className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-3.5 h-3.5 bg-rose-600 hover:bg-rose-500 rotate-45 rounded-[2px] shadow-sm pointer-events-none transition-transform z-10"
+          className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-3.5 h-3.5 bg-indigo-600 hover:bg-indigo-500 rotate-45 rounded-[2px] shadow-sm pointer-events-none transition-transform z-10"
           style={{ left: `${maxPos}%` }}
         />
       </div>

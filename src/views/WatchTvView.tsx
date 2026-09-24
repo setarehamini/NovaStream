@@ -180,7 +180,7 @@ export const WatchTvView: React.FC<WatchTvViewProps> = ({
             onClick={handleToggleWatchlist}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold cursor-pointer transition-colors ${
               inQueue
-                ? 'bg-rose-600 border-rose-600 text-white'
+                ? 'bg-indigo-600 border-indigo-600 text-white'
                 : theme === 'dark'
                 ? 'bg-slate-900 border-slate-800 text-slate-300 hover:text-white'
                 : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50'
@@ -195,14 +195,14 @@ export const WatchTvView: React.FC<WatchTvViewProps> = ({
             onClick={handleToggleFavorite}
             className={`p-1.5 rounded-lg border text-xs font-semibold cursor-pointer transition-colors ${
               isFav
-                ? 'bg-rose-500/10 border-rose-500 text-rose-500'
+                ? 'bg-indigo-500/10 border-indigo-500 text-indigo-400'
                 : theme === 'dark'
-                ? 'bg-slate-900 border-slate-800 text-slate-400 hover:text-rose-500'
-                : 'bg-white border-slate-300 text-slate-500 hover:text-rose-500'
+                ? 'bg-slate-900 border-slate-800 text-slate-400 hover:text-indigo-400'
+                : 'bg-white border-slate-300 text-slate-500 hover:text-indigo-400'
             }`}
             title={t.favorites}
           >
-            <Heart className={`w-4 h-4 ${isFav ? 'fill-rose-500 text-rose-500' : ''}`} />
+            <Heart className={`w-4 h-4 ${isFav ? 'fill-indigo-500 text-indigo-400' : ''}`} />
           </button>
 
           <button

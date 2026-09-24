@@ -45,7 +45,7 @@ export const TrailerModal: React.FC<TrailerModalProps> = ({
         {/* Modal Header */}
         <div className="px-4 py-3 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse" />
+            <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-pulse" />
             <h3 className="text-sm sm:text-base font-bold text-white line-clamp-1">
               {title} - {video.name || 'Official Trailer'}
             </h3>

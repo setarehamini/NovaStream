@@ -86,7 +86,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             }}
             className={`min-w-9 h-9 px-2 rounded-lg text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
               isCurrent
-                ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30'
+                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
                 : theme === 'dark'
                 ? 'bg-slate-900/80 hover:bg-slate-800 text-slate-300 border border-slate-800'
                 : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-xs'

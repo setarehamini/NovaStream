@@ -130,7 +130,7 @@ export const WatchMovieView: React.FC<WatchMovieViewProps> = ({
         <button
           id="back-to-details-btn"
           onClick={() => onNavigate({ view: 'movie-detail', id })}
-          className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-rose-500 hover:text-rose-400 transition-colors cursor-pointer"
+          className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-indigo-400 hover:text-indigo-300 transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4 rtl:rotate-180" />
           <span>{movie ? `${t.moreInfo}: ${movie.title}` : t.movies}</span>
@@ -143,7 +143,7 @@ export const WatchMovieView: React.FC<WatchMovieViewProps> = ({
             onClick={handleToggleWatchlist}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold cursor-pointer transition-colors ${
               inQueue
-                ? 'bg-rose-600 border-rose-600 text-white'
+                ? 'bg-indigo-600 border-indigo-600 text-white'
                 : theme === 'dark'
                 ? 'bg-slate-900 border-slate-800 text-slate-300 hover:text-white'
                 : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50'
@@ -158,14 +158,14 @@ export const WatchMovieView: React.FC<WatchMovieViewProps> = ({
             onClick={handleToggleFavorite}
             className={`p-1.5 rounded-lg border text-xs font-semibold cursor-pointer transition-colors ${
               isFav
-                ? 'bg-rose-500/10 border-rose-500 text-rose-500'
+                ? 'bg-indigo-500/10 border-indigo-500 text-indigo-400'
                 : theme === 'dark'
-                ? 'bg-slate-900 border-slate-800 text-slate-400 hover:text-rose-500'
-                : 'bg-white border-slate-300 text-slate-500 hover:text-rose-500'
+                ? 'bg-slate-900 border-slate-800 text-slate-400 hover:text-indigo-400'
+                : 'bg-white border-slate-300 text-slate-500 hover:text-indigo-400'
             }`}
             title={t.favorites}
           >
-            <Heart className={`w-4 h-4 ${isFav ? 'fill-rose-500 text-rose-500' : ''}`} />
+            <Heart className={`w-4 h-4 ${isFav ? 'fill-indigo-500 text-indigo-400' : ''}`} />
           </button>
 
           {/* Theater mode button */}
@@ -212,11 +212,11 @@ export const WatchMovieView: React.FC<WatchMovieViewProps> = ({
 
               {/* Lock Content Box */}
               <div className="relative z-10 max-w-lg text-center flex flex-col items-center">
-                <div className="w-16 h-16 rounded-3xl bg-rose-600/20 border border-rose-500/40 flex items-center justify-center text-rose-500 mb-4 shadow-lg shadow-rose-500/20 animate-pulse">
+                <div className="w-16 h-16 rounded-3xl bg-indigo-600/20 border border-indigo-500/40 flex items-center justify-center text-indigo-400 mb-4 shadow-lg shadow-indigo-500/20 animate-pulse">
                   <Lock className="w-8 h-8" />
                 </div>
 
-                <span className="text-xs font-bold uppercase tracking-widest text-rose-500 mb-2">
+                <span className="text-xs font-bold uppercase tracking-widest text-indigo-400 mb-2">
                   {t.streamingLocked}
                 </span>
 
@@ -231,7 +231,7 @@ export const WatchMovieView: React.FC<WatchMovieViewProps> = ({
                 <div className="flex flex-wrap items-center justify-center gap-3">
                   <button
                     onClick={() => openAuthModal('login', t.loginRequiredDesc)}
-                    className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-600 text-white font-bold text-xs sm:text-sm shadow-xl shadow-rose-500/30 flex items-center gap-2 cursor-pointer transition-all hover:scale-105"
+                    className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold text-xs sm:text-sm shadow-xl shadow-indigo-500/30 flex items-center gap-2 cursor-pointer transition-all hover:scale-105"
                   >
                     <LogIn className="w-4 h-4" />
                     <span>{t.loginRequiredToWatch}</span>
@@ -254,7 +254,7 @@ export const WatchMovieView: React.FC<WatchMovieViewProps> = ({
         <div className={`mt-4 p-4 rounded-2xl border flex flex-wrap items-center justify-between gap-4 ${
           theme === 'dark' ? 'bg-slate-900/80 border-slate-800' : 'bg-white border-slate-200 shadow-xs'
         }`}>
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-rose-500">
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-indigo-400">
             <Server className="w-4 h-4" />
             <span>{t.server}:</span>
           </div>
@@ -273,7 +273,7 @@ export const WatchMovieView: React.FC<WatchMovieViewProps> = ({
                 }}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   activeServer === srv.id
-                    ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30'
+                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
                     : theme === 'dark'
                     ? 'bg-slate-950 text-slate-400 hover:text-white border border-slate-800'
                     : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300'
@@ -296,7 +296,7 @@ export const WatchMovieView: React.FC<WatchMovieViewProps> = ({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 space-y-10">
           <div className="space-y-3">
             <div className="flex flex-wrap items-center gap-2 text-xs">
-              <span className="px-2.5 py-0.5 rounded-md bg-rose-600/20 text-rose-500 font-bold border border-rose-500/30">
+              <span className="px-2.5 py-0.5 rounded-md bg-indigo-600/20 text-indigo-400 font-bold border border-indigo-500/30">
                 Now Streaming
               </span>
               {movie.vote_average ? (

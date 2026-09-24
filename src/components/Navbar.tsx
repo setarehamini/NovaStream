@@ -87,11 +87,11 @@ export const Navbar: React.FC<NavbarProps> = ({
           className="flex items-center gap-2.5 group cursor-pointer focus:outline-hidden"
           title="Nova Home"
         >
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-600 via-rose-500 to-amber-500 flex items-center justify-center shadow-lg shadow-rose-500/25 group-hover:scale-105 transition-transform duration-200">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform duration-200">
             <Film className="w-5 h-5 text-white" />
           </div>
           <div className="flex flex-col text-left rtl:text-right">
-            <span className="text-xl font-black tracking-wider bg-gradient-to-r from-rose-500 via-rose-400 to-amber-400 bg-clip-text text-transparent">
+            <span className="text-xl font-black tracking-wider bg-gradient-to-r from-indigo-400 via-sky-400 to-cyan-400 bg-clip-text text-transparent">
               NOV<span className={theme === 'dark' ? 'text-white' : 'text-slate-900'}>A</span>
             </span>
             <span className="text-[10px] font-medium tracking-widest uppercase opacity-70 -mt-1">
@@ -112,13 +112,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 onClick={() => onNavigate({ view: link.view })}
                 className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-150 flex items-center gap-2 cursor-pointer relative ${
                   isActive
-                    ? 'bg-rose-500/15 text-rose-500 font-semibold'
+                    ? 'bg-indigo-500/15 text-indigo-400 font-semibold'
                     : theme === 'dark'
                     ? 'text-slate-300 hover:text-white hover:bg-slate-800/60'
                     : 'text-slate-600 hover:text-slate-950 hover:bg-slate-100'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-rose-500' : 'opacity-70'}`} />
+                <Icon className={`w-4 h-4 ${isActive ? 'text-indigo-400' : 'opacity-70'}`} />
                 <span>{link.label}</span>
               </button>
             );
@@ -136,8 +136,8 @@ export const Navbar: React.FC<NavbarProps> = ({
               placeholder={t.searchPlaceholder.slice(0, 22) + "..."}
               className={`w-40 lg:w-56 pl-9 pr-3 rtl:pr-9 rtl:pl-3 py-1.5 text-sm font-medium rounded-full border transition-all duration-200 focus:outline-hidden focus:w-52 lg:focus:w-64 ${
                 theme === 'dark'
-                  ? 'bg-slate-900/90 border-slate-700/70 text-slate-200 placeholder-slate-400 focus:border-rose-500 focus:ring-1 focus:ring-rose-500'
-                  : 'bg-slate-100 border-slate-300 text-slate-800 placeholder-slate-500 focus:border-rose-500 focus:bg-white focus:ring-1 focus:ring-rose-500'
+                  ? 'bg-slate-900/90 border-slate-700/70 text-slate-200 placeholder-slate-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'
+                  : 'bg-slate-100 border-slate-300 text-slate-800 placeholder-slate-500 focus:border-indigo-500 focus:bg-white focus:ring-1 focus:ring-indigo-500'
               }`}
             />
             <Search className="w-4 h-4 absolute left-3 rtl:left-auto rtl:right-3 top-2.5 opacity-50" />
@@ -154,7 +154,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             }`}
             title="Switch Language (English / Persian)"
           >
-            <Globe className="w-4 h-4 text-rose-500" />
+            <Globe className="w-4 h-4 text-indigo-400" />
             <span>{language === 'en' ? 'فارسی' : 'EN'}</span>
           </button>
 
@@ -186,10 +186,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }}
                 className={`flex items-center gap-2 pl-2.5 pr-3.5 rtl:pr-2.5 rtl:pl-3.5 py-1.5 rounded-full border text-sm font-medium cursor-pointer transition-all ${
                   isUserMenuOpen || currentRoute.view === 'account'
-                    ? 'border-rose-500 bg-rose-500/10 text-rose-500 ring-2 ring-rose-500/20'
+                    ? 'border-indigo-500 bg-indigo-500/10 text-indigo-400 ring-2 ring-indigo-500/20'
                     : theme === 'dark'
-                    ? 'border-slate-700 bg-slate-900 text-slate-200 hover:border-rose-500'
-                    : 'border-slate-300 bg-slate-50 text-slate-800 hover:border-rose-500'
+                    ? 'border-slate-700 bg-slate-900 text-slate-200 hover:border-indigo-500'
+                    : 'border-slate-300 bg-slate-50 text-slate-800 hover:border-indigo-500'
                 }`}
                 title={t.myAccount}
               >
@@ -198,15 +198,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                     src={user.avatar}
                     alt={user.name || 'User'}
                     referrerPolicy="no-referrer"
-                    className="w-6 h-6 rounded-full object-cover shadow-xs border border-rose-500/40 shrink-0"
+                    className="w-6 h-6 rounded-full object-cover shadow-xs border border-indigo-500/40 shrink-0"
                   />
                 ) : (
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-rose-500 to-amber-500 text-white flex items-center justify-center text-xs font-bold shadow-xs shrink-0">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 text-white flex items-center justify-center text-xs font-bold shadow-xs shrink-0">
                     {(user?.name || user?.email || 'U').charAt(0).toUpperCase()}
                   </div>
                 )}
                 <span className="max-w-[110px] truncate">{user?.name || user?.email?.split('@')[0]}</span>
-                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isUserMenuOpen ? 'rotate-180 text-rose-500' : 'text-slate-400'}`} />
+                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isUserMenuOpen ? 'rotate-180 text-indigo-400' : 'text-slate-400'}`} />
               </button>
 
               {/* User Dropdown */}
@@ -228,15 +228,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                         src={user.avatar}
                         alt={user.name || 'User'}
                         referrerPolicy="no-referrer"
-                        className="w-8 h-8 rounded-full object-cover shrink-0 border border-rose-500/40"
+                        className="w-8 h-8 rounded-full object-cover shrink-0 border border-indigo-500/40"
                       />
                     ) : (
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-rose-500 to-amber-500 text-white flex items-center justify-center text-xs font-bold shrink-0">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 text-white flex items-center justify-center text-xs font-bold shrink-0">
                         {(user?.name || user?.email || 'U').charAt(0).toUpperCase()}
                       </div>
                     )}
                     <div className="min-w-0 flex-1">
-                      <p className="font-bold text-xs truncate">{user?.name || 'NovaStream Member'}</p>
+                      <p className="font-bold text-xs truncate">{user?.name || 'Nova Member'}</p>
                       <p className="text-[11px] text-slate-400 truncate">{user?.email}</p>
                       <span className="inline-block mt-0.5 text-[10px] font-semibold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.2 rounded-md">
                         {t.myAccount} →
@@ -249,7 +249,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onNavigate({ view: 'account', tab: 'profile' });
                       setIsUserMenuOpen(false);
                     }}
-                    className="w-full px-4 py-2 text-xs flex items-center gap-2.5 hover:bg-rose-500/10 hover:text-rose-500 cursor-pointer text-left rtl:text-right"
+                    className="w-full px-4 py-2 text-xs flex items-center gap-2.5 hover:bg-indigo-500/10 hover:text-indigo-400 cursor-pointer text-left rtl:text-right"
                   >
                     <UserIcon className="w-4 h-4 text-slate-400" />
                     <span>{t.accountOverview}</span>
@@ -260,10 +260,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onNavigate({ view: 'account', tab: 'watchlist' });
                       setIsUserMenuOpen(false);
                     }}
-                    className="w-full px-4 py-2 text-xs flex items-center justify-between hover:bg-rose-500/10 hover:text-rose-500 cursor-pointer text-left rtl:text-right"
+                    className="w-full px-4 py-2 text-xs flex items-center justify-between hover:bg-indigo-500/10 hover:text-indigo-400 cursor-pointer text-left rtl:text-right"
                   >
                     <div className="flex items-center gap-2.5">
-                      <Bookmark className="w-4 h-4 text-rose-500" />
+                      <Bookmark className="w-4 h-4 text-indigo-400" />
                       <span>{t.watchlist}</span>
                     </div>
                     {watchlist.length > 0 && (
@@ -278,7 +278,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onNavigate({ view: 'account', tab: 'watchlater' });
                       setIsUserMenuOpen(false);
                     }}
-                    className="w-full px-4 py-2 text-xs flex items-center justify-between hover:bg-rose-500/10 hover:text-rose-500 cursor-pointer text-left rtl:text-right"
+                    className="w-full px-4 py-2 text-xs flex items-center justify-between hover:bg-indigo-500/10 hover:text-indigo-400 cursor-pointer text-left rtl:text-right"
                   >
                     <div className="flex items-center gap-2.5">
                       <Clock className="w-4 h-4 text-amber-500" />
@@ -296,10 +296,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onNavigate({ view: 'account', tab: 'favorites' });
                       setIsUserMenuOpen(false);
                     }}
-                    className="w-full px-4 py-2 text-xs flex items-center justify-between hover:bg-rose-500/10 hover:text-rose-500 cursor-pointer text-left rtl:text-right"
+                    className="w-full px-4 py-2 text-xs flex items-center justify-between hover:bg-indigo-500/10 hover:text-indigo-400 cursor-pointer text-left rtl:text-right"
                   >
                     <div className="flex items-center gap-2.5">
-                      <Heart className="w-4 h-4 text-rose-500" />
+                      <Heart className="w-4 h-4 text-indigo-400" />
                       <span>{t.favorites}</span>
                     </div>
                     {favorites.length > 0 && (
@@ -314,7 +314,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onNavigate({ view: 'account', tab: 'history' });
                       setIsUserMenuOpen(false);
                     }}
-                    className="w-full px-4 py-2 text-xs flex items-center justify-between hover:bg-rose-500/10 hover:text-rose-500 cursor-pointer text-left rtl:text-right"
+                    className="w-full px-4 py-2 text-xs flex items-center justify-between hover:bg-indigo-500/10 hover:text-indigo-400 cursor-pointer text-left rtl:text-right"
                   >
                     <div className="flex items-center gap-2.5">
                       <History className="w-4 h-4 text-blue-500" />
@@ -334,7 +334,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       logout();
                       setIsUserMenuOpen(false);
                     }}
-                    className="w-full px-4 py-2 text-xs flex items-center gap-2.5 text-rose-500 hover:bg-rose-500/10 cursor-pointer text-left rtl:text-right"
+                    className="w-full px-4 py-2 text-xs flex items-center gap-2.5 text-slate-400 hover:text-white hover:bg-slate-800/80 cursor-pointer text-left rtl:text-right"
                   >
                     <LogOut className="w-4 h-4" />
                     <span>{t.signOut}</span>
@@ -345,7 +345,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           ) : (
             <button
               onClick={() => openAuthModal('login')}
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-600 text-white font-medium text-sm shadow-md shadow-rose-500/25 flex items-center gap-2 cursor-pointer transition-all"
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-600 text-white font-medium text-sm shadow-md shadow-indigo-500/25 flex items-center gap-2 cursor-pointer transition-all"
             >
               <LogIn className="w-3.5 h-3.5" />
               <span>{t.signIn}</span>
@@ -358,7 +358,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {!isAuthenticated && (
             <button
               onClick={() => openAuthModal('login')}
-              className="px-2.5 py-1.5 rounded-lg bg-rose-600 text-white text-xs font-semibold flex items-center gap-1"
+              className="px-2.5 py-1.5 rounded-lg bg-indigo-600 text-white text-xs font-semibold flex items-center gap-1"
             >
               <LogIn className="w-3.5 h-3.5" />
               <span>{t.signIn}</span>
@@ -418,7 +418,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   }}
                   className={`w-full px-3 py-2.5 rounded-lg text-sm font-medium flex items-center justify-between text-left rtl:text-right ${
                     isActive
-                      ? 'bg-rose-500/15 text-rose-500 font-semibold'
+                      ? 'bg-indigo-500/15 text-indigo-400 font-semibold'
                       : theme === 'dark'
                       ? 'text-slate-300 hover:bg-slate-900'
                       : 'text-slate-700 hover:bg-slate-100'
@@ -434,7 +434,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {isAuthenticated ? (
               <div className="mt-3 pt-3 border-t border-slate-700/50 flex flex-col gap-1">
-                <div className="px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-rose-500">
+                <div className="px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-indigo-400">
                   {t.myAccount}
                 </div>
                 <button
@@ -455,7 +455,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   className="w-full px-3 py-2 rounded-lg text-sm font-medium flex items-center justify-between text-left rtl:text-right hover:bg-slate-800/40"
                 >
                   <div className="flex items-center gap-3">
-                    <Bookmark className="w-4 h-4 text-rose-500" />
+                    <Bookmark className="w-4 h-4 text-indigo-400" />
                     <span>{t.watchlist}</span>
                   </div>
                   {watchlist.length > 0 && (
@@ -489,7 +489,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   className="w-full px-3 py-2 rounded-lg text-sm font-medium flex items-center justify-between text-left rtl:text-right hover:bg-slate-800/40"
                 >
                   <div className="flex items-center gap-3">
-                    <Heart className="w-4 h-4 text-rose-500" />
+                    <Heart className="w-4 h-4 text-indigo-400" />
                     <span>{t.favorites}</span>
                   </div>
                   {favorites.length > 0 && (
@@ -520,7 +520,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     logout();
                     setIsMobileMenuOpen(false);
                   }}
-                  className="w-full px-3 py-2.5 rounded-lg text-sm font-medium text-rose-500 flex items-center gap-3 text-left rtl:text-right mt-1 hover:bg-rose-500/10"
+                  className="w-full px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-white flex items-center gap-3 text-left rtl:text-right mt-1 hover:bg-slate-800/60"
                 >
                   <LogOut className="w-4 h-4" />
                   <span>{t.signOut}</span>
@@ -532,7 +532,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   openAuthModal('login');
                   setIsMobileMenuOpen(false);
                 }}
-                className="w-full px-3 py-2.5 rounded-lg text-sm font-semibold bg-rose-600 text-white flex items-center justify-center gap-2 mt-2"
+                className="w-full px-3 py-2.5 rounded-lg text-sm font-semibold bg-indigo-600 text-white flex items-center justify-center gap-2 mt-2"
               >
                 <LogIn className="w-4 h-4" />
                 <span>{t.signIn} / {t.signUp}</span>
@@ -546,7 +546,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 onToggleLanguage();
                 setIsMobileMenuOpen(false);
               }}
-              className="flex items-center gap-2 text-sm font-medium text-rose-500"
+              className="flex items-center gap-2 text-sm font-medium text-indigo-400"
             >
               <Globe className="w-4 h-4" />
               <span>{language === 'en' ? 'تغییر به فارسی (Persian)' : 'Switch to English'}</span>

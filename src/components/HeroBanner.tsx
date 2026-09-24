@@ -101,13 +101,25 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
           {/* Metadata badges */}
           <div className="flex flex-wrap items-center gap-2.5 text-xs font-semibold">
             {isTV ? (
-              <span className="flex items-center gap-1.5 px-3 py-1 rounded-md uppercase tracking-wider bg-sky-500/25 text-sky-300 border border-sky-400/40 backdrop-blur-md shadow-md">
-                <Tv className="w-3.5 h-3.5 text-sky-400" />
+              <span
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-md uppercase tracking-wider text-xs font-bold transition-all shadow-md ${
+                  theme === 'dark'
+                    ? 'bg-sky-500/25 text-sky-300 border border-sky-400/40 backdrop-blur-md'
+                    : 'bg-sky-600 text-white border border-sky-600 shadow-sky-600/20'
+                }`}
+              >
+                <Tv className={`w-3.5 h-3.5 ${theme === 'dark' ? 'text-sky-400' : 'text-white'}`} />
                 <span>{t.series}</span>
               </span>
             ) : (
-              <span className="flex items-center gap-1.5 px-3 py-1 rounded-md uppercase tracking-wider bg-rose-500/25 text-rose-300 border border-rose-400/40 backdrop-blur-md shadow-md">
-                <Film className="w-3.5 h-3.5 text-rose-400" />
+              <span
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-md uppercase tracking-wider text-xs font-bold transition-all shadow-md ${
+                  theme === 'dark'
+                    ? 'bg-indigo-500/25 text-indigo-300 border border-indigo-400/40 backdrop-blur-md'
+                    : 'bg-indigo-600 text-white border border-indigo-600 shadow-indigo-600/20'
+                }`}
+              >
+                <Film className={`w-3.5 h-3.5 ${theme === 'dark' ? 'text-indigo-400' : 'text-white'}`} />
                 <span>{t.movies}</span>
               </span>
             )}
@@ -134,7 +146,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
           {/* Title */}
           <h1
             onClick={handleOpenDetails}
-            className={`text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)] cursor-pointer hover:text-rose-400 transition-colors ${
+            className={`text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)] cursor-pointer hover:text-indigo-400 transition-colors ${
               theme === 'dark' ? 'text-white' : 'text-slate-950'
             }`}
           >
@@ -155,7 +167,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             <button
               id="hero-watch-now-btn"
               onClick={handleWatchNow}
-              className="px-6 py-3 rounded-xl bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 text-white font-bold text-sm sm:text-base flex items-center gap-2.5 shadow-lg shadow-rose-600/35 hover:scale-102 active:scale-98 transition-all cursor-pointer"
+              className="px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-bold text-sm sm:text-base flex items-center gap-2.5 shadow-lg shadow-indigo-600/35 hover:scale-102 active:scale-98 transition-all cursor-pointer"
             >
               <Play className="w-5 h-5 fill-white" />
               <span>{t.watchNow}</span>
@@ -170,7 +182,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
                   : 'bg-white/90 hover:bg-white text-slate-900 border-slate-300 shadow-sm'
               }`}
             >
-              <Video className="w-4 h-4 text-rose-500" />
+              <Video className="w-4 h-4 text-indigo-400" />
               <span>{t.trailer}</span>
             </button>
           </div>
@@ -180,7 +192,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
         <div className="absolute bottom-6 right-4 sm:right-8 rtl:right-auto rtl:left-4 sm:rtl:left-8 flex items-center gap-3 pointer-events-auto">
           <button
             onClick={() => setCurrentIndex((prev) => (prev - 1 + featuredList.length) % featuredList.length)}
-            className="p-2 rounded-full bg-slate-900/70 text-white hover:bg-rose-600 transition-colors backdrop-blur-md border border-slate-700/50"
+            className="p-2 rounded-full bg-slate-900/70 text-white hover:bg-indigo-600 transition-colors backdrop-blur-md border border-slate-700/50"
             title="Previous Featured"
           >
             <ChevronLeft className="w-4 h-4 rtl:rotate-180" />
@@ -192,7 +204,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
                 key={idx}
                 onClick={() => setCurrentIndex(idx)}
                 className={`h-1.5 rounded-full transition-all duration-300 ${
-                  currentIndex === idx ? 'w-6 bg-rose-500' : 'w-2 bg-slate-600/70 hover:bg-slate-400'
+                  currentIndex === idx ? 'w-6 bg-indigo-500' : 'w-2 bg-slate-600/70 hover:bg-slate-400'
                 }`}
               />
             ))}
@@ -200,7 +212,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
 
           <button
             onClick={() => setCurrentIndex((prev) => (prev + 1) % featuredList.length)}
-            className="p-2 rounded-full bg-slate-900/70 text-white hover:bg-rose-600 transition-colors backdrop-blur-md border border-slate-700/50"
+            className="p-2 rounded-full bg-slate-900/70 text-white hover:bg-indigo-600 transition-colors backdrop-blur-md border border-slate-700/50"
             title="Next Featured"
           >
             <ChevronRight className="w-4 h-4 rtl:rotate-180" />

@@ -241,7 +241,7 @@ export const AdvancedSearchView: React.FC<AdvancedSearchViewProps> = ({
                   onClick={() => handleQuickTagClick(qt.id)}
                   className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap shadow-xs ${
                     isActive
-                      ? 'bg-rose-600 text-white shadow-rose-600/30 ring-2 ring-rose-400/20'
+                      ? 'bg-indigo-600 text-white shadow-indigo-600/30 ring-2 ring-indigo-400/20'
                       : theme === 'dark'
                       ? 'bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-800'
                       : 'bg-white text-slate-700 hover:bg-slate-100 hover:text-slate-950 border border-slate-200'
@@ -296,7 +296,7 @@ export const AdvancedSearchView: React.FC<AdvancedSearchViewProps> = ({
           </p>
           <button
             onClick={handleResetFilters}
-            className="px-4 py-2 rounded-xl bg-rose-600 text-white text-xs font-bold hover:bg-rose-500 transition-colors cursor-pointer"
+            className="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-500 transition-colors cursor-pointer"
           >
             Reset Filters
           </button>

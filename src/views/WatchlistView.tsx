@@ -39,7 +39,7 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
   if (!isAuthenticated) {
     return (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-20 text-center">
-        <div className="w-20 h-20 mx-auto mb-6 rounded-3xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-500 shadow-xl shadow-rose-500/10">
+        <div className="w-20 h-20 mx-auto mb-6 rounded-3xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 shadow-xl shadow-indigo-500/10">
           <Bookmark className="w-10 h-10" />
         </div>
         <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3">
@@ -52,7 +52,7 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
         </p>
         <button
           onClick={() => openAuthModal('login', 'Sign in to access your Watchlist and saved streaming history.')}
-          className="inline-flex items-center gap-2.5 px-6 py-3 rounded-2xl bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-600 text-white font-semibold text-sm shadow-xl shadow-rose-500/25 transition-all cursor-pointer"
+          className="inline-flex items-center gap-2.5 px-6 py-3 rounded-2xl bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-600 text-white font-semibold text-sm shadow-xl shadow-indigo-500/25 transition-all cursor-pointer"
         >
           <LogIn className="w-4 h-4" />
           <span>{t.signIn} / {t.signUp}</span>
@@ -74,7 +74,7 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
           <div className="flex items-center gap-2.5 mb-2">
-            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-rose-500/10 text-rose-500 border border-rose-500/20">
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
               {t.library}
             </span>
             <span className="text-xs text-slate-400">
@@ -94,7 +94,7 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
             onClick={() => setActiveTab('watchlist')}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
               activeTab === 'watchlist'
-                ? 'bg-rose-600 text-white shadow-md'
+                ? 'bg-indigo-600 text-white shadow-md'
                 : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100'
             }`}
           >
@@ -111,7 +111,7 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
             onClick={() => setActiveTab('favorites')}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
               activeTab === 'favorites'
-                ? 'bg-rose-600 text-white shadow-md'
+                ? 'bg-indigo-600 text-white shadow-md'
                 : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100'
             }`}
           >
@@ -128,7 +128,7 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
             onClick={() => setActiveTab('history')}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
               activeTab === 'history'
-                ? 'bg-rose-600 text-white shadow-md'
+                ? 'bg-indigo-600 text-white shadow-md'
                 : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100'
             }`}
           >
@@ -150,7 +150,7 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
             onClick={() => setFilterType('all')}
             className={`px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-colors ${
               filterType === 'all'
-                ? 'bg-rose-500/10 text-rose-500 border border-rose-500/30'
+                ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/30'
                 : theme === 'dark' ? 'bg-slate-900 text-slate-400 hover:text-white' : 'bg-slate-100 text-slate-700 hover:text-slate-950'
             }`}
           >
@@ -160,7 +160,7 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
             onClick={() => setFilterType('movie')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-colors ${
               filterType === 'movie'
-                ? 'bg-rose-500/10 text-rose-500 border border-rose-500/30'
+                ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/30'
                 : theme === 'dark' ? 'bg-slate-900 text-slate-400 hover:text-white' : 'bg-slate-100 text-slate-700 hover:text-slate-950'
             }`}
           >
@@ -171,7 +171,7 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
             onClick={() => setFilterType('tv')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-colors ${
               filterType === 'tv'
-                ? 'bg-rose-500/10 text-rose-500 border border-rose-500/30'
+                ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/30'
                 : theme === 'dark' ? 'bg-slate-900 text-slate-400 hover:text-white' : 'bg-slate-100 text-slate-700 hover:text-slate-950'
             }`}
           >
@@ -183,7 +183,7 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
         {activeTab === 'history' && history.length > 0 && (
           <button
             onClick={() => clearHistory()}
-            className="flex items-center gap-1.5 text-xs text-rose-500 hover:text-rose-400 font-semibold cursor-pointer transition-colors"
+            className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-red-400 font-semibold cursor-pointer transition-colors"
           >
             <Trash2 className="w-3.5 h-3.5" />
             <span>{t.clearHistory}</span>
@@ -211,7 +211,7 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
           </p>
           <button
             onClick={() => onNavigate({ view: 'movies' })}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs sm:text-sm shadow-md transition-all cursor-pointer"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs sm:text-sm shadow-md transition-all cursor-pointer"
           >
             <Sparkles className="w-4 h-4" />
             <span>{language === 'fa' ? 'کاوش فیلم‌ها و سریال‌ها' : 'Discover Movies & Shows'}</span>
@@ -267,7 +267,7 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
 
                   {/* Play Overlay */}
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <div className="w-12 h-12 rounded-full bg-rose-600 text-white flex items-center justify-center shadow-lg transform scale-75 group-hover:scale-100 transition-transform">
+                    <div className="w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-lg transform scale-75 group-hover:scale-100 transition-transform">
                       <Play className="w-5 h-5 fill-white ml-0.5" />
                     </div>
                   </div>
@@ -287,7 +287,7 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
                         removeFromFavorites(item.mediaType, item.mediaId);
                       }
                     }}
-                    className="absolute top-2.5 ltr:right-2.5 rtl:left-2.5 p-1.5 rounded-full bg-black/70 backdrop-blur-md text-slate-300 hover:text-rose-500 hover:bg-black/90 transition-colors cursor-pointer"
+                    className="absolute top-2.5 ltr:right-2.5 rtl:left-2.5 p-1.5 rounded-full bg-black/70 backdrop-blur-md text-slate-300 hover:text-red-400 hover:bg-black/90 transition-colors cursor-pointer"
                     title={t.removeFromWatchlist}
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -305,7 +305,7 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
                           onNavigate({ view: 'series-detail', id: item.mediaId });
                         }
                       }}
-                      className="font-bold text-xs sm:text-sm line-clamp-1 hover:text-rose-500 transition-colors cursor-pointer"
+                      className="font-bold text-xs sm:text-sm line-clamp-1 hover:text-indigo-400 transition-colors cursor-pointer"
                       title={displayTitle}
                     >
                       {displayTitle}
@@ -318,7 +318,7 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
                         <span>★ {voteAvg.toFixed(1)}</span>
                       )}
                       {(item as any).season && (
-                        <span className="text-rose-500 font-semibold">
+                        <span className="text-indigo-400 font-semibold">
                           S{(item as any).season} E{(item as any).episode}
                         </span>
                       )}
@@ -340,7 +340,7 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
                         });
                       }
                     }}
-                    className="mt-2.5 w-full py-1.5 rounded-lg bg-rose-600/10 hover:bg-rose-600 text-rose-500 hover:text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                    className="mt-2.5 w-full py-1.5 rounded-lg bg-indigo-600/10 hover:bg-indigo-600 text-indigo-400 hover:text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                   >
                     <Play className="w-3 h-3 fill-current" />
                     <span>{t.watchNow}</span>

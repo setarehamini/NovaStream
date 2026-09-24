@@ -110,7 +110,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ language, theme }) => {
 
         {/* Brand / Header */}
         <div className="flex flex-col items-center text-center mb-6">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-rose-600 to-amber-500 flex items-center justify-center text-white shadow-lg shadow-rose-500/25 mb-3">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25 mb-3">
             <Film className="w-6 h-6" />
           </div>
           <h2 className="text-xl sm:text-2xl font-bold tracking-tight">
@@ -133,7 +133,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ language, theme }) => {
 
         {/* Error Alert */}
         {errorMessage && (
-          <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center gap-2.5 text-xs sm:text-sm text-rose-500">
+          <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/30 flex items-center gap-2.5 text-xs sm:text-sm text-red-400">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{errorMessage}</span>
           </div>
@@ -156,7 +156,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ language, theme }) => {
             onClick={() => { setMode('login'); setErrorMessage(null); }}
             className={`py-2 text-xs sm:text-sm font-semibold rounded-xl transition-all cursor-pointer ${
               mode === 'login'
-                ? 'bg-rose-600 text-white shadow-md'
+                ? 'bg-indigo-600 text-white shadow-md'
                 : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
@@ -167,7 +167,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ language, theme }) => {
             onClick={() => { setMode('register'); setErrorMessage(null); }}
             className={`py-2 text-xs sm:text-sm font-semibold rounded-xl transition-all cursor-pointer ${
               mode === 'register'
-                ? 'bg-rose-600 text-white shadow-md'
+                ? 'bg-indigo-600 text-white shadow-md'
                 : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
@@ -191,8 +191,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ language, theme }) => {
                   placeholder="e.g. Alex Morgan"
                   className={`w-full ltr:pl-10 rtl:pr-10 py-2.5 px-4 rounded-xl text-xs sm:text-sm border outline-hidden transition-all ${
                     theme === 'dark'
-                      ? 'bg-slate-950 border-slate-800 text-white focus:border-rose-500'
-                      : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-rose-500'
+                      ? 'bg-slate-950 border-slate-800 text-white focus:border-indigo-500'
+                      : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-indigo-500'
                   }`}
                 />
               </div>
@@ -213,8 +213,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ language, theme }) => {
                 placeholder="name@example.com"
                 className={`w-full ltr:pl-10 rtl:pr-10 py-2.5 px-4 rounded-xl text-xs sm:text-sm border outline-hidden transition-all ${
                   theme === 'dark'
-                    ? 'bg-slate-950 border-slate-800 text-white focus:border-rose-500'
-                    : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-rose-500'
+                    ? 'bg-slate-950 border-slate-800 text-white focus:border-indigo-500'
+                    : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-indigo-500'
                 }`}
               />
             </div>
@@ -235,8 +235,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ language, theme }) => {
                 placeholder="••••••••"
                 className={`w-full ltr:pl-10 rtl:pr-10 ltr:pr-10 rtl:pl-10 py-2.5 px-4 rounded-xl text-xs sm:text-sm border outline-hidden transition-all ${
                   theme === 'dark'
-                    ? 'bg-slate-950 border-slate-800 text-white focus:border-rose-500'
-                    : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-rose-500'
+                    ? 'bg-slate-950 border-slate-800 text-white focus:border-indigo-500'
+                    : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-indigo-500'
                 }`}
               />
               <button
@@ -252,7 +252,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ language, theme }) => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-600 text-white font-semibold text-xs sm:text-sm shadow-lg shadow-rose-500/25 transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 mt-2"
+            className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-600 text-white font-semibold text-xs sm:text-sm shadow-lg shadow-indigo-500/25 transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 mt-2"
           >
             {isLoading ? (
               <span className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -273,7 +273,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ language, theme }) => {
               <button
                 type="button"
                 onClick={() => { setMode('register'); setErrorMessage(null); }}
-                className="text-rose-500 hover:underline font-semibold cursor-pointer"
+                className="text-indigo-400 hover:underline font-semibold cursor-pointer"
               >
                 {t.signUp}
               </button>
@@ -284,7 +284,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ language, theme }) => {
               <button
                 type="button"
                 onClick={() => { setMode('login'); setErrorMessage(null); }}
-                className="text-rose-500 hover:underline font-semibold cursor-pointer"
+                className="text-indigo-400 hover:underline font-semibold cursor-pointer"
               >
                 {t.signIn}
               </button>

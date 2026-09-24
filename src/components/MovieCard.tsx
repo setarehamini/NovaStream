@@ -38,9 +38,9 @@ export const MovieCard: React.FC<MovieCardProps> = ({
       onKeyDown={(e) => e.key === 'Enter' && handleClick()}
       tabIndex={0}
       role="button"
-      className={`group relative flex flex-col rounded-xl overflow-hidden cursor-pointer transition-all duration-300 focus:outline-hidden focus:ring-2 focus:ring-rose-500 select-none ${
+      className={`group relative flex flex-col rounded-xl overflow-hidden cursor-pointer transition-all duration-300 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 select-none ${
         theme === 'dark'
-          ? 'bg-slate-900/70 border border-slate-800/80 hover:border-slate-700 shadow-lg hover:shadow-2xl hover:shadow-rose-950/20 hover:-translate-y-1.5'
+          ? 'bg-slate-900/70 border border-slate-800/80 hover:border-slate-700 shadow-lg hover:shadow-2xl hover:shadow-indigo-950/20 hover:-translate-y-1.5'
           : 'bg-white border border-slate-200/90 shadow-xs hover:shadow-xl hover:border-slate-300 hover:-translate-y-1.5'
       }`}
     >
@@ -72,7 +72,7 @@ export const MovieCard: React.FC<MovieCardProps> = ({
                 <Tv className="w-2.5 h-2.5" /> TV
               </span>
             ) : (
-              <span className="flex items-center gap-1 text-rose-400">
+              <span className="flex items-center gap-1 text-indigo-400">
                 <Film className="w-2.5 h-2.5" /> Movie
               </span>
             )}
@@ -81,7 +81,7 @@ export const MovieCard: React.FC<MovieCardProps> = ({
 
         {/* Play indicator hover pulse */}
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-          <div className="w-12 h-12 rounded-full bg-rose-600/90 text-white flex items-center justify-center shadow-xl shadow-rose-600/50 transform scale-75 group-hover:scale-100 transition-transform duration-300">
+          <div className="w-12 h-12 rounded-full bg-indigo-600/90 text-white flex items-center justify-center shadow-xl shadow-indigo-600/50 transform scale-75 group-hover:scale-100 transition-transform duration-300">
             <svg className="w-6 h-6 fill-current translate-x-0.5" viewBox="0 0 24 24">
               <path d="M8 5v14l11-7z" />
             </svg>
@@ -92,7 +92,7 @@ export const MovieCard: React.FC<MovieCardProps> = ({
       {/* Card Info Below Poster */}
       <div className="p-3 flex flex-col justify-between flex-1">
         <h3
-          className={`text-sm font-semibold tracking-tight line-clamp-1 group-hover:text-rose-500 transition-colors ${
+          className={`text-sm font-semibold tracking-tight line-clamp-1 group-hover:text-indigo-400 transition-colors ${
             theme === 'dark' ? 'text-slate-100' : 'text-slate-900'
           }`}
           title={title}

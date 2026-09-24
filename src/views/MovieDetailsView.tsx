@@ -87,7 +87,7 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
   if (error || !movie) {
     return (
       <div className="max-w-md mx-auto py-24 text-center space-y-4">
-        <p className="text-rose-500 font-bold">{error || 'Movie not found.'}</p>
+        <p className="text-red-400 font-bold">{error || 'Movie not found.'}</p>
         <button
           onClick={() => onNavigate({ view: 'movies' })}
           className="px-4 py-2 bg-slate-800 text-white rounded-lg text-sm"
@@ -153,21 +153,45 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
             <div className="flex-1 space-y-4 text-center md:text-left rtl:md:text-right">
               {/* Badges */}
               <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 text-xs font-semibold">
-                <span className="flex items-center gap-1.5 px-3 py-1 rounded-md uppercase tracking-wider bg-rose-500/25 text-rose-300 border border-rose-400/40 backdrop-blur-md shadow-md">
-                  <Film className="w-3.5 h-3.5 text-rose-400" />
+                <span
+                  className={`flex items-center gap-1.5 px-3 py-1 rounded-md uppercase tracking-wider text-xs font-bold transition-all shadow-md ${
+                    theme === 'dark'
+                      ? 'bg-indigo-500/25 text-indigo-300 border border-indigo-400/40 backdrop-blur-md'
+                      : 'bg-indigo-600 text-white border border-indigo-600 shadow-indigo-600/20'
+                  }`}
+                >
+                  <Film className={`w-3.5 h-3.5 ${theme === 'dark' ? 'text-indigo-400' : 'text-white'}`} />
                   <span>{t.movies}</span>
                 </span>
-                <span className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-900/90 text-amber-400 border border-amber-500/30">
+                <span
+                  className={`flex items-center gap-1 px-2.5 py-1 rounded-md border font-semibold ${
+                    theme === 'dark'
+                      ? 'bg-slate-900/90 text-amber-400 border-amber-500/30'
+                      : 'bg-amber-50 text-amber-700 border-amber-300 shadow-xs'
+                  }`}
+                >
                   <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                   <span>{rating}</span>
                   {movie.vote_count ? <span className="opacity-70 text-[10px]">({movie.vote_count.toLocaleString()})</span> : null}
                 </span>
-                <span className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-900/80 text-slate-300 border border-slate-700/50">
+                <span
+                  className={`flex items-center gap-1 px-2.5 py-1 rounded-md border ${
+                    theme === 'dark'
+                      ? 'bg-slate-900/80 text-slate-300 border-slate-700/50'
+                      : 'bg-white text-slate-700 border-slate-300 shadow-xs'
+                  }`}
+                >
                   <Calendar className="w-3.5 h-3.5 opacity-70" />
                   <span>{releaseYear}</span>
                 </span>
                 {movie.runtime ? (
-                  <span className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-900/80 text-slate-300 border border-slate-700/50">
+                  <span
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded-md border ${
+                      theme === 'dark'
+                        ? 'bg-slate-900/80 text-slate-300 border-slate-700/50'
+                        : 'bg-white text-slate-700 border-slate-300 shadow-xs'
+                    }`}
+                  >
                     <Clock className="w-3.5 h-3.5 opacity-70" />
                     <span>{movie.runtime} {t.minutes}</span>
                   </span>
@@ -180,7 +204,7 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
                   {movie.title}
                 </h1>
                 {movie.tagline && (
-                  <p className="text-sm sm:text-base italic text-rose-400 font-medium mt-1">
+                  <p className="text-sm sm:text-base italic text-indigo-400 font-medium mt-1">
                     "{movie.tagline}"
                   </p>
                 )}
@@ -207,7 +231,7 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
                 <button
                   id="watch-movie-action-btn"
                   onClick={() => onNavigate({ view: 'watch-movie', id: movie.id })}
-                  className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 text-white font-bold text-base flex items-center gap-2.5 shadow-xl shadow-rose-600/35 hover:scale-102 active:scale-98 transition-all cursor-pointer"
+                  className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-bold text-base flex items-center gap-2.5 shadow-xl shadow-indigo-600/35 hover:scale-102 active:scale-98 transition-all cursor-pointer"
                 >
                   <Play className="w-5 h-5 fill-white" />
                   <span>{t.watchMovie}</span>
@@ -223,7 +247,7 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
                         : 'bg-white/90 hover:bg-white text-slate-900 border-slate-300 shadow-xs'
                     }`}
                   >
-                    <Video className="w-5 h-5 text-rose-500" />
+                    <Video className="w-5 h-5 text-indigo-400" />
                     <span>{t.trailer}</span>
                   </button>
                 )}
@@ -247,7 +271,7 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
                   }}
                   className={`px-5 py-3.5 rounded-xl text-sm font-semibold flex items-center gap-2 border transition-all cursor-pointer ${
                     isInWatchlist('movie', movie.id)
-                      ? 'bg-rose-500 text-white border-rose-500 shadow-lg shadow-rose-500/25'
+                      ? 'bg-indigo-600 text-white border-indigo-600 shadow-lg shadow-indigo-600/25'
                       : theme === 'dark'
                       ? 'bg-slate-900/80 hover:bg-slate-800 text-slate-200 border-slate-700'
                       : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-300 shadow-xs'
@@ -257,7 +281,7 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
                   {isInWatchlist('movie', movie.id) ? (
                     <Check className="w-4 h-4 text-white" />
                   ) : (
-                    <Bookmark className="w-4 h-4 text-rose-500" />
+                    <Bookmark className="w-4 h-4 text-indigo-400" />
                   )}
                   <span>{isInWatchlist('movie', movie.id) ? t.inWatchlist : t.addToWatchlist}</span>
                 </button>
@@ -311,14 +335,14 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
                   }}
                   className={`p-3.5 rounded-xl border transition-all cursor-pointer ${
                     isFavorite('movie', movie.id)
-                      ? 'bg-rose-500/20 text-rose-500 border-rose-500/50'
+                      ? 'bg-indigo-500/20 text-indigo-400 border-indigo-500/50'
                       : theme === 'dark'
                       ? 'bg-slate-900/80 hover:bg-slate-800 text-slate-400 border-slate-700'
                       : 'bg-white hover:bg-slate-50 text-slate-500 border-slate-300 shadow-xs'
                   }`}
                   title={isFavorite('movie', movie.id) ? 'Favorited' : 'Add to Favorites'}
                 >
-                  <Heart className={`w-5 h-5 ${isFavorite('movie', movie.id) ? 'fill-rose-500 text-rose-500' : ''}`} />
+                  <Heart className={`w-5 h-5 ${isFavorite('movie', movie.id) ? 'fill-indigo-500 text-indigo-400' : ''}`} />
                 </button>
               </div>
             </div>
@@ -341,7 +365,7 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
 
             {/* Cast section */}
             <div className="pt-6 space-y-4">
-              <div className="flex items-center gap-2 text-rose-500 font-bold text-base">
+              <div className="flex items-center gap-2 text-indigo-400 font-bold text-base">
                 <Users className="w-5 h-5" />
                 <span>{t.cast}</span>
               </div>
@@ -355,8 +379,8 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
                       onClick={() => onNavigate({ view: 'actor-detail', id: actor.id })}
                       className={`group p-2 rounded-xl border transition-all cursor-pointer text-center ${
                         theme === 'dark'
-                          ? 'bg-slate-900/60 border-slate-800/80 hover:border-rose-500/50 hover:bg-slate-800/80'
-                          : 'bg-white border-slate-200 hover:border-rose-500/50 hover:shadow-md'
+                          ? 'bg-slate-900/60 border-slate-800/80 hover:border-indigo-500/50 hover:bg-slate-800/80'
+                          : 'bg-white border-slate-200 hover:border-indigo-500/50 hover:shadow-md'
                       }`}
                     >
                       <div className="aspect-square w-full rounded-lg overflow-hidden bg-slate-800 mb-2">
@@ -367,7 +391,7 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
                           referrerPolicy="no-referrer"
                         />
                       </div>
-                      <h4 className={`text-xs font-semibold line-clamp-1 group-hover:text-rose-500 transition-colors ${theme === 'dark' ? 'text-slate-200' : 'text-slate-800'}`}>
+                      <h4 className={`text-xs font-semibold line-clamp-1 group-hover:text-indigo-400 transition-colors ${theme === 'dark' ? 'text-slate-200' : 'text-slate-800'}`}>
                         {actor.name}
                       </h4>
                       <p className="text-[10px] text-slate-500 line-clamp-1">
@@ -437,7 +461,7 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
         {similarMovies.length > 0 && (
           <section id="similar-movies-section" className="space-y-4 pt-4 border-t border-slate-800/50">
             <div className="flex items-center gap-2">
-              <Film className="w-5 h-5 text-rose-500" />
+              <Film className="w-5 h-5 text-indigo-400" />
               <h2 className={`text-xl font-bold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
                 {t.similarMovies}
               </h2>

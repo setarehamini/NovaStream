@@ -184,8 +184,8 @@ export const MediaFilterPanel: React.FC<MediaFilterPanelProps> = ({
             placeholder={t.searchPlaceholder}
             className={`w-full pl-11 pr-4 rtl:pr-11 rtl:pl-4 py-3 text-sm sm:text-base rounded-2xl border transition-all ${
               theme === 'dark'
-                ? 'bg-slate-900 border-slate-700 text-white placeholder-slate-500 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20'
-                : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 shadow-xs'
+                ? 'bg-slate-900 border-slate-700 text-white placeholder-slate-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20'
+                : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 shadow-xs'
             }`}
           />
           <Search className="w-5 h-5 absolute left-3.5 rtl:left-auto rtl:right-3.5 top-3.5 text-slate-400" />
@@ -193,7 +193,7 @@ export const MediaFilterPanel: React.FC<MediaFilterPanelProps> = ({
 
         <button
           type="submit"
-          className="px-6 py-3 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm shadow-md shadow-rose-600/25 transition-all cursor-pointer whitespace-nowrap flex items-center gap-2"
+          className="px-6 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-md shadow-indigo-600/25 transition-all cursor-pointer whitespace-nowrap flex items-center gap-2"
         >
           <Search className="w-4 h-4" />
           <span>{language === 'fa' ? 'جستجو' : 'Search'}</span>
@@ -225,7 +225,7 @@ export const MediaFilterPanel: React.FC<MediaFilterPanelProps> = ({
                   onClick={() => handleTypeSelect('all')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                     draftType === 'all'
-                      ? 'bg-rose-600 text-white shadow-sm'
+                      ? 'bg-indigo-600 text-white shadow-sm'
                       : theme === 'dark'
                       ? 'text-slate-400 hover:text-white'
                       : 'text-slate-700 hover:text-slate-950 hover:bg-slate-100'
@@ -239,7 +239,7 @@ export const MediaFilterPanel: React.FC<MediaFilterPanelProps> = ({
                   onClick={() => handleTypeSelect('movie')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
                     draftType === 'movie'
-                      ? 'bg-rose-600 text-white shadow-sm'
+                      ? 'bg-indigo-600 text-white shadow-sm'
                       : theme === 'dark'
                       ? 'text-slate-400 hover:text-white'
                       : 'text-slate-700 hover:text-slate-950 hover:bg-slate-100'
@@ -254,7 +254,7 @@ export const MediaFilterPanel: React.FC<MediaFilterPanelProps> = ({
                   onClick={() => handleTypeSelect('tv')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
                     draftType === 'tv'
-                      ? 'bg-rose-600 text-white shadow-sm'
+                      ? 'bg-indigo-600 text-white shadow-sm'
                       : theme === 'dark'
                       ? 'text-slate-400 hover:text-white'
                       : 'text-slate-700 hover:text-slate-950 hover:bg-slate-100'
@@ -265,7 +265,7 @@ export const MediaFilterPanel: React.FC<MediaFilterPanelProps> = ({
                 </button>
               </div>
             ) : (
-              <span className="px-3 py-1 rounded-lg bg-rose-600/15 text-rose-500 font-bold text-xs flex items-center gap-1.5 border border-rose-500/20">
+              <span className="px-3 py-1 rounded-lg bg-indigo-600/15 text-indigo-400 font-bold text-xs flex items-center gap-1.5 border border-indigo-500/20">
                 {draftType === 'tv' ? <Tv className="w-3.5 h-3.5" /> : <Film className="w-3.5 h-3.5" />}
                 <span>{draftType === 'tv' ? t.series : t.movies}</span>
               </span>
@@ -276,7 +276,7 @@ export const MediaFilterPanel: React.FC<MediaFilterPanelProps> = ({
             <button
               type="button"
               onClick={handleReset}
-              className="px-3 py-2 rounded-xl text-xs font-semibold text-rose-500 hover:bg-rose-500/10 transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="px-3 py-2 rounded-xl text-xs font-semibold text-indigo-400 hover:bg-indigo-500/10 transition-colors flex items-center gap-1.5 cursor-pointer"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               <span>{language === 'fa' ? 'بازنشانی فیلترها' : 'Reset Filters'}</span>
@@ -285,7 +285,7 @@ export const MediaFilterPanel: React.FC<MediaFilterPanelProps> = ({
             <button
               type="button"
               onClick={() => handleApply()}
-              className="px-4 py-2 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white shadow-sm transition-all cursor-pointer flex items-center gap-1.5"
+              className="px-4 py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm transition-all cursor-pointer flex items-center gap-1.5"
             >
               <Search className="w-3.5 h-3.5" />
               <span>{language === 'fa' ? 'اعمال فیلترها' : 'Apply Filters'}</span>
@@ -444,7 +444,7 @@ export const MediaFilterPanel: React.FC<MediaFilterPanelProps> = ({
               <button
                 type="button"
                 onClick={() => setDraftGenre(null)}
-                className="text-xs text-rose-500 hover:underline cursor-pointer"
+                className="text-xs text-indigo-400 hover:underline cursor-pointer"
               >
                 {language === 'fa' ? 'پاک کردن انتخاب' : 'Clear selection'}
               </button>
@@ -461,7 +461,7 @@ export const MediaFilterPanel: React.FC<MediaFilterPanelProps> = ({
                   onClick={() => setDraftGenre(isSelected ? null : g.id)}
                   className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
                     isSelected
-                      ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30 ring-1 ring-rose-400/40'
+                      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 ring-1 ring-indigo-400/40'
                       : theme === 'dark'
                       ? 'bg-slate-950/80 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-800'
                       : 'bg-white text-slate-700 hover:bg-slate-200 hover:text-slate-950 border border-slate-200 shadow-xs'

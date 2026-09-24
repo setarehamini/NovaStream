@@ -26,10 +26,10 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, language, theme }) =
           {/* Brand Info */}
           <div className="md:col-span-2 space-y-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-rose-600 to-amber-500 flex items-center justify-center shadow-md">
-                <Play className="w-4 h-4 text-white fill-white translate-x-0.5" />
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-500 flex items-center justify-center shadow-md">
+                <Film className="w-4 h-4 text-white" />
               </div>
-              <span className="text-xl font-black tracking-tight bg-gradient-to-r from-rose-500 via-rose-400 to-amber-400 bg-clip-text text-transparent">
+              <span className="text-xl font-black tracking-tight bg-gradient-to-r from-indigo-400 via-sky-400 to-cyan-400 bg-clip-text text-transparent">
                 NOV<span className={theme === 'dark' ? 'text-white' : 'text-slate-900'}>A</span>
               </span>
             </div>
@@ -51,7 +51,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, language, theme }) =
               <li>
                 <button
                   onClick={() => onNavigate({ view: 'home' })}
-                  className="hover:text-rose-500 transition-colors flex items-center gap-1.5 cursor-pointer"
+                  className="hover:text-indigo-400 transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
                   <Play className="w-3.5 h-3.5 opacity-70" /> {t.home}
                 </button>
@@ -59,7 +59,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, language, theme }) =
               <li>
                 <button
                   onClick={() => onNavigate({ view: 'movies' })}
-                  className="hover:text-rose-500 transition-colors flex items-center gap-1.5 cursor-pointer"
+                  className="hover:text-indigo-400 transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
                   <Film className="w-3.5 h-3.5 opacity-70" /> {t.movies}
                 </button>
@@ -67,7 +67,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, language, theme }) =
               <li>
                 <button
                   onClick={() => onNavigate({ view: 'series' })}
-                  className="hover:text-rose-500 transition-colors flex items-center gap-1.5 cursor-pointer"
+                  className="hover:text-indigo-400 transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
                   <Tv className="w-3.5 h-3.5 opacity-70" /> {t.series}
                 </button>
@@ -75,7 +75,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, language, theme }) =
               <li>
                 <button
                   onClick={() => onNavigate({ view: 'search' })}
-                  className="hover:text-rose-500 transition-colors flex items-center gap-1.5 cursor-pointer"
+                  className="hover:text-indigo-400 transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
                   <Search className="w-3.5 h-3.5 opacity-70" /> {t.search}
                 </button>

@@ -61,7 +61,7 @@ export const ActorDetailsView: React.FC<ActorDetailsViewProps> = ({
   if (error || !actor) {
     return (
       <div className="max-w-md mx-auto py-24 text-center space-y-4">
-        <p className="text-rose-500 font-bold">{error || 'Actor details not found.'}</p>
+        <p className="text-red-400 font-bold">{error || 'Actor details not found.'}</p>
         <button
           onClick={() => onNavigate({ view: 'home' })}
           className="px-4 py-2 bg-slate-800 text-white rounded-lg text-sm"
@@ -122,7 +122,7 @@ export const ActorDetailsView: React.FC<ActorDetailsViewProps> = ({
 
         {/* Actor Info */}
         <div className="flex-1 space-y-4 text-left rtl:text-right">
-          <div className="flex items-center gap-2 text-xs font-bold text-rose-500 uppercase tracking-wider">
+          <div className="flex items-center gap-2 text-xs font-bold text-indigo-400 uppercase tracking-wider">
             <User className="w-4 h-4" />
             <span>{actor.known_for_department || t.actors}</span>
           </div>
@@ -135,7 +135,7 @@ export const ActorDetailsView: React.FC<ActorDetailsViewProps> = ({
           <div className="flex flex-wrap items-center gap-3 text-xs text-slate-400">
             {actor.birthday && (
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900/60 border border-slate-800">
-                <Calendar className="w-3.5 h-3.5 text-rose-500" />
+                <Calendar className="w-3.5 h-3.5 text-indigo-400" />
                 <span>{t.born}: {actor.birthday}</span>
               </div>
             )}
@@ -170,7 +170,7 @@ export const ActorDetailsView: React.FC<ActorDetailsViewProps> = ({
                   {actor.biography.length > 250 && (
                     <button
                       onClick={() => setIsBioExpanded(!isBioExpanded)}
-                      className="mt-2 text-xs font-semibold text-rose-500 hover:underline flex items-center gap-1 cursor-pointer"
+                      className="mt-2 text-xs font-semibold text-indigo-400 hover:underline flex items-center gap-1 cursor-pointer"
                     >
                       <span>{isBioExpanded ? t.readLess : t.readMore}</span>
                       {isBioExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -205,7 +205,7 @@ export const ActorDetailsView: React.FC<ActorDetailsViewProps> = ({
               onClick={() => setMediaFilter('all')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
                 mediaFilter === 'all'
-                  ? 'bg-rose-600 text-white shadow-xs'
+                  ? 'bg-indigo-600 text-white shadow-xs'
                   : theme === 'dark'
                   ? 'text-slate-400 hover:text-white'
                   : 'text-slate-700 hover:text-slate-950 hover:bg-slate-200/60'
@@ -218,7 +218,7 @@ export const ActorDetailsView: React.FC<ActorDetailsViewProps> = ({
               onClick={() => setMediaFilter('movie')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer ${
                 mediaFilter === 'movie'
-                  ? 'bg-rose-600 text-white shadow-xs'
+                  ? 'bg-indigo-600 text-white shadow-xs'
                   : theme === 'dark'
                   ? 'text-slate-400 hover:text-white'
                   : 'text-slate-700 hover:text-slate-950 hover:bg-slate-200/60'
