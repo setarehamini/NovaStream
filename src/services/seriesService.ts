@@ -18,6 +18,14 @@ export class SeriesService {
     };
   }
 
+  public static async getAiringToday(page: number = 1, language: string = 'en-US'): Promise<PaginatedResult<MediaItem>> {
+    const data = await TMDBService.fetchEndpoint<PaginatedResult<MediaItem>>("tv/airing_today", { page, language });
+    return {
+      ...data,
+      results: (data.results || []).map(s => ({ ...s, media_type: 'tv' as const })),
+    };
+  }
+
   public static async getOnTheAir(page: number = 1, language: string = 'en-US'): Promise<PaginatedResult<MediaItem>> {
     const data = await TMDBService.fetchEndpoint<PaginatedResult<MediaItem>>("tv/on_the_air", { page, language });
     return {
@@ -59,15 +67,37 @@ export class SeriesService {
       include_adult: false,
     };
 
-    if (options.genreId && options.genreId !== 'all') {
+    if (options.genres && options.genres.length > 0) {
+      params.with_genres = Array.isArray(options.genres) ? options.genres.join(',') : options.genres;
+    } else if (options.genreId && options.genreId !== 'all') {
       params.with_genres = options.genreId;
     }
-    if (options.year && options.year !== 'all') {
+
+    if (options.yearFrom && options.yearFrom !== 'all') {
+      params["first_air_date.gte"] = `${options.yearFrom}-01-01`;
+    }
+    if (options.yearTo && options.yearTo !== 'all') {
+      params["first_air_date.lte"] = `${options.yearTo}-12-31`;
+    }
+    if (options.year && options.year !== 'all' && !options.yearFrom && !options.yearTo) {
       params.first_air_date_year = options.year;
     }
+
     if (options.minRating && options.minRating !== 'all') {
       params["vote_average.gte"] = options.minRating;
-      params["vote_count.gte"] = 25;
+    }
+    if (options.maxRating && options.maxRating !== 'all') {
+      params["vote_average.lte"] = options.maxRating;
+    }
+
+    if (options.minVotes && options.minVotes !== 'all') {
+      params["vote_count.gte"] = options.minVotes;
+    } else if (options.minRating && options.minRating !== 'all') {
+      params["vote_count.gte"] = 15;
+    }
+
+    if (options.originalLanguage && options.originalLanguage !== 'all') {
+      params.with_original_language = options.originalLanguage;
     }
 
     const data = await TMDBService.fetchEndpoint<PaginatedResult<MediaItem>>("discover/tv", params);

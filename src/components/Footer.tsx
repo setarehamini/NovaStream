@@ -22,7 +22,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, language, theme }) =
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           {/* Brand Info */}
           <div className="md:col-span-2 space-y-4">
             <div className="flex items-center gap-2.5">
@@ -30,7 +30,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, language, theme }) =
                 <Play className="w-4 h-4 text-white fill-white translate-x-0.5" />
               </div>
               <span className="text-xl font-black tracking-tight bg-gradient-to-r from-rose-500 via-rose-400 to-amber-400 bg-clip-text text-transparent">
-                NOVA<span className={theme === 'dark' ? 'text-white' : 'text-slate-900'}>STREAM</span>
+                NOV<span className={theme === 'dark' ? 'text-white' : 'text-slate-900'}>A</span>
               </span>
             </div>
             <p className="text-xs sm:text-sm leading-relaxed max-w-md opacity-85">
@@ -82,27 +82,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, language, theme }) =
               </li>
             </ul>
           </div>
-
-          {/* Streaming Info */}
-          <div>
-            <h4 className={`text-xs font-bold uppercase tracking-wider mb-3 ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
-              Streaming Tech
-            </h4>
-            <p className="text-xs leading-relaxed opacity-85">
-              {t.streamingNotice}
-            </p>
-            <div className="mt-4 flex flex-wrap gap-1.5">
-              <span className="px-2 py-0.5 text-[11px] rounded-md font-mono bg-rose-500/10 text-rose-500 border border-rose-500/20">Server 1 HD</span>
-              <span className="px-2 py-0.5 text-[11px] rounded-md font-mono bg-slate-500/10 text-slate-400 border border-slate-500/20">Server 2 Fast</span>
-              <span className="px-2 py-0.5 text-[11px] rounded-md font-mono bg-amber-500/10 text-amber-500 border border-amber-500/20">Ultra 1080p</span>
-            </div>
-          </div>
         </div>
 
         {/* Bottom bar */}
         <div className="pt-6 border-t border-slate-800/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
           <div>
-            © {new Date().getFullYear()} NovaStream Cinema. {t.footerRights}
+            © {new Date().getFullYear()} Nova Cinema. {t.footerRights}
           </div>
           <div className="flex items-center gap-4">
             <span className="opacity-75">EN / فارسی Supported</span>

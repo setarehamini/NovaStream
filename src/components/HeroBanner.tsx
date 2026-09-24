@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Play, Info, Video, Star, ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
+import { Play, Eye, Video, Star, ChevronLeft, ChevronRight, Calendar, Film, Tv } from 'lucide-react';
 import { MediaItem, RouteState, Theme } from '../types';
 import { TMDBService } from '../services';
 import { translations } from '../i18n/translations';
@@ -60,13 +60,17 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
 
   return (
     <section id="hero-banner-section" className="relative w-full h-[520px] sm:h-[580px] lg:h-[640px] overflow-hidden select-none">
-      {/* Background Image with Minimal, Non-Intrusive Shading */}
-      <div className="absolute inset-0">
+      {/* Background Image with Minimal, Non-Intrusive Shading - Click poster navigates to detail */}
+      <div
+        className="absolute inset-0 cursor-pointer group"
+        onClick={handleOpenDetails}
+        title={`View details for ${title}`}
+      >
         <img
           key={currentItem.id}
           src={backdropUrl}
           alt={title}
-          className="w-full h-full object-cover object-center animate-fade-in transition-opacity duration-1000"
+          className="w-full h-full object-cover object-center animate-fade-in transition-transform duration-1000 group-hover:scale-102"
           referrerPolicy="no-referrer"
         />
         {/* Soft, shallow bottom gradient to blend gently with the page without covering the artwork */}
@@ -92,13 +96,21 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
       </div>
 
       {/* Hero Content */}
-      <div className="relative max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex flex-col justify-end pb-14 sm:pb-20 z-10">
-        <div className="max-w-2xl space-y-4">
+      <div className="relative max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex flex-col justify-end pb-14 sm:pb-20 z-10 pointer-events-none">
+        <div className="max-w-2xl space-y-4 pointer-events-auto">
           {/* Metadata badges */}
           <div className="flex flex-wrap items-center gap-2.5 text-xs font-semibold">
-            <span className="px-2.5 py-1 rounded-md uppercase tracking-wider bg-rose-600 text-white shadow-md">
-              {isTV ? t.series : t.movies}
-            </span>
+            {isTV ? (
+              <span className="flex items-center gap-1.5 px-3 py-1 rounded-md uppercase tracking-wider bg-sky-500/25 text-sky-300 border border-sky-400/40 backdrop-blur-md shadow-md">
+                <Tv className="w-3.5 h-3.5 text-sky-400" />
+                <span>{t.series}</span>
+              </span>
+            ) : (
+              <span className="flex items-center gap-1.5 px-3 py-1 rounded-md uppercase tracking-wider bg-rose-500/25 text-rose-300 border border-rose-400/40 backdrop-blur-md shadow-md">
+                <Film className="w-3.5 h-3.5 text-rose-400" />
+                <span>{t.movies}</span>
+              </span>
+            )}
 
             {rating && (
               <span className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-900/80 backdrop-blur-md text-amber-400 border border-amber-500/30">
@@ -121,7 +133,8 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
 
           {/* Title */}
           <h1
-            className={`text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)] ${
+            onClick={handleOpenDetails}
+            className={`text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)] cursor-pointer hover:text-rose-400 transition-colors ${
               theme === 'dark' ? 'text-white' : 'text-slate-950'
             }`}
           >
@@ -160,24 +173,11 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
               <Video className="w-4 h-4 text-rose-500" />
               <span>{t.trailer}</span>
             </button>
-
-            <button
-              id="hero-details-btn"
-              onClick={handleOpenDetails}
-              className={`p-3 rounded-xl border backdrop-blur-md transition-all cursor-pointer ${
-                theme === 'dark'
-                  ? 'bg-slate-900/60 hover:bg-slate-800 text-slate-300 border-slate-800'
-                  : 'bg-white/70 hover:bg-white text-slate-700 border-slate-300 shadow-sm'
-              }`}
-              title={t.moreInfo}
-            >
-              <Info className="w-5 h-5" />
-            </button>
           </div>
         </div>
 
         {/* Carousel indicators & arrows */}
-        <div className="absolute bottom-6 right-4 sm:right-8 rtl:right-auto rtl:left-4 sm:rtl:left-8 flex items-center gap-3">
+        <div className="absolute bottom-6 right-4 sm:right-8 rtl:right-auto rtl:left-4 sm:rtl:left-8 flex items-center gap-3 pointer-events-auto">
           <button
             onClick={() => setCurrentIndex((prev) => (prev - 1 + featuredList.length) % featuredList.length)}
             className="p-2 rounded-full bg-slate-900/70 text-white hover:bg-rose-600 transition-colors backdrop-blur-md border border-slate-700/50"

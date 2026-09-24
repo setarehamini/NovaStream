@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowRight, Flame, Film, Tv, Trophy } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { MediaItem, RouteState, VideoItem, Theme, Language } from '../types';
 import { TrendingService, MovieService, SeriesService, VideoService } from '../services';
 import { HeroBanner } from '../components/HeroBanner';
 import { MovieCard } from '../components/MovieCard';
 import { SkeletonGrid } from '../components/SkeletonGrid';
 import { TrailerModal } from '../components/TrailerModal';
+import { LatestTrailersSlider } from '../components/LatestTrailersSlider';
 import { translations } from '../i18n/translations';
 
 interface HomeViewProps {
@@ -105,22 +106,17 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, language, theme 
         {/* Section 1: Trending Movies */}
         <section id="trending-movies-section">
           <div className="flex items-center justify-between mb-5">
-            <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-lg bg-rose-500/10 text-rose-500 border border-rose-500/20">
-                <Flame className="w-5 h-5" />
-              </div>
-              <div>
-                <h2 className={`text-xl sm:text-2xl font-bold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
-                  {t.trendingMovies}
-                </h2>
-                <p className="text-xs text-slate-500">{t.tagline}</p>
-              </div>
+            <div>
+              <h2 className={`text-xl sm:text-2xl font-bold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+                {t.trendingMovies}
+              </h2>
+              <p className="text-xs text-slate-500">{t.tagline}</p>
             </div>
 
             <button
               id="view-all-movies-btn"
               onClick={() => onNavigate({ view: 'movies' })}
-              className="text-xs sm:text-sm font-semibold text-rose-500 hover:text-rose-400 flex items-center gap-1.5 transition-colors cursor-pointer group"
+              className="text-xs sm:text-sm font-semibold text-white/90 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer group"
             >
               <span>{t.viewAll}</span>
               <ArrowRight className="w-4 h-4 rtl:rotate-180 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform" />
@@ -144,25 +140,27 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, language, theme 
           )}
         </section>
 
+        {/* Latest Trailers Slider Section (TMDB style) */}
+        <LatestTrailersSlider
+          onOpenTrailer={handleOpenTrailer}
+          language={language}
+          theme={theme}
+        />
+
         {/* Section 2: Popular TV Series */}
         <section id="popular-series-section">
           <div className="flex items-center justify-between mb-5">
-            <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-lg bg-sky-500/10 text-sky-500 border border-sky-500/20">
-                <Tv className="w-5 h-5" />
-              </div>
-              <div>
-                <h2 className={`text-xl sm:text-2xl font-bold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
-                  {t.popularSeries}
-                </h2>
-                <p className="text-xs text-slate-500">Binge-worthy drama, action, and fantasy shows</p>
-              </div>
+            <div>
+              <h2 className={`text-xl sm:text-2xl font-bold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+                {t.popularSeries}
+              </h2>
+              <p className="text-xs text-slate-500">Binge-worthy drama, action, and fantasy shows</p>
             </div>
 
             <button
               id="view-all-series-btn"
               onClick={() => onNavigate({ view: 'series' })}
-              className="text-xs sm:text-sm font-semibold text-sky-500 hover:text-sky-400 flex items-center gap-1.5 transition-colors cursor-pointer group"
+              className="text-xs sm:text-sm font-semibold text-white/90 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer group"
             >
               <span>{t.viewAll}</span>
               <ArrowRight className="w-4 h-4 rtl:rotate-180 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform" />
@@ -189,21 +187,16 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, language, theme 
         {/* Section 3: Top Rated Movies */}
         <section id="top-rated-movies-section">
           <div className="flex items-center justify-between mb-5">
-            <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-lg bg-amber-500/10 text-amber-500 border border-amber-500/20">
-                <Trophy className="w-5 h-5" />
-              </div>
-              <div>
-                <h2 className={`text-xl sm:text-2xl font-bold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
-                  {t.topRatedMovies}
-                </h2>
-                <p className="text-xs text-slate-500">Masterpieces voted by global cinema enthusiasts</p>
-              </div>
+            <div>
+              <h2 className={`text-xl sm:text-2xl font-bold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+                {t.topRatedMovies}
+              </h2>
+              <p className="text-xs text-slate-500">Masterpieces voted by global cinema enthusiasts</p>
             </div>
 
             <button
               onClick={() => onNavigate({ view: 'movies' })}
-              className="text-xs sm:text-sm font-semibold text-amber-500 hover:text-amber-400 flex items-center gap-1.5 transition-colors cursor-pointer group"
+              className="text-xs sm:text-sm font-semibold text-white/90 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer group"
             >
               <span>{t.viewAll}</span>
               <ArrowRight className="w-4 h-4 rtl:rotate-180 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform" />

@@ -34,6 +34,13 @@ export class TMDBService {
     return `https://image.tmdb.org/t/p/${size}${path}`;
   }
 
+  public static getBackdropUrl(path: string | null | undefined, size: 'w300' | 'w780' | 'w1280' | 'original' = 'w780'): string {
+    if (!path) {
+      return "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1280&q=80";
+    }
+    return `https://image.tmdb.org/t/p/${size}${path}`;
+  }
+
   public static getProfileUrl(path: string | null | undefined): string {
     if (!path) {
       return "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80";

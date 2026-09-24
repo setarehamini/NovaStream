@@ -18,6 +18,7 @@ export interface Dictionary {
   popularSeries: string;
   topRatedSeries: string;
   latestReleases: string;
+  latestTrailers: string;
   viewAll: string;
   genres: string;
   allGenres: string;
@@ -140,7 +141,7 @@ export interface Dictionary {
 
 export const translations: Record<'en' | 'fa', Dictionary> = {
   en: {
-    appName: "NovaStream",
+    appName: "Nova",
     tagline: "Stream Cinema & Series in High Definition",
     home: "Home",
     movies: "Movies",
@@ -159,6 +160,7 @@ export const translations: Record<'en' | 'fa', Dictionary> = {
     popularSeries: "Popular TV Series",
     topRatedSeries: "Top Rated Series",
     latestReleases: "Latest Releases",
+    latestTrailers: "Latest Trailers",
     viewAll: "View All",
     genres: "Genres",
     allGenres: "All Genres",
@@ -279,7 +281,7 @@ export const translations: Record<'en' | 'fa', Dictionary> = {
     removePhoto: "Remove Photo",
   },
   fa: {
-    appName: "نوااستریم",
+    appName: "نوا",
     tagline: "تماشای آنلاین جدیدترین فیلم‌ها و سریال‌های روز دنیا با کیفیت عالی",
     home: "خانه",
     movies: "فیلم‌ها",
@@ -298,6 +300,7 @@ export const translations: Record<'en' | 'fa', Dictionary> = {
     popularSeries: "سریال‌های پرمخاطب",
     topRatedSeries: "برترین سریال‌ها",
     latestReleases: "تازه‌ترین انتشارات",
+    latestTrailers: "جدیدترین تریلرها",
     viewAll: "مشاهده همه",
     genres: "ژانرها",
     allGenres: "همه ژانرها",

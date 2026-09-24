@@ -26,6 +26,14 @@ export class MovieService {
     };
   }
 
+  public static async getUpcoming(page: number = 1, language: string = 'en-US'): Promise<PaginatedResult<MediaItem>> {
+    const data = await TMDBService.fetchEndpoint<PaginatedResult<MediaItem>>("movie/upcoming", { page, language });
+    return {
+      ...data,
+      results: (data.results || []).map(m => ({ ...m, media_type: 'movie' as const })),
+    };
+  }
+
   public static async getDetails(id: number, language: string = 'en-US'): Promise<MovieDetails> {
     const data = await TMDBService.fetchEndpoint<MovieDetails>(`movie/${id}`, {
       language,
@@ -55,15 +63,42 @@ export class MovieService {
       include_adult: false,
     };
 
-    if (options.genreId && options.genreId !== 'all') {
+    if (options.genres && options.genres.length > 0) {
+      params.with_genres = Array.isArray(options.genres) ? options.genres.join(',') : options.genres;
+    } else if (options.genreId && options.genreId !== 'all') {
       params.with_genres = options.genreId;
     }
-    if (options.year && options.year !== 'all') {
+
+    if (options.yearFrom && options.yearFrom !== 'all') {
+      params["primary_release_date.gte"] = `${options.yearFrom}-01-01`;
+    }
+    if (options.yearTo && options.yearTo !== 'all') {
+      params["primary_release_date.lte"] = `${options.yearTo}-12-31`;
+    }
+    if (options.year && options.year !== 'all' && !options.yearFrom && !options.yearTo) {
       params.primary_release_year = options.year;
     }
+
     if (options.minRating && options.minRating !== 'all') {
       params["vote_average.gte"] = options.minRating;
-      params["vote_count.gte"] = 50; // ensure meaningful ratings
+    }
+    if (options.maxRating && options.maxRating !== 'all') {
+      params["vote_average.lte"] = options.maxRating;
+    }
+
+    if (options.minVotes && options.minVotes !== 'all') {
+      params["vote_count.gte"] = options.minVotes;
+    } else if (options.minRating && options.minRating !== 'all') {
+      params["vote_count.gte"] = 20;
+    }
+
+    if (options.originalLanguage && options.originalLanguage !== 'all') {
+      params.with_original_language = options.originalLanguage;
+    }
+
+    if (options.certification && options.certification !== 'all') {
+      params.certification_country = 'US';
+      params.certification = options.certification;
     }
 
     const data = await TMDBService.fetchEndpoint<PaginatedResult<MediaItem>>("discover/movie", params);

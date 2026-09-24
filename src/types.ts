@@ -151,8 +151,15 @@ export interface FilterOptions {
   page?: number;
   searchQuery?: string;
   genreId?: number | string;
+  genres?: number[] | string[];
   year?: number | string;
+  yearFrom?: number | string;
+  yearTo?: number | string;
   minRating?: number | string;
+  maxRating?: number | string;
+  minVotes?: number | string;
+  originalLanguage?: string;
+  certification?: string;
   sortBy?: string;
   language?: string;
   country?: string;

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Film, Tv, Search, Moon, Sun, Globe, Menu, X, Play, Bookmark, Clock, Heart, History, LogIn, LogOut, User as UserIcon, ChevronDown } from 'lucide-react';
+import { Film, Tv, Search, Moon, Sun, Globe, Menu, X, Home, Bookmark, Clock, Heart, History, LogIn, LogOut, User as UserIcon, ChevronDown } from 'lucide-react';
 import { Language, RouteState, Theme } from '../types';
 import { translations } from '../i18n/translations';
 import { useAuth } from '../context/AuthContext';
@@ -64,7 +64,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   // Main navigation items for media catalog (clean & focused)
   const navLinks = [
-    { label: t.home, view: 'home' as const, icon: Play },
+    { label: t.home, view: 'home' as const, icon: Home },
     { label: t.movies, view: 'movies' as const, icon: Film },
     { label: t.series, view: 'series' as const, icon: Tv },
     { label: t.search, view: 'search' as const, icon: Search },
@@ -80,19 +80,19 @@ export const Navbar: React.FC<NavbarProps> = ({
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-4">
-        {/* Brand Logo */}
+        {/* Brand Logo - Film icon instead of Play */}
         <button
           id="brand-logo-btn"
           onClick={() => onNavigate({ view: 'home' })}
           className="flex items-center gap-2.5 group cursor-pointer focus:outline-hidden"
-          title="NovaStream Home"
+          title="Nova Home"
         >
           <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-600 via-rose-500 to-amber-500 flex items-center justify-center shadow-lg shadow-rose-500/25 group-hover:scale-105 transition-transform duration-200">
-            <Play className="w-5 h-5 text-white fill-white translate-x-0.5" />
+            <Film className="w-5 h-5 text-white" />
           </div>
           <div className="flex flex-col text-left rtl:text-right">
-            <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-rose-500 via-rose-400 to-amber-400 bg-clip-text text-transparent">
-              NOVA<span className={theme === 'dark' ? 'text-white' : 'text-slate-900'}>STREAM</span>
+            <span className="text-xl font-black tracking-wider bg-gradient-to-r from-rose-500 via-rose-400 to-amber-400 bg-clip-text text-transparent">
+              NOV<span className={theme === 'dark' ? 'text-white' : 'text-slate-900'}>A</span>
             </span>
             <span className="text-[10px] font-medium tracking-widest uppercase opacity-70 -mt-1">
               CINEMA & TV
@@ -100,7 +100,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </button>
 
-        {/* Desktop Navigation Links */}
+        {/* Desktop Navigation Links - unified text-sm font-medium */}
         <nav id="desktop-navigation" className="hidden md:flex items-center gap-1.5">
           {navLinks.map(link => {
             const isActive = currentRoute.view === link.view;
@@ -125,7 +125,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           })}
         </nav>
 
-        {/* Quick Search & Controls */}
+        {/* Quick Search & Controls - unified text-sm */}
         <div className="hidden sm:flex items-center gap-3">
           <form onSubmit={handleSearchSubmit} className="relative">
             <input
@@ -134,27 +134,27 @@ export const Navbar: React.FC<NavbarProps> = ({
               value={quickSearch}
               onChange={(e) => setQuickSearch(e.target.value)}
               placeholder={t.searchPlaceholder.slice(0, 22) + "..."}
-              className={`w-40 lg:w-56 pl-9 pr-3 rtl:pr-9 rtl:pl-3 py-1.5 text-xs rounded-full border transition-all duration-200 focus:outline-hidden focus:w-52 lg:focus:w-64 ${
+              className={`w-40 lg:w-56 pl-9 pr-3 rtl:pr-9 rtl:pl-3 py-1.5 text-sm font-medium rounded-full border transition-all duration-200 focus:outline-hidden focus:w-52 lg:focus:w-64 ${
                 theme === 'dark'
                   ? 'bg-slate-900/90 border-slate-700/70 text-slate-200 placeholder-slate-400 focus:border-rose-500 focus:ring-1 focus:ring-rose-500'
                   : 'bg-slate-100 border-slate-300 text-slate-800 placeholder-slate-500 focus:border-rose-500 focus:bg-white focus:ring-1 focus:ring-rose-500'
               }`}
             />
-            <Search className="w-3.5 h-3.5 absolute left-3 rtl:left-auto rtl:right-3 top-2.5 opacity-50" />
+            <Search className="w-4 h-4 absolute left-3 rtl:left-auto rtl:right-3 top-2.5 opacity-50" />
           </form>
 
-          {/* Language Switcher */}
+          {/* Language Switcher - text-sm font-medium */}
           <button
             id="toggle-language-btn"
             onClick={onToggleLanguage}
-            className={`px-2.5 py-1.5 rounded-lg border text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
+            className={`px-3 py-1.5 rounded-lg border text-sm font-medium flex items-center gap-1.5 transition-colors cursor-pointer ${
               theme === 'dark'
                 ? 'border-slate-700/80 bg-slate-900/80 hover:bg-slate-800 text-slate-200'
                 : 'border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-700'
             }`}
             title="Switch Language (English / Persian)"
           >
-            <Globe className="w-3.5 h-3.5 text-rose-500" />
+            <Globe className="w-4 h-4 text-rose-500" />
             <span>{language === 'en' ? 'فارسی' : 'EN'}</span>
           </button>
 
@@ -162,7 +162,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             id="toggle-theme-btn"
             onClick={onToggleTheme}
-            className={`p-2 rounded-lg border text-xs transition-colors cursor-pointer ${
+            className={`p-2 rounded-lg border text-sm transition-colors cursor-pointer ${
               theme === 'dark'
                 ? 'border-slate-700/80 bg-slate-900/80 hover:bg-slate-800 text-amber-400'
                 : 'border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-700'
@@ -172,7 +172,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </button>
 
-          {/* Auth Button: Sign In or User Profile */}
+          {/* Auth Button: Sign In or User Profile - unified text-sm font-medium */}
           {isAuthenticated ? (
             <div className="relative" ref={userMenuRef}>
               <button
@@ -184,7 +184,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   e.stopPropagation();
                   setIsUserMenuOpen((prev) => !prev);
                 }}
-                className={`flex items-center gap-2 pl-2 pr-3 rtl:pr-2 rtl:pl-3 py-1.5 rounded-full border text-xs font-semibold cursor-pointer transition-all ${
+                className={`flex items-center gap-2 pl-2.5 pr-3.5 rtl:pr-2.5 rtl:pl-3.5 py-1.5 rounded-full border text-sm font-medium cursor-pointer transition-all ${
                   isUserMenuOpen || currentRoute.view === 'account'
                     ? 'border-rose-500 bg-rose-500/10 text-rose-500 ring-2 ring-rose-500/20'
                     : theme === 'dark'
@@ -201,12 +201,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                     className="w-6 h-6 rounded-full object-cover shadow-xs border border-rose-500/40 shrink-0"
                   />
                 ) : (
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-rose-500 to-amber-500 text-white flex items-center justify-center text-[11px] font-bold shadow-xs shrink-0">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-rose-500 to-amber-500 text-white flex items-center justify-center text-xs font-bold shadow-xs shrink-0">
                     {(user?.name || user?.email || 'U').charAt(0).toUpperCase()}
                   </div>
                 )}
-                <span className="max-w-[100px] truncate">{user?.name || user?.email?.split('@')[0]}</span>
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isUserMenuOpen ? 'rotate-180 text-rose-500' : 'text-slate-400'}`} />
+                <span className="max-w-[110px] truncate">{user?.name || user?.email?.split('@')[0]}</span>
+                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isUserMenuOpen ? 'rotate-180 text-rose-500' : 'text-slate-400'}`} />
               </button>
 
               {/* User Dropdown */}
@@ -345,7 +345,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           ) : (
             <button
               onClick={() => openAuthModal('login')}
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-600 text-white font-semibold text-xs shadow-md shadow-rose-500/25 flex items-center gap-1.5 cursor-pointer transition-all"
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-600 text-white font-medium text-sm shadow-md shadow-rose-500/25 flex items-center gap-2 cursor-pointer transition-all"
             >
               <LogIn className="w-3.5 h-3.5" />
               <span>{t.signIn}</span>

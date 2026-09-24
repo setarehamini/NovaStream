@@ -349,8 +349,9 @@ export const SeriesDetailsView: React.FC<SeriesDetailsViewProps> = ({
             <div className="flex-1 space-y-4 text-center md:text-left rtl:md:text-right">
               {/* Badges */}
               <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 text-xs font-semibold">
-                <span className="px-2.5 py-1 rounded-md bg-sky-600 text-white uppercase tracking-wider">
-                  TV Series
+                <span className="flex items-center gap-1.5 px-3 py-1 rounded-md uppercase tracking-wider bg-sky-500/25 text-sky-300 border border-sky-400/40 backdrop-blur-md shadow-md">
+                  <Tv className="w-3.5 h-3.5 text-sky-400" />
+                  <span>{t.series}</span>
                 </span>
                 <span className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-900/90 text-amber-400 border border-amber-500/30">
                   <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />

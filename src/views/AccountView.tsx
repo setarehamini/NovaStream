@@ -499,16 +499,6 @@ export const AccountView: React.FC<AccountViewProps> = ({
 
           <div className="flex flex-wrap items-center gap-2">
             <button
-              onClick={() => setActiveTab('profile')}
-              className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
-                activeTab === 'profile'
-                  ? 'bg-rose-600 text-white shadow-md'
-                  : theme === 'dark' ? 'bg-slate-800/80 text-slate-300 hover:text-white' : 'bg-slate-200/80 text-slate-700 hover:text-slate-950'
-              }`}
-            >
-              {t.profile}
-            </button>
-            <button
               onClick={() => logout()}
               className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer border border-rose-500/20"
               title={t.signOut}
@@ -525,7 +515,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
             onClick={() => setActiveTab('watchlist')}
             className={`p-3.5 rounded-2xl border text-left rtl:text-right transition-all cursor-pointer ${
               activeTab === 'watchlist'
-                ? 'bg-rose-500/15 border-rose-500/40 shadow-sm'
+                ? 'bg-rose-500/15 border-rose-500/50 shadow-md ring-1 ring-rose-500/30'
                 : theme === 'dark' ? 'bg-slate-900/50 border-slate-800 hover:bg-slate-800/60' : 'bg-white/80 border-slate-200 hover:bg-slate-50'
             }`}
           >
@@ -533,29 +523,29 @@ export const AccountView: React.FC<AccountViewProps> = ({
               <span className="text-xs font-medium text-slate-500">{t.watchlist}</span>
               <Bookmark className={`w-4 h-4 ${activeTab === 'watchlist' ? 'text-rose-500' : 'text-slate-400'}`} />
             </div>
-            <div className="text-xl sm:text-2xl font-black">{watchlist.length}</div>
+            <div className={`text-xl sm:text-2xl font-black ${activeTab === 'watchlist' ? 'text-rose-500' : ''}`}>{watchlist.length}</div>
           </button>
 
           <button
             onClick={() => setActiveTab('watchlater')}
             className={`p-3.5 rounded-2xl border text-left rtl:text-right transition-all cursor-pointer ${
               activeTab === 'watchlater'
-                ? 'bg-amber-500/15 border-amber-500/40 shadow-sm'
+                ? 'bg-rose-500/15 border-rose-500/50 shadow-md ring-1 ring-rose-500/30'
                 : theme === 'dark' ? 'bg-slate-900/50 border-slate-800 hover:bg-slate-800/60' : 'bg-white/80 border-slate-200 hover:bg-slate-50'
             }`}
           >
             <div className="flex items-center justify-between mb-1">
               <span className="text-xs font-medium text-slate-500">{t.watchLater}</span>
-              <Clock className={`w-4 h-4 ${activeTab === 'watchlater' ? 'text-amber-500' : 'text-slate-400'}`} />
+              <Clock className={`w-4 h-4 ${activeTab === 'watchlater' ? 'text-rose-500' : 'text-slate-400'}`} />
             </div>
-            <div className="text-xl sm:text-2xl font-black">{watchLater.length}</div>
+            <div className={`text-xl sm:text-2xl font-black ${activeTab === 'watchlater' ? 'text-rose-500' : ''}`}>{watchLater.length}</div>
           </button>
 
           <button
             onClick={() => setActiveTab('favorites')}
             className={`p-3.5 rounded-2xl border text-left rtl:text-right transition-all cursor-pointer ${
               activeTab === 'favorites'
-                ? 'bg-rose-500/15 border-rose-500/40 shadow-sm'
+                ? 'bg-rose-500/15 border-rose-500/50 shadow-md ring-1 ring-rose-500/30'
                 : theme === 'dark' ? 'bg-slate-900/50 border-slate-800 hover:bg-slate-800/60' : 'bg-white/80 border-slate-200 hover:bg-slate-50'
             }`}
           >
@@ -563,22 +553,22 @@ export const AccountView: React.FC<AccountViewProps> = ({
               <span className="text-xs font-medium text-slate-500">{t.favorites}</span>
               <Heart className={`w-4 h-4 ${activeTab === 'favorites' ? 'text-rose-500' : 'text-slate-400'}`} />
             </div>
-            <div className="text-xl sm:text-2xl font-black">{favorites.length}</div>
+            <div className={`text-xl sm:text-2xl font-black ${activeTab === 'favorites' ? 'text-rose-500' : ''}`}>{favorites.length}</div>
           </button>
 
           <button
             onClick={() => setActiveTab('history')}
             className={`p-3.5 rounded-2xl border text-left rtl:text-right transition-all cursor-pointer ${
               activeTab === 'history'
-                ? 'bg-blue-500/15 border-blue-500/40 shadow-sm'
+                ? 'bg-rose-500/15 border-rose-500/50 shadow-md ring-1 ring-rose-500/30'
                 : theme === 'dark' ? 'bg-slate-900/50 border-slate-800 hover:bg-slate-800/60' : 'bg-white/80 border-slate-200 hover:bg-slate-50'
             }`}
           >
             <div className="flex items-center justify-between mb-1">
               <span className="text-xs font-medium text-slate-500">{t.history}</span>
-              <History className={`w-4 h-4 ${activeTab === 'history' ? 'text-blue-500' : 'text-slate-400'}`} />
+              <History className={`w-4 h-4 ${activeTab === 'history' ? 'text-rose-500' : 'text-slate-400'}`} />
             </div>
-            <div className="text-xl sm:text-2xl font-black">{history.length}</div>
+            <div className={`text-xl sm:text-2xl font-black ${activeTab === 'history' ? 'text-rose-500' : ''}`}>{history.length}</div>
           </button>
         </div>
       </div>
@@ -592,8 +582,8 @@ export const AccountView: React.FC<AccountViewProps> = ({
             onClick={() => setActiveTab('profile')}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'profile'
-                ? 'bg-rose-600 text-white shadow-md'
-                : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100'
+                ? 'bg-rose-600 text-white shadow-md shadow-rose-600/25 ring-2 ring-rose-400/20'
+                : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800/50'
             }`}
           >
             <UserIcon className="w-4 h-4" />
@@ -604,13 +594,13 @@ export const AccountView: React.FC<AccountViewProps> = ({
             onClick={() => setActiveTab('watchlist')}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'watchlist'
-                ? 'bg-rose-600 text-white shadow-md'
-                : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100'
+                ? 'bg-rose-600 text-white shadow-md shadow-rose-600/25 ring-2 ring-rose-400/20'
+                : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800/50'
             }`}
           >
             <Bookmark className="w-4 h-4" />
             <span>{t.watchlist}</span>
-            <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
+            <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
               activeTab === 'watchlist' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
             }`}>
               {watchlist.length}
@@ -621,13 +611,13 @@ export const AccountView: React.FC<AccountViewProps> = ({
             onClick={() => setActiveTab('watchlater')}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'watchlater'
-                ? 'bg-rose-600 text-white shadow-md'
-                : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100'
+                ? 'bg-rose-600 text-white shadow-md shadow-rose-600/25 ring-2 ring-rose-400/20'
+                : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800/50'
             }`}
           >
             <Clock className="w-4 h-4" />
             <span>{t.watchLater}</span>
-            <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
+            <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
               activeTab === 'watchlater' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
             }`}>
               {watchLater.length}
@@ -638,13 +628,13 @@ export const AccountView: React.FC<AccountViewProps> = ({
             onClick={() => setActiveTab('favorites')}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'favorites'
-                ? 'bg-rose-600 text-white shadow-md'
-                : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100'
+                ? 'bg-rose-600 text-white shadow-md shadow-rose-600/25 ring-2 ring-rose-400/20'
+                : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800/50'
             }`}
           >
             <Heart className="w-4 h-4" />
             <span>{t.favorites}</span>
-            <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
+            <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
               activeTab === 'favorites' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
             }`}>
               {favorites.length}
@@ -655,13 +645,13 @@ export const AccountView: React.FC<AccountViewProps> = ({
             onClick={() => setActiveTab('history')}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'history'
-                ? 'bg-rose-600 text-white shadow-md'
-                : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100'
+                ? 'bg-rose-600 text-white shadow-md shadow-rose-600/25 ring-2 ring-rose-400/20'
+                : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800/50'
             }`}
           >
             <History className="w-4 h-4" />
             <span>{t.history}</span>
-            <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
+            <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
               activeTab === 'history' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
             }`}>
               {history.length}
@@ -885,7 +875,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
                 type="button"
                 onClick={handleSaveProfile}
                 disabled={isSavingProfile}
-                className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-600 disabled:opacity-50 text-white font-bold text-xs sm:text-sm shadow-md shadow-rose-600/20 transition-all cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-2.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white font-bold text-xs sm:text-sm shadow-md shadow-rose-600/20 transition-all cursor-pointer flex items-center justify-center gap-2"
               >
                 {isSavingProfile ? (
                   <>
@@ -1028,7 +1018,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
                 <button
                   type="submit"
                   disabled={isChangingPassword || !currentPassword || !newPassword}
-                  className="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-white font-bold text-xs sm:text-sm border border-slate-700 transition-all cursor-pointer flex items-center justify-center gap-2"
+                  className="w-full py-2.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white font-bold text-xs sm:text-sm shadow-md shadow-rose-600/20 transition-all cursor-pointer flex items-center justify-center gap-2"
                 >
                   {isChangingPassword ? (
                     <>
@@ -1037,7 +1027,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
                     </>
                   ) : (
                     <>
-                      <Lock className="w-4 h-4 text-rose-500" />
+                      <Lock className="w-4 h-4 text-white" />
                       <span>{t.changePassword}</span>
                     </>
                   )}
