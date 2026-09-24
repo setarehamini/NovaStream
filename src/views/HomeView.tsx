@@ -83,16 +83,6 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, language, theme 
     }
   };
 
-  const genresQuickList = [
-    { id: 28, name: language === 'fa' ? 'اکشن' : 'Action' },
-    { id: 878, name: language === 'fa' ? 'علمی تخیلی' : 'Sci-Fi' },
-    { id: 18, name: language === 'fa' ? 'درام' : 'Drama' },
-    { id: 35, name: language === 'fa' ? 'کمدی' : 'Comedy' },
-    { id: 27, name: language === 'fa' ? 'ترسناک' : 'Horror' },
-    { id: 16, name: language === 'fa' ? 'انیمیشن' : 'Animation' },
-    { id: 53, name: language === 'fa' ? 'مهیج' : 'Thriller' },
-  ];
-
   return (
     <div className="min-h-screen">
       {/* Hero Banner Section */}
@@ -111,24 +101,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, language, theme 
       )}
 
       {/* Main Content Sections */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 sm:-mt-10 relative z-20 space-y-12">
-        {/* Quick Genre Chips */}
-        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-2">
-          {genresQuickList.map(g => (
-            <button
-              key={g.id}
-              onClick={() => onNavigate({ view: 'movies', query: String(g.id) })}
-              className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-200 border cursor-pointer ${
-                theme === 'dark'
-                  ? 'bg-slate-900/90 border-slate-800 text-slate-300 hover:text-white hover:border-rose-500/50 hover:bg-slate-800'
-                  : 'bg-white border-slate-200 text-slate-700 hover:text-slate-900 hover:border-rose-500/50 hover:bg-slate-50 shadow-xs'
-              }`}
-            >
-              {g.name}
-            </button>
-          ))}
-        </div>
-
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-10 space-y-12">
         {/* Section 1: Trending Movies */}
         <section id="trending-movies-section">
           <div className="flex items-center justify-between mb-5">

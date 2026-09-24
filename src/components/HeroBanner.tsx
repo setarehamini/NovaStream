@@ -40,7 +40,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
   const date = currentItem.release_date || currentItem.first_air_date;
   const year = date ? new Date(date).getFullYear() : '';
   const rating = currentItem.vote_average ? currentItem.vote_average.toFixed(1) : null;
-  const backdropUrl = TMDBService.getImageUrl(currentItem.backdrop_path, 'original');
+  const backdropUrl = TMDBService.getImageUrl(currentItem.backdrop_path || currentItem.poster_path, 'original');
 
   const handleWatchNow = () => {
     if (isTV) {
@@ -60,32 +60,33 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
 
   return (
     <section id="hero-banner-section" className="relative w-full h-[520px] sm:h-[580px] lg:h-[640px] overflow-hidden select-none">
-      {/* Background Image with Cinematic Vignettes */}
+      {/* Background Image with Minimal, Non-Intrusive Shading */}
       <div className="absolute inset-0">
         <img
           key={currentItem.id}
           src={backdropUrl}
           alt={title}
-          className="w-full h-full object-cover object-center animate-fade-in filter brightness-90 transition-opacity duration-1000"
+          className="w-full h-full object-cover object-center animate-fade-in transition-opacity duration-1000"
           referrerPolicy="no-referrer"
         />
-        {/* Gradients to fade smoothly into page background */}
+        {/* Soft, shallow bottom gradient to blend gently with the page without covering the artwork */}
         <div
-          className={`absolute inset-0 ${
+          className={`absolute inset-0 pointer-events-none ${
             theme === 'dark'
-              ? 'bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent'
-              : 'bg-gradient-to-t from-slate-50 via-slate-50/60 to-transparent'
+              ? 'bg-gradient-to-t from-slate-950/70 via-slate-950/15 to-transparent'
+              : 'bg-gradient-to-t from-slate-50/70 via-slate-50/15 to-transparent'
           }`}
         />
+        {/* Very light lateral wash just for text legibility while keeping the poster bright and open */}
         <div
-          className={`absolute inset-0 ${
+          className={`absolute inset-0 pointer-events-none ${
             language === 'fa'
               ? theme === 'dark'
-                ? 'bg-gradient-to-l from-slate-950/95 via-slate-950/50 to-transparent'
-                : 'bg-gradient-to-l from-white/95 via-white/50 to-transparent'
+                ? 'bg-gradient-to-l from-slate-950/45 via-slate-950/10 to-transparent'
+                : 'bg-gradient-to-l from-white/45 via-white/10 to-transparent'
               : theme === 'dark'
-              ? 'bg-gradient-to-r from-slate-950/95 via-slate-950/50 to-transparent'
-              : 'bg-gradient-to-r from-white/95 via-white/50 to-transparent'
+              ? 'bg-gradient-to-r from-slate-950/45 via-slate-950/10 to-transparent'
+              : 'bg-gradient-to-r from-white/45 via-white/10 to-transparent'
           }`}
         />
       </div>
@@ -120,7 +121,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
 
           {/* Title */}
           <h1
-            className={`text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight ${
+            className={`text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)] ${
               theme === 'dark' ? 'text-white' : 'text-slate-950'
             }`}
           >
@@ -129,8 +130,8 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
 
           {/* Overview */}
           <p
-            className={`text-sm sm:text-base line-clamp-3 leading-relaxed max-w-xl ${
-              theme === 'dark' ? 'text-slate-300' : 'text-slate-700 font-medium'
+            className={`text-sm sm:text-base line-clamp-3 leading-relaxed max-w-xl drop-shadow-[0_1px_6px_rgba(0,0,0,0.8)] ${
+              theme === 'dark' ? 'text-slate-100 font-normal' : 'text-slate-900 font-semibold'
             }`}
           >
             {currentItem.overview || 'Experience the latest cinematic release with seamless high-definition streaming.'}

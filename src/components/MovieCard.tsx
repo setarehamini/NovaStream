@@ -54,8 +54,8 @@ export const MovieCard: React.FC<MovieCardProps> = ({
           className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
         />
 
-        {/* Subtle dark vignette only at edges to ensure badges pop */}
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/30 pointer-events-none" />
+        {/* Subtle, minimal vignette only at edges so badges pop without darkening the poster */}
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/35 via-transparent to-black/10 pointer-events-none" />
 
         {/* Top Badges */}
         <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between gap-1 pointer-events-none z-10">
