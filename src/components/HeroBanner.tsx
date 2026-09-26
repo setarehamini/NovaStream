@@ -146,7 +146,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
           {/* Title */}
           <h1
             onClick={handleOpenDetails}
-            className={`text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)] cursor-pointer hover:text-indigo-400 transition-colors ${
+            className={`text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)] cursor-pointer ${
               theme === 'dark' ? 'text-white' : 'text-slate-950'
             }`}
           >

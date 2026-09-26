@@ -1,5 +1,5 @@
 import React from 'react';
-import { Play, Film, Tv, Search, ShieldCheck } from 'lucide-react';
+import { Home, Film, Tv, Search, ShieldCheck } from 'lucide-react';
 import { Language, RouteState, Theme } from '../types';
 import { translations } from '../i18n/translations';
 
@@ -53,7 +53,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, language, theme }) =
                   onClick={() => onNavigate({ view: 'home' })}
                   className="hover:text-indigo-400 transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
-                  <Play className="w-3.5 h-3.5 opacity-70" /> {t.home}
+                  <Home className="w-3.5 h-3.5 opacity-70" /> {t.home}
                 </button>
               </li>
               <li>

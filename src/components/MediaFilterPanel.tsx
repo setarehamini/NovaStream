@@ -297,7 +297,7 @@ export const MediaFilterPanel: React.FC<MediaFilterPanelProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
           {/* Release Year */}
           <div
-            className={`p-4 rounded-2xl border ${
+            className={`p-4 rounded-2xl border flex flex-col justify-between ${
               theme === 'dark' ? 'bg-slate-950/60 border-slate-800' : 'bg-white border-slate-200 shadow-xs'
             }`}
           >
@@ -315,11 +315,39 @@ export const MediaFilterPanel: React.FC<MediaFilterPanelProps> = ({
               theme={theme}
               isRtl={isRtl}
             />
+            {/* Quick Presets */}
+            <div className="flex flex-wrap gap-1.5 pt-2">
+              {[
+                { label: language === 'fa' ? 'همه' : 'All', min: 1888, max: 2026 },
+                { label: '2020-2026', min: 2020, max: 2026 },
+                { label: '2010-2019', min: 2010, max: 2019 },
+                { label: '2000-2009', min: 2000, max: 2009 },
+                { label: '< 2000', min: 1970, max: 1999 },
+              ].map((p, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => {
+                    setDraftYearMin(p.min);
+                    setDraftYearMax(p.max);
+                  }}
+                  className={`text-[11px] px-2 py-0.5 rounded-md font-medium transition-colors cursor-pointer ${
+                    draftYearMin === p.min && draftYearMax === p.max
+                      ? 'bg-indigo-600 text-white'
+                      : theme === 'dark'
+                      ? 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  }`}
+                >
+                  {p.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Rating */}
           <div
-            className={`p-4 rounded-2xl border ${
+            className={`p-4 rounded-2xl border flex flex-col justify-between ${
               theme === 'dark' ? 'bg-slate-950/60 border-slate-800' : 'bg-white border-slate-200 shadow-xs'
             }`}
           >
@@ -338,11 +366,38 @@ export const MediaFilterPanel: React.FC<MediaFilterPanelProps> = ({
               theme={theme}
               isRtl={isRtl}
             />
+            {/* Quick Presets */}
+            <div className="flex flex-wrap gap-1.5 pt-2">
+              {[
+                { label: language === 'fa' ? 'همه' : 'All', min: 1.0, max: 10.0 },
+                { label: '★ 8.0 - 10', min: 8.0, max: 10.0 },
+                { label: '★ 7.0 - 10', min: 7.0, max: 10.0 },
+                { label: '★ 6.0 - 8.5', min: 6.0, max: 8.5 },
+              ].map((p, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => {
+                    setDraftRatingMin(p.min);
+                    setDraftRatingMax(p.max);
+                  }}
+                  className={`text-[11px] px-2 py-0.5 rounded-md font-medium transition-colors cursor-pointer ${
+                    Math.abs(draftRatingMin - p.min) < 0.01 && Math.abs(draftRatingMax - p.max) < 0.01
+                      ? 'bg-indigo-600 text-white'
+                      : theme === 'dark'
+                      ? 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  }`}
+                >
+                  {p.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Minimum User Votes */}
           <div
-            className={`p-4 rounded-2xl border ${
+            className={`p-4 rounded-2xl border flex flex-col justify-between ${
               theme === 'dark' ? 'bg-slate-950/60 border-slate-800' : 'bg-white border-slate-200 shadow-xs'
             }`}
           >
@@ -361,6 +416,33 @@ export const MediaFilterPanel: React.FC<MediaFilterPanelProps> = ({
               theme={theme}
               isRtl={isRtl}
             />
+            {/* Quick Presets */}
+            <div className="flex flex-wrap gap-1.5 pt-2">
+              {[
+                { label: language === 'fa' ? 'همه' : 'All', min: 0, max: 10000 },
+                { label: '500+', min: 500, max: 10000 },
+                { label: '1,000+', min: 1000, max: 10000 },
+                { label: '5,000+', min: 5000, max: 10000 },
+              ].map((p, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => {
+                    setDraftMinVotesMin(p.min);
+                    setDraftMinVotesMax(p.max);
+                  }}
+                  className={`text-[11px] px-2 py-0.5 rounded-md font-medium transition-colors cursor-pointer ${
+                    draftMinVotesMin === p.min && draftMinVotesMax === p.max
+                      ? 'bg-indigo-600 text-white'
+                      : theme === 'dark'
+                      ? 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  }`}
+                >
+                  {p.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
