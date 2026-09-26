@@ -127,28 +127,28 @@ export const ActorDetailsView: React.FC<ActorDetailsViewProps> = ({
             <span>{actor.known_for_department || t.actors}</span>
           </div>
 
-          <h1 className={`text-3xl sm:text-5xl font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+          <h1 className={`text-3xl sm:text-5xl font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-zinc-950'}`}>
             {actor.name}
           </h1>
 
           {/* Quick info badges */}
-          <div className="flex flex-wrap items-center gap-3 text-xs text-slate-400">
+          <div className="flex flex-wrap items-center gap-3 text-xs text-zinc-400">
             {actor.birthday && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900/60 border border-slate-800">
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#181818] border border-zinc-800">
                 <Calendar className="w-3.5 h-3.5 text-indigo-400" />
                 <span>{t.born}: {actor.birthday}</span>
               </div>
             )}
 
             {actor.place_of_birth && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900/60 border border-slate-800">
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#181818] border border-zinc-800">
                 <MapPin className="w-3.5 h-3.5 text-amber-500" />
                 <span>{actor.place_of_birth}</span>
               </div>
             )}
 
             {actor.popularity ? (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900/60 border border-slate-800">
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#181818] border border-zinc-800">
                 <Award className="w-3.5 h-3.5 text-emerald-500" />
                 <span>Popularity score: {actor.popularity.toFixed(0)}</span>
               </div>
@@ -157,11 +157,11 @@ export const ActorDetailsView: React.FC<ActorDetailsViewProps> = ({
 
           {/* Biography */}
           <div className="space-y-2 pt-2">
-            <h3 className={`text-sm font-bold uppercase tracking-wider ${theme === 'dark' ? 'text-slate-300' : 'text-slate-700'}`}>
+            <h3 className={`text-sm font-bold uppercase tracking-wider ${theme === 'dark' ? 'text-zinc-300' : 'text-zinc-700'}`}>
               {t.biography}
             </h3>
 
-            <div className={`text-sm leading-relaxed ${theme === 'dark' ? 'text-slate-300' : 'text-slate-700'}`}>
+            <div className={`text-sm leading-relaxed ${theme === 'dark' ? 'text-zinc-300' : 'text-zinc-700'}`}>
               {actor.biography ? (
                 <div>
                   <p className={!isBioExpanded ? 'line-clamp-4' : ''}>
@@ -178,7 +178,7 @@ export const ActorDetailsView: React.FC<ActorDetailsViewProps> = ({
                   )}
                 </div>
               ) : (
-                <p className="text-slate-500">No biography is currently available for this actor.</p>
+                <p className="text-zinc-500">No biography is currently available for this actor.</p>
               )}
             </div>
           </div>
@@ -186,24 +186,24 @@ export const ActorDetailsView: React.FC<ActorDetailsViewProps> = ({
       </div>
 
       {/* Filmography Section */}
-      <div className="pt-8 border-t border-slate-800/60 space-y-6">
+      <div className="pt-8 border-t border-zinc-800 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h2 className={`text-2xl font-bold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+            <h2 className={`text-2xl font-bold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-zinc-950'}`}>
               {t.filmography}
             </h2>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-zinc-500">
               Showing {filteredCredits.length} featured movies and series
             </p>
           </div>
 
           {/* Filmography Filters */}
-          <div className={`flex items-center p-1 rounded-xl border transition-colors ${
-            theme === 'dark' ? 'bg-slate-950/60 border-slate-800' : 'bg-slate-100 border-slate-200'
+          <div className={`flex items-center p-1.5 rounded-2xl border transition-colors ${
+            theme === 'dark' ? 'bg-slate-900/80 border-slate-800' : 'bg-slate-100 border-slate-200'
           }`}>
             <button
               onClick={() => setMediaFilter('all')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
                 mediaFilter === 'all'
                   ? 'bg-indigo-600 text-white shadow-xs'
                   : theme === 'dark'
@@ -216,7 +216,7 @@ export const ActorDetailsView: React.FC<ActorDetailsViewProps> = ({
 
             <button
               onClick={() => setMediaFilter('movie')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer ${
                 mediaFilter === 'movie'
                   ? 'bg-indigo-600 text-white shadow-xs'
                   : theme === 'dark'
@@ -224,21 +224,21 @@ export const ActorDetailsView: React.FC<ActorDetailsViewProps> = ({
                   : 'text-slate-700 hover:text-slate-950 hover:bg-slate-200/60'
               }`}
             >
-              <Film className="w-3 h-3" />
+              <Film className="w-3.5 h-3.5" />
               <span>{t.movies}</span>
             </button>
 
             <button
               onClick={() => setMediaFilter('tv')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer ${
                 mediaFilter === 'tv'
-                  ? 'bg-sky-600 text-white shadow-xs'
+                  ? 'bg-indigo-600 text-white shadow-xs'
                   : theme === 'dark'
                   ? 'text-slate-400 hover:text-white'
                   : 'text-slate-700 hover:text-slate-950 hover:bg-slate-200/60'
               }`}
             >
-              <Tv className="w-3 h-3" />
+              <Tv className="w-3.5 h-3.5" />
               <span>{t.series}</span>
             </button>
           </div>

@@ -55,12 +55,12 @@ export const Pagination: React.FC<PaginationProps> = ({
           onPageChange(currentPage - 1);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
-        className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-medium border flex items-center gap-1 transition-colors ${
+        className={`px-3 py-2 rounded-md text-xs sm:text-sm font-medium border flex items-center gap-1 transition-colors ${
           currentPage <= 1
             ? 'opacity-40 cursor-not-allowed border-transparent'
             : theme === 'dark'
-            ? 'bg-slate-900 border-slate-800 text-slate-200 hover:bg-slate-800'
-            : 'bg-white border-slate-300 text-slate-800 hover:bg-slate-100'
+            ? 'bg-zinc-900 border-zinc-800 text-zinc-200 hover:bg-zinc-800 cursor-pointer'
+            : 'bg-white border-zinc-300 text-zinc-800 hover:bg-zinc-100 cursor-pointer'
         }`}
       >
         <ChevronLeft className="w-4 h-4 rtl:rotate-180" />
@@ -69,7 +69,7 @@ export const Pagination: React.FC<PaginationProps> = ({
       {pages.map((p, idx) => {
         if (typeof p === 'string') {
           return (
-            <span key={`dots-${idx}`} className="px-2 py-1 text-slate-500 text-xs">
+            <span key={`dots-${idx}`} className="px-2 py-1 text-zinc-500 text-xs">
               •••
             </span>
           );
@@ -84,7 +84,7 @@ export const Pagination: React.FC<PaginationProps> = ({
               onPageChange(p);
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className={`min-w-9 h-9 px-2 rounded-lg text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
+            className={`min-w-9 h-9 px-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
               isCurrent
                 ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
                 : theme === 'dark'
@@ -104,12 +104,12 @@ export const Pagination: React.FC<PaginationProps> = ({
           onPageChange(currentPage + 1);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
-        className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-medium border flex items-center gap-1 transition-colors ${
+        className={`px-3 py-2 rounded-md text-xs sm:text-sm font-medium border flex items-center gap-1 transition-colors ${
           currentPage >= maxPages
             ? 'opacity-40 cursor-not-allowed border-transparent'
             : theme === 'dark'
-            ? 'bg-slate-900 border-slate-800 text-slate-200 hover:bg-slate-800'
-            : 'bg-white border-slate-300 text-slate-800 hover:bg-slate-100'
+            ? 'bg-zinc-900 border-zinc-800 text-zinc-200 hover:bg-zinc-800 cursor-pointer'
+            : 'bg-white border-zinc-300 text-zinc-800 hover:bg-zinc-100 cursor-pointer'
         }`}
       >
         <ChevronRight className="w-4 h-4 rtl:rotate-180" />

@@ -130,7 +130,9 @@ export const WatchMovieView: React.FC<WatchMovieViewProps> = ({
         <button
           id="back-to-details-btn"
           onClick={() => onNavigate({ view: 'movie-detail', id })}
-          className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-indigo-400 hover:text-indigo-300 transition-colors cursor-pointer"
+          className={`flex items-center gap-2 text-xs sm:text-sm font-semibold transition-colors cursor-pointer ${
+            theme === 'dark' ? 'text-zinc-400 hover:text-white' : 'text-zinc-600 hover:text-black'
+          }`}
         >
           <ArrowLeft className="w-4 h-4 rtl:rotate-180" />
           <span>{movie ? `${t.moreInfo}: ${movie.title}` : t.movies}</span>
@@ -141,12 +143,12 @@ export const WatchMovieView: React.FC<WatchMovieViewProps> = ({
           {/* Watchlist Quick Button */}
           <button
             onClick={handleToggleWatchlist}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold cursor-pointer transition-colors ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold cursor-pointer transition-colors ${
               inQueue
-                ? 'bg-indigo-600 border-indigo-600 text-white'
+                ? 'bg-indigo-600 border-indigo-600 text-white shadow-md shadow-indigo-600/20'
                 : theme === 'dark'
-                ? 'bg-slate-900 border-slate-800 text-slate-300 hover:text-white'
-                : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50'
+                ? 'bg-slate-800 border-slate-700 text-slate-300 hover:text-white'
+                : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-100'
             }`}
           >
             {inQueue ? <Check className="w-3.5 h-3.5" /> : <Bookmark className="w-3.5 h-3.5" />}
@@ -156,26 +158,26 @@ export const WatchMovieView: React.FC<WatchMovieViewProps> = ({
           {/* Favorite Quick Button */}
           <button
             onClick={handleToggleFavorite}
-            className={`p-1.5 rounded-lg border text-xs font-semibold cursor-pointer transition-colors ${
+            className={`p-1.5 rounded-xl border text-xs font-semibold cursor-pointer transition-colors ${
               isFav
-                ? 'bg-indigo-500/10 border-indigo-500 text-indigo-400'
+                ? 'bg-rose-500/15 border-rose-500/40 text-rose-500'
                 : theme === 'dark'
-                ? 'bg-slate-900 border-slate-800 text-slate-400 hover:text-indigo-400'
-                : 'bg-white border-slate-300 text-slate-500 hover:text-indigo-400'
+                ? 'bg-slate-800 border-slate-700 text-slate-400 hover:text-rose-500'
+                : 'bg-white border-slate-300 text-slate-500 hover:text-rose-500'
             }`}
             title={t.favorites}
           >
-            <Heart className={`w-4 h-4 ${isFav ? 'fill-indigo-500 text-indigo-400' : ''}`} />
+            <Heart className={`w-4 h-4 ${isFav ? 'fill-rose-500 text-rose-500' : ''}`} />
           </button>
 
           {/* Theater mode button */}
           <button
             id="toggle-theater-btn"
             onClick={() => setIsWideTheater(!isWideTheater)}
-            className={`hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold cursor-pointer transition-colors ${
+            className={`hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold cursor-pointer transition-colors ${
               theme === 'dark'
-                ? 'bg-slate-900 border-slate-800 text-slate-300 hover:text-white'
-                : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50'
+                ? 'bg-slate-800 border-slate-700 text-slate-300 hover:text-white'
+                : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-100'
             }`}
           >
             {isWideTheater ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
@@ -186,7 +188,7 @@ export const WatchMovieView: React.FC<WatchMovieViewProps> = ({
 
       {/* Actual Video Streaming Player Container */}
       <div className={`${isWideTheater ? 'w-full px-2 sm:px-6' : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'} transition-all duration-300`}>
-        <div className="relative w-full aspect-16/9 bg-black rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border border-slate-800/80">
+        <div className="relative w-full aspect-16/9 bg-black rounded-2xl overflow-hidden shadow-2xl border border-slate-800">
           {isAuthenticated ? (
             <iframe
               id="movie-streaming-iframe"
@@ -208,11 +210,11 @@ export const WatchMovieView: React.FC<WatchMovieViewProps> = ({
                   className="absolute inset-0 w-full h-full object-cover blur-md opacity-25 scale-105"
                 />
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/90 to-slate-950/70" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/60" />
 
               {/* Lock Content Box */}
               <div className="relative z-10 max-w-lg text-center flex flex-col items-center">
-                <div className="w-16 h-16 rounded-3xl bg-indigo-600/20 border border-indigo-500/40 flex items-center justify-center text-indigo-400 mb-4 shadow-lg shadow-indigo-500/20 animate-pulse">
+                <div className="w-16 h-16 rounded-2xl bg-indigo-600/20 border border-indigo-500/40 flex items-center justify-center text-indigo-400 mb-4 shadow-lg shadow-indigo-600/20 animate-pulse">
                   <Lock className="w-8 h-8" />
                 </div>
 
@@ -231,7 +233,7 @@ export const WatchMovieView: React.FC<WatchMovieViewProps> = ({
                 <div className="flex flex-wrap items-center justify-center gap-3">
                   <button
                     onClick={() => openAuthModal('login', t.loginRequiredDesc)}
-                    className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold text-xs sm:text-sm shadow-xl shadow-indigo-500/30 flex items-center gap-2 cursor-pointer transition-all hover:scale-105"
+                    className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs sm:text-sm shadow-xl shadow-indigo-600/30 flex items-center gap-2 cursor-pointer transition-all hover:scale-105"
                   >
                     <LogIn className="w-4 h-4" />
                     <span>{t.loginRequiredToWatch}</span>
@@ -252,7 +254,7 @@ export const WatchMovieView: React.FC<WatchMovieViewProps> = ({
 
         {/* Server Switcher Bar */}
         <div className={`mt-4 p-4 rounded-2xl border flex flex-wrap items-center justify-between gap-4 ${
-          theme === 'dark' ? 'bg-slate-900/80 border-slate-800' : 'bg-white border-slate-200 shadow-xs'
+          theme === 'dark' ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200 shadow-xs'
         }`}>
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-indigo-400">
             <Server className="w-4 h-4" />
@@ -275,7 +277,7 @@ export const WatchMovieView: React.FC<WatchMovieViewProps> = ({
                   activeServer === srv.id
                     ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
                     : theme === 'dark'
-                    ? 'bg-slate-950 text-slate-400 hover:text-white border border-slate-800'
+                    ? 'bg-slate-800 text-slate-300 hover:text-white border border-slate-700'
                     : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300'
                 }`}
               >
@@ -296,34 +298,34 @@ export const WatchMovieView: React.FC<WatchMovieViewProps> = ({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 space-y-10">
           <div className="space-y-3">
             <div className="flex flex-wrap items-center gap-2 text-xs">
-              <span className="px-2.5 py-0.5 rounded-md bg-indigo-600/20 text-indigo-400 font-bold border border-indigo-500/30">
-                Now Streaming
+              <span className="px-2.5 py-0.5 rounded-lg bg-indigo-500/15 text-indigo-400 border border-indigo-500/25 font-bold uppercase tracking-wider text-[11px] shadow-sm">
+                MOVIE
               </span>
               {movie.vote_average ? (
-                <span className="flex items-center gap-1 text-amber-400 font-bold">
-                  <Star className="w-3.5 h-3.5 fill-amber-400" /> {movie.vote_average.toFixed(1)}
+                <span className="flex items-center gap-1 text-amber-400 font-bold bg-black/40 px-2 py-0.5 rounded-lg border border-black/20">
+                  <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" /> {movie.vote_average.toFixed(1)}
                 </span>
               ) : null}
               {movie.release_date && (
-                <span className="flex items-center gap-1 text-slate-400">
+                <span className="flex items-center gap-1 text-slate-400 font-medium">
                   <Calendar className="w-3.5 h-3.5" /> {new Date(movie.release_date).getFullYear()}
                 </span>
               )}
             </div>
 
-            <h1 className={`text-2xl sm:text-3xl font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+            <h1 className={`text-2xl sm:text-3xl font-black ${theme === 'dark' ? 'text-white' : 'text-zinc-950'}`}>
               {movie.title}
             </h1>
 
-            <p className={`text-sm leading-relaxed max-w-3xl ${theme === 'dark' ? 'text-slate-300' : 'text-slate-700'}`}>
+            <p className={`text-sm leading-relaxed max-w-3xl ${theme === 'dark' ? 'text-zinc-300' : 'text-zinc-700'}`}>
               {movie.overview}
             </p>
           </div>
 
           {/* Recommendations / Similar Movies */}
           {movie.similar?.results && movie.similar.results.length > 0 && (
-            <div className="space-y-4 pt-6 border-t border-slate-800/50">
-              <h3 className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+            <div className="space-y-4 pt-6 border-t border-zinc-800">
+              <h3 className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-zinc-950'}`}>
                 {t.similarMovies}
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">

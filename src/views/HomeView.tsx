@@ -101,9 +101,9 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, language, theme 
         />
       )}
 
-      {/* Main Content Sections */}
+      {/* Main Content Sections - Clean Modern Grids matching user's design */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-10 space-y-12">
-        {/* Section 1: Trending Movies */}
+        {/* Section 1: Trending Movies Grid */}
         <section id="trending-movies-section">
           <div className="flex items-center justify-between mb-5">
             <div>
@@ -116,7 +116,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, language, theme 
             <button
               id="view-all-movies-btn"
               onClick={() => onNavigate({ view: 'movies' })}
-              className="text-xs sm:text-sm font-semibold text-white/90 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer group"
+              className="text-xs sm:text-sm font-semibold text-indigo-400 hover:text-indigo-300 flex items-center gap-1.5 transition-colors cursor-pointer group"
             >
               <span>{t.viewAll}</span>
               <ArrowRight className="w-4 h-4 rtl:rotate-180 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform" />
@@ -140,7 +140,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, language, theme 
           )}
         </section>
 
-        {/* Latest Trailers Slider Section (TMDB style) */}
+        {/* Latest Trailers Slider Section */}
         <LatestTrailersSlider
           onOpenTrailer={handleOpenTrailer}
           language={language}
@@ -154,13 +154,15 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, language, theme 
               <h2 className={`text-xl sm:text-2xl font-bold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
                 {t.popularSeries}
               </h2>
-              <p className="text-xs text-slate-500">Binge-worthy drama, action, and fantasy shows</p>
+              <p className="text-xs text-slate-500">
+                {language === 'fa' ? 'سریال‌های پرطرفدار و هیجان‌انگیز' : 'Binge-worthy drama, action, and fantasy shows'}
+              </p>
             </div>
 
             <button
               id="view-all-series-btn"
               onClick={() => onNavigate({ view: 'series' })}
-              className="text-xs sm:text-sm font-semibold text-white/90 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer group"
+              className="text-xs sm:text-sm font-semibold text-indigo-400 hover:text-indigo-300 flex items-center gap-1.5 transition-colors cursor-pointer group"
             >
               <span>{t.viewAll}</span>
               <ArrowRight className="w-4 h-4 rtl:rotate-180 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform" />
@@ -191,12 +193,14 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, language, theme 
               <h2 className={`text-xl sm:text-2xl font-bold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
                 {t.topRatedMovies}
               </h2>
-              <p className="text-xs text-slate-500">Masterpieces voted by global cinema enthusiasts</p>
+              <p className="text-xs text-slate-500">
+                {language === 'fa' ? 'شاهکارهای تحسین‌شده سینمای جهان' : 'Masterpieces voted by global cinema enthusiasts'}
+              </p>
             </div>
 
             <button
               onClick={() => onNavigate({ view: 'movies' })}
-              className="text-xs sm:text-sm font-semibold text-white/90 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer group"
+              className="text-xs sm:text-sm font-semibold text-indigo-400 hover:text-indigo-300 flex items-center gap-1.5 transition-colors cursor-pointer group"
             >
               <span>{t.viewAll}</span>
               <ArrowRight className="w-4 h-4 rtl:rotate-180 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform" />

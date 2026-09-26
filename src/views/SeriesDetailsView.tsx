@@ -347,71 +347,66 @@ export const SeriesDetailsView: React.FC<SeriesDetailsViewProps> = ({
 
             {/* TV Details Info */}
             <div className="flex-1 space-y-4 text-center md:text-left rtl:md:text-right">
-              {/* Badges */}
-              <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 text-xs font-semibold">
-                <span
-                  className={`flex items-center gap-1.5 px-3 py-1 rounded-md uppercase tracking-wider text-xs font-bold transition-all shadow-md ${
-                    theme === 'dark'
-                      ? 'bg-sky-500/25 text-sky-300 border border-sky-400/40 backdrop-blur-md'
-                      : 'bg-sky-600 text-white border border-sky-600 shadow-sky-600/20'
-                  }`}
-                >
-                  <Tv className={`w-3.5 h-3.5 ${theme === 'dark' ? 'text-sky-400' : 'text-white'}`} />
+              {/* Badges - Modern Purple & Indigo Style matching Movie Details */}
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-2.5 text-xs font-semibold">
+                <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold uppercase tracking-wider bg-sky-500/15 text-sky-400 border border-sky-500/25 shadow-sm">
+                  <Tv className="w-3.5 h-3.5" />
                   <span>{t.series}</span>
                 </span>
-                <span
-                  className={`flex items-center gap-1 px-2.5 py-1 rounded-md border font-semibold ${
-                    theme === 'dark'
-                      ? 'bg-slate-900/90 text-amber-400 border-amber-500/30'
-                      : 'bg-amber-50 text-amber-700 border-amber-300 shadow-xs'
-                  }`}
-                >
-                  <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                  <span>{rating}</span>
-                  {series.vote_count ? <span className="opacity-70 text-[10px]">({series.vote_count.toLocaleString()})</span> : null}
+
+                {rating && (
+                  <span className="flex items-center gap-1 text-amber-400 font-bold bg-black/50 px-2.5 py-1 rounded-xl border border-black/30">
+                    <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                    <span>{rating}</span>
+                  </span>
+                )}
+
+                <span className={`px-2.5 py-1 rounded-xl border font-medium ${
+                  theme === 'dark' ? 'border-slate-800 bg-slate-900/60 text-slate-300' : 'border-slate-200 bg-slate-100 text-slate-700'
+                }`}>
+                  {releaseYear}
                 </span>
-                <span
-                  className={`flex items-center gap-1 px-2.5 py-1 rounded-md border ${
-                    theme === 'dark'
-                      ? 'bg-slate-900/80 text-slate-300 border-slate-700/50'
-                      : 'bg-white text-slate-700 border-slate-300 shadow-xs'
-                  }`}
-                >
-                  <Calendar className="w-3.5 h-3.5 opacity-70" />
-                  <span>{releaseYear}</span>
+
+                <span className={`px-2 py-0.5 rounded-lg border text-[11px] font-bold ${
+                  theme === 'dark' ? 'border-slate-700 text-slate-300' : 'border-slate-300 text-slate-700'
+                }`}>
+                  16+
                 </span>
-                <span
-                  className={`px-2.5 py-1 rounded-md border ${
-                    theme === 'dark'
-                      ? 'bg-slate-900/80 text-slate-300 border-slate-700/50'
-                      : 'bg-white text-slate-700 border-slate-300 shadow-xs'
-                  }`}
-                >
+
+                <span className={`px-2 py-0.5 rounded-lg border text-[11px] font-bold ${
+                  theme === 'dark' ? 'border-slate-700 text-slate-300' : 'border-slate-300 text-slate-700'
+                }`}>
+                  HD
+                </span>
+
+                <span className={`px-2.5 py-1 rounded-xl border ${
+                  theme === 'dark' ? 'border-slate-800 bg-slate-900/60 text-slate-300' : 'border-slate-200 bg-slate-100 text-slate-700'
+                }`}>
                   {series.number_of_seasons || 1} {t.seasons} • {series.number_of_episodes || 0} {t.episodes}
                 </span>
               </div>
 
               {/* Title & Tagline */}
               <div>
-                <h1 className={`text-3xl sm:text-5xl font-black tracking-tight leading-tight ${theme === 'dark' ? 'text-white' : 'text-slate-950'}`}>
+                <h1 className={`text-3xl sm:text-5xl font-black tracking-tight leading-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
                   {series.name}
                 </h1>
                 {series.tagline && (
-                  <p className="text-sm sm:text-base italic text-sky-400 font-medium mt-1">
+                  <p className="text-sm sm:text-base italic text-indigo-400 font-medium mt-1">
                     "{series.tagline}"
                   </p>
                 )}
               </div>
 
               {/* Genres */}
-              <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-1.5 text-xs">
                 {series.genres?.map((g) => (
                   <span
                     key={g.id}
-                    className={`px-3 py-1 rounded-full text-xs font-medium border ${
+                    className={`px-3 py-1 rounded-xl border font-medium ${
                       theme === 'dark'
-                        ? 'bg-slate-900/80 border-slate-700 text-slate-300'
-                        : 'bg-white border-slate-300 text-slate-700 shadow-xs'
+                        ? 'bg-slate-800/60 text-slate-300 border-slate-700/60'
+                        : 'bg-slate-100 text-slate-700 border-slate-200'
                     }`}
                   >
                     {g.name}
@@ -424,9 +419,9 @@ export const SeriesDetailsView: React.FC<SeriesDetailsViewProps> = ({
                 <button
                   id="watch-series-first-ep-btn"
                   onClick={() => onNavigate({ view: 'watch-tv', id: series.id, season: selectedSeasonNum, episode: 1 })}
-                  className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-sky-600 to-sky-500 hover:from-sky-500 hover:to-sky-400 text-white font-bold text-base flex items-center gap-2.5 shadow-xl shadow-sky-600/35 hover:scale-102 active:scale-98 transition-all cursor-pointer"
+                  className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-base flex items-center gap-2.5 shadow-xl shadow-indigo-500/25 hover:scale-102 active:scale-98 transition-all cursor-pointer"
                 >
-                  <Play className="w-5 h-5 fill-white" />
+                  <Play className="w-5 h-5 fill-white text-white" />
                   <span>{t.watchNow} ({t.season} {selectedSeasonNum} {t.episode} 1)</span>
                 </button>
 
@@ -434,13 +429,9 @@ export const SeriesDetailsView: React.FC<SeriesDetailsViewProps> = ({
                   <button
                     id="series-trailer-btn"
                     onClick={() => setIsTrailerOpen(true)}
-                    className={`px-6 py-3.5 rounded-xl text-base font-semibold flex items-center gap-2 border backdrop-blur-md transition-all cursor-pointer ${
-                      theme === 'dark'
-                        ? 'bg-slate-900/80 hover:bg-slate-800 text-white border-slate-700'
-                        : 'bg-white/90 hover:bg-white text-slate-900 border-slate-300 shadow-xs'
-                    }`}
+                    className="px-6 py-3.5 rounded-2xl text-base font-semibold flex items-center gap-2 border bg-slate-800/80 hover:bg-slate-700 text-white border-slate-700 backdrop-blur-md transition-all cursor-pointer"
                   >
-                    <Video className="w-5 h-5 text-sky-500" />
+                    <Video className="w-5 h-5 text-indigo-400" />
                     <span>{t.trailer}</span>
                   </button>
                 )}
@@ -462,19 +453,19 @@ export const SeriesDetailsView: React.FC<SeriesDetailsViewProps> = ({
                       });
                     }
                   }}
-                  className={`px-5 py-3.5 rounded-xl text-sm font-semibold flex items-center gap-2 border transition-all cursor-pointer ${
+                  className={`px-5 py-3.5 rounded-2xl text-sm font-bold flex items-center gap-2 border transition-all cursor-pointer ${
                     isInWatchlist('tv', series.id)
-                      ? 'bg-sky-500 text-white border-sky-500 shadow-lg shadow-sky-500/25'
+                      ? 'bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-600/30'
                       : theme === 'dark'
-                      ? 'bg-slate-900/80 hover:bg-slate-800 text-slate-200 border-slate-700'
-                      : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-300 shadow-xs'
+                      ? 'bg-slate-800/90 hover:bg-slate-700 text-slate-200 border-slate-700'
+                      : 'bg-white hover:bg-slate-100 text-slate-800 border-slate-300 shadow-xs'
                   }`}
                   title={isInWatchlist('tv', series.id) ? t.inWatchlist : t.addToWatchlist}
                 >
                   {isInWatchlist('tv', series.id) ? (
                     <Check className="w-4 h-4 text-white" />
                   ) : (
-                    <Bookmark className="w-4 h-4 text-sky-500" />
+                    <Bookmark className="w-4 h-4 text-zinc-300" />
                   )}
                   <span>{isInWatchlist('tv', series.id) ? t.inWatchlist : t.addToWatchlist}</span>
                 </button>
@@ -496,12 +487,12 @@ export const SeriesDetailsView: React.FC<SeriesDetailsViewProps> = ({
                       });
                     }
                   }}
-                  className={`px-5 py-3.5 rounded-xl text-sm font-semibold flex items-center gap-2 border transition-all cursor-pointer ${
+                  className={`px-5 py-3.5 rounded-md text-sm font-semibold flex items-center gap-2 border transition-all cursor-pointer ${
                     isInWatchLater('tv', series.id)
                       ? 'bg-amber-500 text-white border-amber-500 shadow-lg shadow-amber-500/25'
                       : theme === 'dark'
-                      ? 'bg-slate-900/80 hover:bg-slate-800 text-slate-200 border-slate-700'
-                      : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-300 shadow-xs'
+                      ? 'bg-zinc-800/90 hover:bg-zinc-700 text-zinc-200 border-zinc-700'
+                      : 'bg-white hover:bg-zinc-100 text-zinc-800 border-zinc-300 shadow-xs'
                   }`}
                   title={isInWatchLater('tv', series.id) ? t.inWatchLater : t.addToWatchLater}
                 >
@@ -526,16 +517,16 @@ export const SeriesDetailsView: React.FC<SeriesDetailsViewProps> = ({
                       });
                     }
                   }}
-                  className={`p-3.5 rounded-xl border transition-all cursor-pointer ${
+                  className={`p-3.5 rounded-2xl border transition-all cursor-pointer ${
                     isFavorite('tv', series.id)
-                      ? 'bg-sky-500/20 text-sky-500 border-sky-500/50'
+                      ? 'bg-rose-500/15 border-rose-500/40 text-rose-500'
                       : theme === 'dark'
-                      ? 'bg-slate-900/80 hover:bg-slate-800 text-slate-400 border-slate-700'
-                      : 'bg-white hover:bg-slate-50 text-slate-500 border-slate-300 shadow-xs'
+                      ? 'bg-slate-800/90 hover:bg-slate-700 text-slate-400 border-slate-700'
+                      : 'bg-white hover:bg-slate-100 text-slate-500 border-slate-300 shadow-xs'
                   }`}
                   title={isFavorite('tv', series.id) ? 'Favorited' : 'Add to Favorites'}
                 >
-                  <Heart className={`w-5 h-5 ${isFavorite('tv', series.id) ? 'fill-sky-500 text-sky-500' : ''}`} />
+                  <Heart className={`w-5 h-5 ${isFavorite('tv', series.id) ? 'fill-rose-500 text-rose-500' : ''}`} />
                 </button>
               </div>
             </div>

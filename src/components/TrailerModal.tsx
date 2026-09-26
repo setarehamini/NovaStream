@@ -40,7 +40,7 @@ export const TrailerModal: React.FC<TrailerModalProps> = ({
       <div
         id="trailer-modal-content"
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-4xl bg-slate-950 rounded-2xl overflow-hidden shadow-2xl border border-slate-800"
+        className="relative w-full max-w-4xl bg-slate-900 rounded-2xl overflow-hidden shadow-2xl border border-slate-800"
       >
         {/* Modal Header */}
         <div className="px-4 py-3 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between">
@@ -53,7 +53,7 @@ export const TrailerModal: React.FC<TrailerModalProps> = ({
           <button
             id="close-trailer-modal-btn"
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>

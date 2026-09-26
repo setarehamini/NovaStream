@@ -39,20 +39,20 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
   if (!isAuthenticated) {
     return (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-20 text-center">
-        <div className="w-20 h-20 mx-auto mb-6 rounded-3xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 shadow-xl shadow-indigo-500/10">
+        <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-indigo-600/15 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shadow-xl shadow-indigo-600/20">
           <Bookmark className="w-10 h-10" />
         </div>
-        <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3">
+        <h1 className="text-2xl sm:text-4xl font-black tracking-tight mb-3">
           {t.watchlist}
         </h1>
-        <p className="text-sm sm:text-base text-slate-500 max-w-md mx-auto mb-8">
+        <p className="text-sm sm:text-base text-zinc-400 max-w-md mx-auto mb-8">
           {language === 'fa'
             ? 'برای دسترسی به لیست تماشا، علاقه‌مندی‌ها و تاریخچه مشاهده در تمامی دستگاه‌ها، لطفاً وارد حساب کاربری خود شوید.'
             : 'Sign in to sync your personal Watchlist, favorites, and watch history across all your devices.'}
         </p>
         <button
           onClick={() => openAuthModal('login', 'Sign in to access your Watchlist and saved streaming history.')}
-          className="inline-flex items-center gap-2.5 px-6 py-3 rounded-2xl bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-600 text-white font-semibold text-sm shadow-xl shadow-indigo-500/25 transition-all cursor-pointer"
+          className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-xl shadow-indigo-600/30 hover:scale-105 active:scale-95 transition-all cursor-pointer"
         >
           <LogIn className="w-4 h-4" />
           <span>{t.signIn} / {t.signUp}</span>
@@ -74,34 +74,34 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
           <div className="flex items-center gap-2.5 mb-2">
-            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+            <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-indigo-600 text-white uppercase tracking-wider">
               {t.library}
             </span>
             <span className="text-xs text-slate-400">
               {user?.name || user?.email}
             </span>
           </div>
-          <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
+          <h1 className="text-2xl sm:text-4xl font-black tracking-tight">
             {activeTab === 'watchlist' ? t.watchlist : activeTab === 'favorites' ? t.favorites : t.history}
           </h1>
         </div>
 
         {/* Tab Switcher */}
         <div className={`flex items-center gap-1.5 p-1.5 rounded-2xl border ${
-          theme === 'dark' ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200 shadow-xs'
+          theme === 'dark' ? 'bg-slate-900/80 border-slate-800' : 'bg-slate-100 border-slate-200 shadow-xs'
         }`}>
           <button
             onClick={() => setActiveTab('watchlist')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
               activeTab === 'watchlist'
                 ? 'bg-indigo-600 text-white shadow-md'
-                : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
             }`}
           >
             <Bookmark className="w-4 h-4" />
             <span>{t.watchlist}</span>
             <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
-              activeTab === 'watchlist' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+              activeTab === 'watchlist' ? 'bg-white/20 text-white' : 'bg-slate-800 text-slate-300'
             }`}>
               {watchlist.length}
             </span>
@@ -109,16 +109,16 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
 
           <button
             onClick={() => setActiveTab('favorites')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
               activeTab === 'favorites'
                 ? 'bg-indigo-600 text-white shadow-md'
-                : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
             }`}
           >
             <Heart className="w-4 h-4" />
             <span>{t.favorites}</span>
             <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
-              activeTab === 'favorites' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+              activeTab === 'favorites' ? 'bg-white/20 text-white' : 'bg-slate-800 text-slate-300'
             }`}>
               {favorites.length}
             </span>
@@ -126,16 +126,16 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
 
           <button
             onClick={() => setActiveTab('history')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
               activeTab === 'history'
                 ? 'bg-indigo-600 text-white shadow-md'
-                : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
             }`}
           >
             <History className="w-4 h-4" />
             <span>{t.history}</span>
             <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
-              activeTab === 'history' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+              activeTab === 'history' ? 'bg-white/20 text-white' : 'bg-slate-800 text-slate-300'
             }`}>
               {history.length}
             </span>
@@ -148,20 +148,20 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
         <div className="flex items-center gap-2">
           <button
             onClick={() => setFilterType('all')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-colors ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-all ${
               filterType === 'all'
-                ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/30'
-                : theme === 'dark' ? 'bg-slate-900 text-slate-400 hover:text-white' : 'bg-slate-100 text-slate-700 hover:text-slate-950'
+                ? 'bg-indigo-600 text-white shadow-md'
+                : theme === 'dark' ? 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800' : 'bg-slate-100 text-slate-700 hover:text-slate-950 border border-slate-200'
             }`}
           >
             {t.all} ({rawItems.length})
           </button>
           <button
             onClick={() => setFilterType('movie')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-colors ${
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-all ${
               filterType === 'movie'
-                ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/30'
-                : theme === 'dark' ? 'bg-slate-900 text-slate-400 hover:text-white' : 'bg-slate-100 text-slate-700 hover:text-slate-950'
+                ? 'bg-indigo-600 text-white shadow-md'
+                : theme === 'dark' ? 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800' : 'bg-slate-100 text-slate-700 hover:text-slate-950 border border-slate-200'
             }`}
           >
             <Film className="w-3.5 h-3.5" />
@@ -169,10 +169,10 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
           </button>
           <button
             onClick={() => setFilterType('tv')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-colors ${
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-all ${
               filterType === 'tv'
-                ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/30'
-                : theme === 'dark' ? 'bg-slate-900 text-slate-400 hover:text-white' : 'bg-slate-100 text-slate-700 hover:text-slate-950'
+                ? 'bg-indigo-600 text-white shadow-md'
+                : theme === 'dark' ? 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800' : 'bg-slate-100 text-slate-700 hover:text-slate-950 border border-slate-200'
             }`}
           >
             <Tv className="w-3.5 h-3.5" />
@@ -183,7 +183,7 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
         {activeTab === 'history' && history.length > 0 && (
           <button
             onClick={() => clearHistory()}
-            className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-red-400 font-semibold cursor-pointer transition-colors"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs text-slate-400 hover:text-rose-400 font-semibold cursor-pointer transition-colors border border-slate-700/60"
           >
             <Trash2 className="w-3.5 h-3.5" />
             <span>{t.clearHistory}</span>
@@ -194,15 +194,15 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
       {/* Empty State */}
       {filteredItems.length === 0 ? (
         <div className={`p-12 sm:p-16 rounded-3xl border text-center ${
-          theme === 'dark' ? 'bg-slate-900/50 border-slate-800/80' : 'bg-white border-slate-200'
+          theme === 'dark' ? 'bg-slate-900/60 border-slate-800 shadow-xl' : 'bg-white border-slate-200 shadow-sm'
         }`}>
-          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-slate-500/10 flex items-center justify-center text-slate-400">
-            {activeTab === 'watchlist' ? <Bookmark className="w-8 h-8" /> : activeTab === 'favorites' ? <Heart className="w-8 h-8" /> : <History className="w-8 h-8" />}
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-slate-800/80 border border-slate-700/60 flex items-center justify-center text-slate-400">
+            {activeTab === 'watchlist' ? <Bookmark className="w-8 h-8 text-indigo-400" /> : activeTab === 'favorites' ? <Heart className="w-8 h-8 text-rose-400" /> : <History className="w-8 h-8 text-indigo-400" />}
           </div>
           <h3 className="text-lg sm:text-xl font-bold mb-2">
             {activeTab === 'watchlist' ? t.emptyWatchlist : activeTab === 'favorites' ? t.emptyWatchlist : t.emptyHistory}
           </h3>
-          <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto mb-6">
+          <p className="text-xs sm:text-sm text-slate-400 max-w-sm mx-auto mb-6">
             {activeTab === 'watchlist'
               ? t.emptyWatchlistDesc
               : activeTab === 'favorites'
@@ -211,7 +211,7 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
           </p>
           <button
             onClick={() => onNavigate({ view: 'movies' })}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs sm:text-sm shadow-md transition-all cursor-pointer"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs sm:text-sm shadow-md shadow-indigo-600/25 transition-all cursor-pointer"
           >
             <Sparkles className="w-4 h-4" />
             <span>{language === 'fa' ? 'کاوش فیلم‌ها و سریال‌ها' : 'Discover Movies & Shows'}</span>
@@ -219,7 +219,7 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
         </div>
       ) : (
         /* Items Grid */
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
           {filteredItems.map((item) => {
             const isMovie = item.mediaType === 'movie';
             const displayTitle = item.title || item.name || 'Untitled';
@@ -230,8 +230,8 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
             return (
               <div
                 key={item.id}
-                className={`group relative flex flex-col rounded-2xl border overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl ${
-                  theme === 'dark' ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'
+                className={`group relative flex flex-col rounded-2xl border overflow-hidden transition-all duration-300 hover:scale-103 hover:shadow-2xl hover:shadow-indigo-500/10 ${
+                  theme === 'dark' ? 'bg-slate-900/80 border-slate-800/80' : 'bg-white border-slate-200 shadow-sm'
                 }`}
               >
                 {/* Poster */}
@@ -267,14 +267,14 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
 
                   {/* Play Overlay */}
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <div className="w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-lg transform scale-75 group-hover:scale-100 transition-transform">
-                      <Play className="w-5 h-5 fill-white ml-0.5" />
+                    <div className="w-12 h-12 rounded-full bg-white text-black flex items-center justify-center shadow-lg transform scale-75 group-hover:scale-100 transition-transform">
+                      <Play className="w-5 h-5 fill-black ml-0.5" />
                     </div>
                   </div>
 
                   {/* Media Type Badge */}
-                  <span className="absolute top-2.5 ltr:left-2.5 rtl:right-2.5 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-black/70 backdrop-blur-md text-white border border-white/10">
-                    {isMovie ? t.movies : t.series}
+                  <span className="absolute top-2.5 ltr:left-2.5 rtl:right-2.5 px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-wider bg-indigo-600 text-white shadow-sm">
+                    {isMovie ? 'FILM' : 'SERIES'}
                   </span>
 
                   {/* Remove Button */}
@@ -287,7 +287,7 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
                         removeFromFavorites(item.mediaType, item.mediaId);
                       }
                     }}
-                    className="absolute top-2.5 ltr:right-2.5 rtl:left-2.5 p-1.5 rounded-full bg-black/70 backdrop-blur-md text-slate-300 hover:text-red-400 hover:bg-black/90 transition-colors cursor-pointer"
+                    className="absolute top-2.5 ltr:right-2.5 rtl:left-2.5 p-1.5 rounded-full bg-black/70 backdrop-blur-md text-slate-300 hover:text-rose-400 hover:bg-black/90 transition-colors cursor-pointer"
                     title={t.removeFromWatchlist}
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -315,7 +315,7 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
                     <div className="flex items-center gap-2 mt-1 text-[11px] text-slate-400">
                       {releaseYear && <span>{releaseYear}</span>}
                       {voteAvg !== undefined && (
-                        <span>★ {voteAvg.toFixed(1)}</span>
+                        <span className="text-amber-400">★ {voteAvg.toFixed(1)}</span>
                       )}
                       {(item as any).season && (
                         <span className="text-indigo-400 font-semibold">
@@ -340,7 +340,7 @@ export const WatchlistView: React.FC<WatchlistViewProps> = ({
                         });
                       }
                     }}
-                    className="mt-2.5 w-full py-1.5 rounded-lg bg-indigo-600/10 hover:bg-indigo-600 text-indigo-400 hover:text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                    className="mt-2.5 w-full py-1.5 rounded-xl bg-indigo-600/15 hover:bg-indigo-600 text-indigo-400 hover:text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                   >
                     <Play className="w-3 h-3 fill-current" />
                     <span>{t.watchNow}</span>

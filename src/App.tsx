@@ -33,9 +33,9 @@ export default function App() {
   // Synchronize Theme class on root/body
   useEffect(() => {
     if (theme === 'dark') {
-      document.body.className = "bg-slate-950 text-slate-100 antialiased selection:bg-indigo-500 selection:text-white";
+      document.body.className = "bg-slate-950 text-slate-100 antialiased selection:bg-indigo-600 selection:text-white";
     } else {
-      document.body.className = "bg-slate-50 text-slate-900 antialiased selection:bg-indigo-500 selection:text-white";
+      document.body.className = "bg-slate-50 text-slate-900 antialiased selection:bg-indigo-600 selection:text-white";
     }
   }, [theme]);
 
@@ -144,7 +144,7 @@ export default function App() {
   return (
     <AuthProvider>
       <div className={`min-h-screen flex flex-col font-sans transition-colors duration-200 ${
-        theme === 'dark' ? 'bg-slate-950 text-slate-100' : 'bg-slate-50 text-slate-900'
+        theme === 'dark' ? 'bg-[#141414] text-zinc-100' : 'bg-[#f8f8f8] text-zinc-900'
       }`}>
         {/* Global Auth Modal */}
         <AuthModal language={language} theme={theme} />

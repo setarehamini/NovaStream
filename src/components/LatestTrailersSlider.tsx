@@ -89,9 +89,9 @@ export const LatestTrailersSlider: React.FC<LatestTrailersSliderProps> = ({
           </p>
         </div>
 
-        {/* Category Tabs */}
+        {/* Category Tabs - Rounded pill capsule from screenshot */}
         <div
-          className={`flex items-center p-1 rounded-xl border max-w-full overflow-x-auto ${
+          className={`flex items-center p-1 rounded-full border max-w-full overflow-x-auto ${
             theme === 'dark' ? 'bg-slate-900/80 border-slate-800' : 'bg-slate-100 border-slate-200'
           }`}
         >
@@ -99,10 +99,12 @@ export const LatestTrailersSlider: React.FC<LatestTrailersSliderProps> = ({
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
                 activeCategory === cat.id
-                  ? 'bg-indigo-600 text-white shadow-sm'
-                  : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-200'
+                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 font-bold'
+                  : theme === 'dark'
+                  ? 'text-slate-400 hover:text-white'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               {cat.label}
@@ -112,11 +114,11 @@ export const LatestTrailersSlider: React.FC<LatestTrailersSliderProps> = ({
       </div>
 
       {/* Horizontal Carousel */}
-      <div className="relative group">
+      <div className="relative group/slider">
         {/* Scroll Left Button */}
         <button
           onClick={() => handleScroll('left')}
-          className="absolute -left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-slate-950/80 hover:bg-indigo-600 text-white border border-slate-700/60 shadow-xl backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all cursor-pointer disabled:opacity-0"
+          className="absolute -left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-slate-900/90 hover:bg-indigo-600 text-white border border-slate-700/60 shadow-xl backdrop-blur-md flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all cursor-pointer disabled:opacity-0"
           aria-label="Scroll left"
         >
           <ChevronLeft className="w-5 h-5 rtl:rotate-180" />
@@ -125,7 +127,7 @@ export const LatestTrailersSlider: React.FC<LatestTrailersSliderProps> = ({
         {/* Scroll Right Button */}
         <button
           onClick={() => handleScroll('right')}
-          className="absolute -right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-slate-950/80 hover:bg-indigo-600 text-white border border-slate-700/60 shadow-xl backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all cursor-pointer disabled:opacity-0"
+          className="absolute -right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-slate-900/90 hover:bg-indigo-600 text-white border border-slate-700/60 shadow-xl backdrop-blur-md flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all cursor-pointer disabled:opacity-0"
           aria-label="Scroll right"
         >
           <ChevronRight className="w-5 h-5 rtl:rotate-180" />
@@ -139,7 +141,7 @@ export const LatestTrailersSlider: React.FC<LatestTrailersSliderProps> = ({
             Array.from({ length: 4 }).map((_, i) => (
               <div
                 key={`trailer-skeleton-${i}`}
-                className="w-72 sm:w-80 shrink-0 aspect-video rounded-2xl bg-slate-800/40 animate-pulse border border-slate-800"
+                className="w-72 sm:w-84 shrink-0 aspect-video rounded-2xl bg-slate-900 animate-pulse border border-slate-800"
               />
             ))
           ) : (
@@ -153,10 +155,10 @@ export const LatestTrailersSlider: React.FC<LatestTrailersSliderProps> = ({
                 <div
                   key={`trailer-card-${item.id}`}
                   onClick={() => onOpenTrailer(item)}
-                  className="w-72 sm:w-84 shrink-0 cursor-pointer group/card flex flex-col snap-start"
+                  className="w-72 sm:w-84 shrink-0 cursor-pointer group/card flex flex-col snap-start outline-none focus:outline-none focus:ring-0 active:outline-none select-none"
                 >
-                  {/* Backdrop with Play Button */}
-                  <div className="relative aspect-video rounded-2xl overflow-hidden border border-slate-700/50 shadow-lg bg-slate-900 group-hover/card:border-indigo-500/80 transition-all duration-300">
+                  {/* Backdrop with Purple Glowing Play Button & Rounded-2xl */}
+                  <div className="relative aspect-video rounded-2xl overflow-hidden border border-slate-800/80 shadow-lg bg-slate-900 group-hover/card:border-indigo-500/50 transition-all duration-300">
                     <img
                       src={backdropUrl}
                       alt={title}
@@ -166,39 +168,35 @@ export const LatestTrailersSlider: React.FC<LatestTrailersSliderProps> = ({
                     />
 
                     {/* Dark gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
 
-                    {/* Center Glowing Play Button */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-12 h-12 rounded-full bg-indigo-600/90 text-white flex items-center justify-center shadow-xl shadow-indigo-600/40 group-hover/card:scale-115 group-hover/card:bg-indigo-500 transition-all">
-                        <Play className="w-5 h-5 fill-white translate-x-0.5" />
+                    {/* Center Purple Play Button */}
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                      <div className="w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-600/50 group-hover/card:scale-115 group-hover/card:bg-indigo-500 transition-all">
+                        <Play className="w-5 h-5 fill-white text-white translate-x-0.5" />
                       </div>
                     </div>
 
                     {/* Type and Year Tag */}
-                    <div className="absolute top-2.5 left-2.5 rtl:left-auto rtl:right-2.5 flex items-center gap-1.5">
-                      <span className="px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-slate-950/80 text-white border border-slate-700/50 backdrop-blur-md">
+                    <div className="absolute top-3 left-3 rtl:left-auto rtl:right-3 flex items-center gap-1.5">
+                      <span className="px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-black/75 backdrop-blur-md text-white border border-white/10 shadow-sm">
                         {item.media_type === 'tv' ? t.series : t.movies}
                       </span>
                       {year && (
-                        <span className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-slate-950/70 text-slate-300 border border-slate-700/40 backdrop-blur-md">
+                        <span className="px-2 py-1 rounded-lg text-[10px] font-medium bg-black/75 text-slate-300 border border-white/10 backdrop-blur-md shadow-sm">
                           {year}
                         </span>
                       )}
                     </div>
                   </div>
 
-                  {/* Title & Info */}
-                  <div className="mt-2.5 px-1">
-                    <h3 className={`text-sm font-bold truncate group-hover/card:text-indigo-400 transition-colors ${
+                  <h3
+                    className={`mt-2.5 text-sm font-bold line-clamp-1 group-hover/card:text-indigo-400 transition-colors ${
                       theme === 'dark' ? 'text-white' : 'text-slate-900'
-                    }`}>
-                      {title}
-                    </h3>
-                    <p className="text-xs text-slate-500 line-clamp-1 mt-0.5">
-                      {item.overview || t.trailer}
-                    </p>
-                  </div>
+                    }`}
+                  >
+                    {title}
+                  </h3>
                 </div>
               );
             })

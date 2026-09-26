@@ -167,7 +167,9 @@ export const WatchTvView: React.FC<WatchTvViewProps> = ({
         <button
           id="back-to-tv-details-btn"
           onClick={() => onNavigate({ view: 'series-detail', id })}
-          className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-sky-500 hover:text-sky-400 transition-colors cursor-pointer"
+          className={`flex items-center gap-2 text-xs sm:text-sm font-semibold transition-colors cursor-pointer ${
+            theme === 'dark' ? 'text-zinc-400 hover:text-white' : 'text-zinc-600 hover:text-black'
+          }`}
         >
           <ArrowLeft className="w-4 h-4 rtl:rotate-180" />
           <span>{series ? `${t.moreInfo}: ${series.name}` : t.series}</span>
@@ -178,12 +180,12 @@ export const WatchTvView: React.FC<WatchTvViewProps> = ({
           {/* Watchlist Quick Button */}
           <button
             onClick={handleToggleWatchlist}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold cursor-pointer transition-colors ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold cursor-pointer transition-colors ${
               inQueue
-                ? 'bg-indigo-600 border-indigo-600 text-white'
+                ? 'bg-indigo-600 border-indigo-600 text-white shadow-md shadow-indigo-600/20'
                 : theme === 'dark'
-                ? 'bg-slate-900 border-slate-800 text-slate-300 hover:text-white'
-                : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50'
+                ? 'bg-slate-800 border-slate-700 text-slate-300 hover:text-white'
+                : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-100'
             }`}
           >
             {inQueue ? <Check className="w-3.5 h-3.5" /> : <Bookmark className="w-3.5 h-3.5" />}
@@ -193,35 +195,35 @@ export const WatchTvView: React.FC<WatchTvViewProps> = ({
           {/* Favorite Quick Button */}
           <button
             onClick={handleToggleFavorite}
-            className={`p-1.5 rounded-lg border text-xs font-semibold cursor-pointer transition-colors ${
+            className={`p-1.5 rounded-xl border text-xs font-semibold cursor-pointer transition-colors ${
               isFav
-                ? 'bg-indigo-500/10 border-indigo-500 text-indigo-400'
+                ? 'bg-rose-500/15 border-rose-500/40 text-rose-500'
                 : theme === 'dark'
-                ? 'bg-slate-900 border-slate-800 text-slate-400 hover:text-indigo-400'
-                : 'bg-white border-slate-300 text-slate-500 hover:text-indigo-400'
+                ? 'bg-slate-800 border-slate-700 text-slate-400 hover:text-rose-500'
+                : 'bg-white border-slate-300 text-slate-500 hover:text-rose-500'
             }`}
             title={t.favorites}
           >
-            <Heart className={`w-4 h-4 ${isFav ? 'fill-indigo-500 text-indigo-400' : ''}`} />
+            <Heart className={`w-4 h-4 ${isFav ? 'fill-rose-500 text-rose-500' : ''}`} />
           </button>
 
           <button
             id="watch-prev-ep-btn"
             disabled={!hasPrevEpisode}
             onClick={handlePrevEpisode}
-            className={`px-3 py-1.5 rounded-lg border text-xs font-semibold flex items-center gap-1 transition-colors ${
+            className={`px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1 transition-colors ${
               !hasPrevEpisode
                 ? 'opacity-40 cursor-not-allowed border-transparent text-slate-500'
                 : theme === 'dark'
-                ? 'bg-slate-900 border-slate-800 text-slate-300 hover:text-white cursor-pointer'
-                : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50 cursor-pointer'
+                ? 'bg-slate-800 border-slate-700 text-slate-300 hover:text-white cursor-pointer'
+                : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-100 cursor-pointer'
             }`}
           >
             <ChevronLeft className="w-4 h-4 rtl:rotate-180" />
             <span className="hidden sm:inline">{t.prevEpisode}</span>
           </button>
 
-          <span className="text-xs font-bold px-2 py-1 rounded-md bg-sky-600/20 text-sky-400 border border-sky-500/30">
+          <span className="text-xs font-bold px-2.5 py-1 rounded-xl bg-indigo-600/20 text-indigo-400 border border-indigo-500/40">
             S{season} : E{episode}
           </span>
 
@@ -229,12 +231,12 @@ export const WatchTvView: React.FC<WatchTvViewProps> = ({
             id="watch-next-ep-btn"
             disabled={!hasNextEpisode}
             onClick={handleNextEpisode}
-            className={`px-3 py-1.5 rounded-lg border text-xs font-semibold flex items-center gap-1 transition-colors ${
+            className={`px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1 transition-colors ${
               !hasNextEpisode
                 ? 'opacity-40 cursor-not-allowed border-transparent text-slate-500'
                 : theme === 'dark'
-                ? 'bg-slate-900 border-slate-800 text-slate-300 hover:text-white cursor-pointer'
-                : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50 cursor-pointer'
+                ? 'bg-slate-800 border-slate-700 text-slate-300 hover:text-white cursor-pointer'
+                : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-100 cursor-pointer'
             }`}
           >
             <span className="hidden sm:inline">{t.nextEpisode}</span>
@@ -244,10 +246,10 @@ export const WatchTvView: React.FC<WatchTvViewProps> = ({
           <button
             id="toggle-tv-theater-btn"
             onClick={() => setIsWideTheater(!isWideTheater)}
-            className={`hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold cursor-pointer transition-colors ml-2 ${
+            className={`hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-xs font-semibold cursor-pointer transition-colors ml-2 ${
               theme === 'dark'
-                ? 'bg-slate-900 border-slate-800 text-slate-300 hover:text-white'
-                : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50'
+                ? 'bg-zinc-800 border-zinc-700 text-zinc-300 hover:text-white'
+                : 'bg-white border-zinc-300 text-zinc-700 hover:bg-zinc-100'
             }`}
           >
             {isWideTheater ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
@@ -257,7 +259,7 @@ export const WatchTvView: React.FC<WatchTvViewProps> = ({
 
       {/* Actual Video Streaming Player Container */}
       <div className={`${isWideTheater ? 'w-full px-2 sm:px-6' : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'} transition-all duration-300`}>
-        <div className="relative w-full aspect-16/9 bg-black rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border border-slate-800/80">
+        <div className="relative w-full aspect-16/9 bg-black rounded-lg sm:rounded-xl overflow-hidden shadow-2xl border border-zinc-800">
           {isAuthenticated ? (
             <iframe
               id="tv-streaming-iframe"
@@ -279,15 +281,15 @@ export const WatchTvView: React.FC<WatchTvViewProps> = ({
                   className="absolute inset-0 w-full h-full object-cover blur-md opacity-25 scale-105"
                 />
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/90 to-slate-950/70" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/60" />
 
               {/* Lock Content Box */}
               <div className="relative z-10 max-w-lg text-center flex flex-col items-center">
-                <div className="w-16 h-16 rounded-3xl bg-sky-600/20 border border-sky-500/40 flex items-center justify-center text-sky-400 mb-4 shadow-lg shadow-sky-500/20 animate-pulse">
+                <div className="w-16 h-16 rounded-2xl bg-indigo-600/20 border border-indigo-500/40 flex items-center justify-center text-indigo-400 mb-4 shadow-lg shadow-indigo-600/20 animate-pulse">
                   <Lock className="w-8 h-8" />
                 </div>
 
-                <span className="text-xs font-bold uppercase tracking-widest text-sky-400 mb-2">
+                <span className="text-xs font-bold uppercase tracking-widest text-indigo-400 mb-2">
                   {t.streamingLocked}
                 </span>
 
@@ -302,7 +304,7 @@ export const WatchTvView: React.FC<WatchTvViewProps> = ({
                 <div className="flex flex-wrap items-center justify-center gap-3">
                   <button
                     onClick={() => openAuthModal('login', t.loginRequiredDesc)}
-                    className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-600 to-sky-500 hover:from-sky-500 hover:to-sky-600 text-white font-bold text-xs sm:text-sm shadow-xl shadow-sky-500/30 flex items-center gap-2 cursor-pointer transition-all hover:scale-105"
+                    className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs sm:text-sm shadow-xl shadow-indigo-600/30 flex items-center gap-2 cursor-pointer transition-all hover:scale-105"
                   >
                     <LogIn className="w-4 h-4" />
                     <span>{t.loginRequiredToWatch}</span>
@@ -323,9 +325,9 @@ export const WatchTvView: React.FC<WatchTvViewProps> = ({
 
         {/* Server & Next/Prev Navigation Bar */}
         <div className={`mt-4 p-4 rounded-2xl border flex flex-wrap items-center justify-between gap-4 ${
-          theme === 'dark' ? 'bg-slate-900/80 border-slate-800' : 'bg-white border-slate-200 shadow-xs'
+          theme === 'dark' ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200 shadow-xs'
         }`}>
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-sky-500">
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-indigo-400">
             <Server className="w-4 h-4" />
             <span>{t.server}:</span>
           </div>
@@ -344,9 +346,9 @@ export const WatchTvView: React.FC<WatchTvViewProps> = ({
                 }}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   activeServer === srv.id
-                    ? 'bg-sky-600 text-white shadow-md shadow-sky-600/30'
+                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
                     : theme === 'dark'
-                    ? 'bg-slate-950 text-slate-400 hover:text-white border border-slate-800'
+                    ? 'bg-slate-800 text-slate-300 hover:text-white border border-slate-700'
                     : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300'
                 }`}
               >
@@ -368,7 +370,10 @@ export const WatchTvView: React.FC<WatchTvViewProps> = ({
         <div className="lg:col-span-2 space-y-4">
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-xs">
-              <span className="px-2.5 py-0.5 rounded-md bg-sky-600/20 text-sky-400 font-bold border border-sky-500/30">
+              <span className="px-2.5 py-0.5 rounded-lg bg-sky-500/15 text-sky-400 border border-sky-500/25 font-bold uppercase tracking-wider text-[11px] shadow-sm">
+                SERIES
+              </span>
+              <span className="px-2.5 py-0.5 rounded-lg bg-slate-800 text-slate-300 font-bold border border-slate-700">
                 {t.season} {season} • {t.episode} {episode}
               </span>
               {currentEpData?.air_date && (
@@ -390,7 +395,7 @@ export const WatchTvView: React.FC<WatchTvViewProps> = ({
             <button
               disabled={!hasPrevEpisode}
               onClick={handlePrevEpisode}
-              className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs flex items-center gap-2 disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
+              className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs flex items-center gap-2 disabled:opacity-40 disabled:pointer-events-none cursor-pointer border border-slate-700"
             >
               <ChevronLeft className="w-4 h-4 rtl:rotate-180" />
               <span>{t.prevEpisode}</span>
@@ -399,7 +404,7 @@ export const WatchTvView: React.FC<WatchTvViewProps> = ({
             <button
               disabled={!hasNextEpisode}
               onClick={handleNextEpisode}
-              className="px-5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs flex items-center gap-2 disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
+              className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs flex items-center gap-2 disabled:opacity-40 disabled:pointer-events-none cursor-pointer shadow-md shadow-indigo-600/30"
             >
               <span>{t.nextEpisode}</span>
               <ChevronRight className="w-4 h-4 rtl:rotate-180" />
@@ -410,21 +415,21 @@ export const WatchTvView: React.FC<WatchTvViewProps> = ({
         {/* Right Column: Episode Playlist */}
         <div
           className={`p-5 rounded-2xl border space-y-4 h-[480px] flex flex-col ${
-            theme === 'dark' ? 'bg-slate-900/60 border-slate-800' : 'bg-slate-50 border-slate-200'
+            theme === 'dark' ? 'bg-slate-900 border-slate-800' : 'bg-slate-50 border-slate-200'
           }`}
         >
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800/40 gap-2">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-800 gap-2">
             <div className="flex items-center gap-2 min-w-0">
-              <Layers className="w-4 h-4 text-sky-500 shrink-0" />
+              <Layers className="w-4 h-4 text-indigo-400 shrink-0" />
               {availableSeasons.length > 1 ? (
                 <select
                   id="watch-tv-season-select"
                   value={season}
                   onChange={(e) => onNavigate({ view: 'watch-tv', id, season: Number(e.target.value), episode: 1 })}
-                  className={`text-xs font-bold px-2 py-1 rounded-lg border cursor-pointer outline-hidden ${
+                  className={`text-xs font-bold px-2.5 py-1 rounded-xl border cursor-pointer outline-hidden ${
                     theme === 'dark'
-                      ? 'bg-slate-900 border-slate-700 text-slate-200 focus:border-sky-500'
-                      : 'bg-white border-slate-300 text-slate-800 focus:border-sky-500 shadow-xs'
+                      ? 'bg-slate-900 border-slate-700 text-slate-200 focus:border-indigo-500'
+                      : 'bg-white border-slate-300 text-slate-800 focus:border-indigo-500 shadow-xs'
                   }`}
                 >
                   {availableSeasons.map((s) => (
@@ -454,15 +459,15 @@ export const WatchTvView: React.FC<WatchTvViewProps> = ({
                   onClick={() => onNavigate({ view: 'watch-tv', id, season, episode: ep.episode_number })}
                   className={`p-2.5 rounded-xl border transition-all flex items-center justify-between gap-3 cursor-pointer ${
                     isPlaying
-                      ? 'bg-sky-600/15 border-sky-500 text-sky-400 font-bold'
+                      ? 'bg-indigo-600/15 border-indigo-500/50 text-indigo-400 font-bold'
                       : theme === 'dark'
                       ? 'bg-slate-950/60 border-slate-800/70 hover:border-slate-700 text-slate-300'
                       : 'bg-white border-slate-200 hover:border-slate-300 text-slate-700 shadow-xs'
                   }`}
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <div className={`w-6 h-6 rounded-md flex items-center justify-center text-xs font-mono shrink-0 ${
-                      isPlaying ? 'bg-sky-600 text-white' : 'bg-slate-800 text-slate-400'
+                    <div className={`w-6 h-6 rounded-lg flex items-center justify-center text-xs font-mono shrink-0 ${
+                      isPlaying ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-400'
                     }`}>
                       {ep.episode_number}
                     </div>
@@ -471,7 +476,7 @@ export const WatchTvView: React.FC<WatchTvViewProps> = ({
                     </span>
                   </div>
 
-                  <Play className={`w-3.5 h-3.5 shrink-0 ${isPlaying ? 'text-sky-400 fill-sky-400' : 'opacity-40'}`} />
+                  <Play className={`w-3.5 h-3.5 shrink-0 ${isPlaying ? 'text-indigo-400 fill-indigo-400' : 'opacity-40'}`} />
                 </div>
               );
             })}

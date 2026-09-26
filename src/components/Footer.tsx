@@ -18,21 +18,28 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, language, theme }) =
       className={`mt-20 border-t transition-colors ${
         theme === 'dark'
           ? 'bg-slate-950 border-slate-800 text-slate-400'
-          : 'bg-slate-100/80 border-slate-200 text-slate-600'
+          : 'bg-slate-100 border-slate-200 text-slate-600'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-          {/* Brand Info */}
+          {/* Brand Info - Matching header styling & clickable home navigation */}
           <div className="md:col-span-2 space-y-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-500 flex items-center justify-center shadow-md">
-                <Film className="w-4 h-4 text-white" />
+            <button
+              id="footer-brand-logo-btn"
+              onClick={() => onNavigate({ view: 'home' })}
+              className="flex items-center gap-2.5 group cursor-pointer focus:outline-hidden text-left rtl:text-right"
+              title="NovaFlix Home"
+            >
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform duration-200">
+                <Film className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-black tracking-tight bg-gradient-to-r from-indigo-400 via-sky-400 to-cyan-400 bg-clip-text text-transparent">
-                NOV<span className={theme === 'dark' ? 'text-white' : 'text-slate-900'}>A</span>
-              </span>
-            </div>
+              <div className="flex flex-col text-left rtl:text-right">
+                <span className={`text-xl font-bold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+                  Nova<span className="text-indigo-500">Flix</span>
+                </span>
+              </div>
+            </button>
             <p className="text-xs sm:text-sm leading-relaxed max-w-md opacity-85">
               {t.tagline}. {t.footerDisclaimer}
             </p>
@@ -50,34 +57,38 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, language, theme }) =
             <ul className="space-y-2 text-sm">
               <li>
                 <button
+                  id="footer-nav-home"
                   onClick={() => onNavigate({ view: 'home' })}
-                  className="hover:text-indigo-400 transition-colors flex items-center gap-1.5 cursor-pointer"
+                  className="hover:text-indigo-400 transition-colors flex items-center gap-2 cursor-pointer font-medium"
                 >
-                  <Home className="w-3.5 h-3.5 opacity-70" /> {t.home}
+                  <Home className="w-4 h-4 text-indigo-400" /> {t.home}
                 </button>
               </li>
               <li>
                 <button
+                  id="footer-nav-movies"
                   onClick={() => onNavigate({ view: 'movies' })}
-                  className="hover:text-indigo-400 transition-colors flex items-center gap-1.5 cursor-pointer"
+                  className="hover:text-indigo-400 transition-colors flex items-center gap-2 cursor-pointer font-medium"
                 >
-                  <Film className="w-3.5 h-3.5 opacity-70" /> {t.movies}
+                  <Film className="w-4 h-4 opacity-70 hover:opacity-100" /> {t.movies}
                 </button>
               </li>
               <li>
                 <button
+                  id="footer-nav-series"
                   onClick={() => onNavigate({ view: 'series' })}
-                  className="hover:text-indigo-400 transition-colors flex items-center gap-1.5 cursor-pointer"
+                  className="hover:text-indigo-400 transition-colors flex items-center gap-2 cursor-pointer font-medium"
                 >
-                  <Tv className="w-3.5 h-3.5 opacity-70" /> {t.series}
+                  <Tv className="w-4 h-4 opacity-70 hover:opacity-100" /> {t.series}
                 </button>
               </li>
               <li>
                 <button
+                  id="footer-nav-search"
                   onClick={() => onNavigate({ view: 'search' })}
-                  className="hover:text-indigo-400 transition-colors flex items-center gap-1.5 cursor-pointer"
+                  className="hover:text-indigo-400 transition-colors flex items-center gap-2 cursor-pointer font-medium"
                 >
-                  <Search className="w-3.5 h-3.5 opacity-70" /> {t.search}
+                  <Search className="w-4 h-4 opacity-70 hover:opacity-100" /> {t.search}
                 </button>
               </li>
             </ul>
@@ -85,9 +96,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, language, theme }) =
         </div>
 
         {/* Bottom bar */}
-        <div className="pt-6 border-t border-slate-800/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+        <div className="pt-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
           <div>
-            © {new Date().getFullYear()} Nova Cinema. {t.footerRights}
+            © {new Date().getFullYear()} NovaFlix Cinema. {t.footerRights}
           </div>
           <div className="flex items-center gap-4">
             <span className="opacity-75">EN / فارسی Supported</span>

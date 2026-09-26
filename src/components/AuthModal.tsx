@@ -89,19 +89,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({ language, theme }) => {
 
       {/* Modal Dialog Card */}
       <div
-        className={`relative w-full max-w-md rounded-3xl border shadow-2xl p-6 sm:p-8 z-10 transition-all ${
+        className={`relative w-full max-w-md rounded-xl border shadow-2xl p-6 sm:p-8 z-10 transition-all ${
           theme === 'dark'
-            ? 'bg-slate-900 border-slate-800 text-slate-100'
-            : 'bg-white border-slate-200 text-slate-900'
+            ? 'bg-[#141414] border-zinc-800 text-zinc-100 shadow-black'
+            : 'bg-white border-zinc-200 text-zinc-900'
         }`}
       >
         {/* Close Button */}
         <button
           onClick={closeAuthModal}
-          className={`absolute top-5 ltr:right-5 rtl:left-5 p-2 rounded-full cursor-pointer transition-colors ${
+          className={`absolute top-5 ltr:right-5 rtl:left-5 p-2 rounded-md cursor-pointer transition-colors ${
             theme === 'dark'
-              ? 'hover:bg-slate-800 text-slate-400 hover:text-white'
-              : 'hover:bg-slate-100 text-slate-500 hover:text-slate-900'
+              ? 'hover:bg-zinc-800 text-zinc-400 hover:text-white'
+              : 'hover:bg-zinc-100 text-zinc-500 hover:text-zinc-900'
           }`}
           aria-label="Close"
         >
@@ -110,13 +110,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ language, theme }) => {
 
         {/* Brand / Header */}
         <div className="flex flex-col items-center text-center mb-6">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25 mb-3">
-            <Film className="w-6 h-6" />
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25 mb-3">
+            <Film className="w-6 h-6 text-white" />
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-black tracking-tight">
             {mode === 'login' ? t.signIn : t.createAccount}
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+          <p className="text-xs sm:text-sm text-slate-400 mt-1">
             {mode === 'login'
               ? (language === 'fa' ? 'برای پخش ویدیو و مدیریت لیست تماشا وارد شوید' : 'Sign in to stream movies and sync your Watchlist')
               : (language === 'fa' ? 'ثبت‌نام رایگان برای دسترسی کامل به پخش آنلاین' : 'Join free for instant streaming & personal queue')}
@@ -125,7 +125,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ language, theme }) => {
 
         {/* Prompt Alert (e.g. when blocked from watching) */}
         {authPromptMessage && (
-          <div className="mb-5 p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-3 text-xs sm:text-sm text-amber-600 dark:text-amber-300">
+          <div className="mb-5 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-3 text-xs sm:text-sm text-amber-400">
             <Lock className="w-4 h-4 shrink-0 mt-0.5" />
             <div className="leading-snug">{authPromptMessage}</div>
           </div>
@@ -133,7 +133,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ language, theme }) => {
 
         {/* Error Alert */}
         {errorMessage && (
-          <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/30 flex items-center gap-2.5 text-xs sm:text-sm text-red-400">
+          <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center gap-2.5 text-xs sm:text-sm text-rose-400">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{errorMessage}</span>
           </div>
@@ -148,16 +148,16 @@ export const AuthModal: React.FC<AuthModalProps> = ({ language, theme }) => {
         )}
 
         {/* Mode Switch Tabs */}
-        <div className={`grid grid-cols-2 p-1 rounded-2xl mb-5 ${
-          theme === 'dark' ? 'bg-slate-950/60' : 'bg-slate-100'
+        <div className={`grid grid-cols-2 p-1 rounded-xl mb-5 ${
+          theme === 'dark' ? 'bg-slate-900 border border-slate-800' : 'bg-slate-100 border border-slate-200'
         }`}>
           <button
             type="button"
             onClick={() => { setMode('login'); setErrorMessage(null); }}
-            className={`py-2 text-xs sm:text-sm font-semibold rounded-xl transition-all cursor-pointer ${
+            className={`py-2 text-xs sm:text-sm font-bold rounded-lg transition-all cursor-pointer ${
               mode === 'login'
-                ? 'bg-indigo-600 text-white shadow-md'
-                : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/25'
+                : 'text-slate-400 hover:text-white'
             }`}
           >
             {t.signIn}
@@ -165,10 +165,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ language, theme }) => {
           <button
             type="button"
             onClick={() => { setMode('register'); setErrorMessage(null); }}
-            className={`py-2 text-xs sm:text-sm font-semibold rounded-xl transition-all cursor-pointer ${
+            className={`py-2 text-xs sm:text-sm font-bold rounded-lg transition-all cursor-pointer ${
               mode === 'register'
-                ? 'bg-indigo-600 text-white shadow-md'
-                : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/25'
+                : 'text-slate-400 hover:text-white'
             }`}
           >
             {t.signUp}
@@ -179,7 +179,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ language, theme }) => {
         <form onSubmit={handleSubmit} className="space-y-4">
           {mode === 'register' && (
             <div>
-              <label className="block text-xs font-semibold mb-1.5 opacity-80">
+              <label className="block text-xs font-semibold mb-1.5 text-slate-300">
                 {t.name}
               </label>
               <div className="relative">
@@ -191,8 +191,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ language, theme }) => {
                   placeholder="e.g. Alex Morgan"
                   className={`w-full ltr:pl-10 rtl:pr-10 py-2.5 px-4 rounded-xl text-xs sm:text-sm border outline-hidden transition-all ${
                     theme === 'dark'
-                      ? 'bg-slate-950 border-slate-800 text-white focus:border-indigo-500'
-                      : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-indigo-500'
+                      ? 'bg-slate-900 border-slate-700 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'
+                      : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'
                   }`}
                 />
               </div>
@@ -200,7 +200,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ language, theme }) => {
           )}
 
           <div>
-            <label className="block text-xs font-semibold mb-1.5 opacity-80">
+            <label className="block text-xs font-semibold mb-1.5 text-slate-300">
               {t.email} *
             </label>
             <div className="relative">
@@ -213,15 +213,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({ language, theme }) => {
                 placeholder="name@example.com"
                 className={`w-full ltr:pl-10 rtl:pr-10 py-2.5 px-4 rounded-xl text-xs sm:text-sm border outline-hidden transition-all ${
                   theme === 'dark'
-                    ? 'bg-slate-950 border-slate-800 text-white focus:border-indigo-500'
-                    : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-indigo-500'
+                    ? 'bg-slate-900 border-slate-700 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'
+                    : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'
                 }`}
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold mb-1.5 opacity-80">
+            <label className="block text-xs font-semibold mb-1.5 text-slate-300">
               {t.password} *
             </label>
             <div className="relative">
@@ -235,8 +235,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ language, theme }) => {
                 placeholder="••••••••"
                 className={`w-full ltr:pl-10 rtl:pr-10 ltr:pr-10 rtl:pl-10 py-2.5 px-4 rounded-xl text-xs sm:text-sm border outline-hidden transition-all ${
                   theme === 'dark'
-                    ? 'bg-slate-950 border-slate-800 text-white focus:border-indigo-500'
-                    : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-indigo-500'
+                    ? 'bg-slate-900 border-slate-700 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'
+                    : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'
                 }`}
               />
               <button
@@ -252,7 +252,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ language, theme }) => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-600 text-white font-semibold text-xs sm:text-sm shadow-lg shadow-indigo-500/25 transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 mt-2"
+            className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-xs sm:text-sm shadow-lg shadow-indigo-600/30 transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 mt-2"
           >
             {isLoading ? (
               <span className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -266,14 +266,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ language, theme }) => {
         </form>
 
         {/* Footer switch prompt */}
-        <div className="mt-5 text-center text-xs text-slate-500">
+        <div className="mt-5 text-center text-xs text-slate-400">
           {mode === 'login' ? (
             <p>
               {t.dontHaveAccount}{' '}
               <button
                 type="button"
                 onClick={() => { setMode('register'); setErrorMessage(null); }}
-                className="text-indigo-400 hover:underline font-semibold cursor-pointer"
+                className="text-indigo-400 hover:text-indigo-300 hover:underline font-semibold cursor-pointer"
               >
                 {t.signUp}
               </button>
@@ -284,7 +284,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ language, theme }) => {
               <button
                 type="button"
                 onClick={() => { setMode('login'); setErrorMessage(null); }}
-                className="text-indigo-400 hover:underline font-semibold cursor-pointer"
+                className="text-indigo-400 hover:text-indigo-300 hover:underline font-semibold cursor-pointer"
               >
                 {t.signIn}
               </button>

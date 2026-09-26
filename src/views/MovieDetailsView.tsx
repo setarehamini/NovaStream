@@ -131,8 +131,8 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
           <div
             className={`absolute inset-0 ${
               theme === 'dark'
-                ? 'bg-gradient-to-t from-slate-950 via-slate-950/80 to-slate-950/40'
-                : 'bg-gradient-to-t from-white via-white/80 to-transparent'
+                ? 'bg-gradient-to-t from-[#141414] via-[#141414]/85 to-black/40'
+                : 'bg-gradient-to-t from-[#f8f8f8] via-[#f8f8f8]/85 to-transparent'
             }`}
           />
         </div>
@@ -140,7 +140,7 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10">
           <div className="flex flex-col md:flex-row items-center md:items-end gap-8">
             {/* Movie Poster */}
-            <div className="w-48 sm:w-60 md:w-68 shrink-0 rounded-2xl overflow-hidden shadow-2xl border-2 border-slate-800/80 bg-slate-900 group">
+            <div className="w-48 sm:w-60 md:w-68 shrink-0 rounded-md overflow-hidden shadow-2xl border border-zinc-800 bg-zinc-900 group">
               <img
                 src={posterUrl}
                 alt={movie.title}
@@ -152,55 +152,47 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
             {/* Movie Details Info */}
             <div className="flex-1 space-y-4 text-center md:text-left rtl:md:text-right">
               {/* Badges */}
-              <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 text-xs font-semibold">
-                <span
-                  className={`flex items-center gap-1.5 px-3 py-1 rounded-md uppercase tracking-wider text-xs font-bold transition-all shadow-md ${
-                    theme === 'dark'
-                      ? 'bg-indigo-500/25 text-indigo-300 border border-indigo-400/40 backdrop-blur-md'
-                      : 'bg-indigo-600 text-white border border-indigo-600 shadow-indigo-600/20'
-                  }`}
-                >
-                  <Film className={`w-3.5 h-3.5 ${theme === 'dark' ? 'text-indigo-400' : 'text-white'}`} />
-                  <span>{t.movies}</span>
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-2.5 text-xs font-semibold">
+                <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold uppercase tracking-wider bg-indigo-500/15 text-indigo-400 border border-indigo-500/25 shadow-sm">
+                  <Film className="w-3.5 h-3.5" />
+                  <span>Movie</span>
                 </span>
-                <span
-                  className={`flex items-center gap-1 px-2.5 py-1 rounded-md border font-semibold ${
-                    theme === 'dark'
-                      ? 'bg-slate-900/90 text-amber-400 border-amber-500/30'
-                      : 'bg-amber-50 text-amber-700 border-amber-300 shadow-xs'
-                  }`}
-                >
+
+                <span className="flex items-center gap-1 text-amber-400 font-bold bg-black/50 px-2.5 py-1 rounded-xl border border-black/30">
                   <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                   <span>{rating}</span>
-                  {movie.vote_count ? <span className="opacity-70 text-[10px]">({movie.vote_count.toLocaleString()})</span> : null}
                 </span>
-                <span
-                  className={`flex items-center gap-1 px-2.5 py-1 rounded-md border ${
-                    theme === 'dark'
-                      ? 'bg-slate-900/80 text-slate-300 border-slate-700/50'
-                      : 'bg-white text-slate-700 border-slate-300 shadow-xs'
-                  }`}
-                >
-                  <Calendar className="w-3.5 h-3.5 opacity-70" />
-                  <span>{releaseYear}</span>
+
+                <span className={`px-2.5 py-1 rounded-xl border font-medium ${
+                  theme === 'dark' ? 'border-slate-800 bg-slate-900/60 text-slate-300' : 'border-slate-200 bg-slate-100 text-slate-700'
+                }`}>
+                  {releaseYear}
                 </span>
+
+                <span className={`px-2 py-0.5 rounded-lg border text-[11px] font-bold ${
+                  theme === 'dark' ? 'border-slate-700 text-slate-300' : 'border-slate-300 text-slate-700'
+                }`}>
+                  16+
+                </span>
+
+                <span className={`px-2 py-0.5 rounded-lg border text-[11px] font-bold ${
+                  theme === 'dark' ? 'border-slate-700 text-slate-300' : 'border-slate-300 text-slate-700'
+                }`}>
+                  HD
+                </span>
+
                 {movie.runtime ? (
-                  <span
-                    className={`flex items-center gap-1 px-2.5 py-1 rounded-md border ${
-                      theme === 'dark'
-                        ? 'bg-slate-900/80 text-slate-300 border-slate-700/50'
-                        : 'bg-white text-slate-700 border-slate-300 shadow-xs'
-                    }`}
-                  >
-                    <Clock className="w-3.5 h-3.5 opacity-70" />
-                    <span>{movie.runtime} {t.minutes}</span>
+                  <span className={`px-2.5 py-1 rounded-xl border ${
+                    theme === 'dark' ? 'border-slate-800 bg-slate-900/60 text-slate-300' : 'border-slate-200 bg-slate-100 text-slate-700'
+                  }`}>
+                    {movie.runtime} {t.minutes}
                   </span>
                 ) : null}
               </div>
 
               {/* Title & Tagline */}
               <div>
-                <h1 className={`text-3xl sm:text-5xl font-black tracking-tight leading-tight ${theme === 'dark' ? 'text-white' : 'text-slate-950'}`}>
+                <h1 className={`text-3xl sm:text-5xl font-black tracking-tight leading-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
                   {movie.title}
                 </h1>
                 {movie.tagline && (
@@ -211,14 +203,14 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
               </div>
 
               {/* Genres */}
-              <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
-                {movie.genres?.map((g) => (
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-1.5 text-xs">
+                {movie.genres?.map((g, idx) => (
                   <span
                     key={g.id}
-                    className={`px-3 py-1 rounded-full text-xs font-medium border ${
+                    className={`px-3 py-1 rounded-xl border font-medium ${
                       theme === 'dark'
-                        ? 'bg-slate-900/80 border-slate-700 text-slate-300'
-                        : 'bg-white border-slate-300 text-slate-700 shadow-xs'
+                        ? 'bg-slate-800/60 text-slate-300 border-slate-700/60'
+                        : 'bg-slate-100 text-slate-700 border-slate-200'
                     }`}
                   >
                     {g.name}
@@ -231,9 +223,9 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
                 <button
                   id="watch-movie-action-btn"
                   onClick={() => onNavigate({ view: 'watch-movie', id: movie.id })}
-                  className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-bold text-base flex items-center gap-2.5 shadow-xl shadow-indigo-600/35 hover:scale-102 active:scale-98 transition-all cursor-pointer"
+                  className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-base flex items-center gap-2.5 shadow-xl shadow-indigo-500/25 hover:scale-102 active:scale-98 transition-all cursor-pointer"
                 >
-                  <Play className="w-5 h-5 fill-white" />
+                  <Play className="w-5 h-5 fill-white text-white" />
                   <span>{t.watchMovie}</span>
                 </button>
 
@@ -241,11 +233,7 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
                   <button
                     id="trailer-modal-action-btn"
                     onClick={() => setIsTrailerOpen(true)}
-                    className={`px-6 py-3.5 rounded-xl text-base font-semibold flex items-center gap-2 border backdrop-blur-md transition-all cursor-pointer ${
-                      theme === 'dark'
-                        ? 'bg-slate-900/80 hover:bg-slate-800 text-white border-slate-700'
-                        : 'bg-white/90 hover:bg-white text-slate-900 border-slate-300 shadow-xs'
-                    }`}
+                    className="px-6 py-3.5 rounded-2xl text-base font-semibold flex items-center gap-2 border bg-slate-800/80 hover:bg-slate-700 text-white border-slate-700 backdrop-blur-md transition-all cursor-pointer"
                   >
                     <Video className="w-5 h-5 text-indigo-400" />
                     <span>{t.trailer}</span>
@@ -269,51 +257,21 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
                       });
                     }
                   }}
-                  className={`px-5 py-3.5 rounded-xl text-sm font-semibold flex items-center gap-2 border transition-all cursor-pointer ${
+                  className={`px-5 py-3.5 rounded-2xl text-sm font-semibold flex items-center gap-2 border transition-all cursor-pointer ${
                     isInWatchlist('movie', movie.id)
-                      ? 'bg-indigo-600 text-white border-indigo-600 shadow-lg shadow-indigo-600/25'
+                      ? 'bg-indigo-600 text-white border-indigo-600 shadow-lg shadow-indigo-600/30'
                       : theme === 'dark'
-                      ? 'bg-slate-900/80 hover:bg-slate-800 text-slate-200 border-slate-700'
-                      : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-300 shadow-xs'
+                      ? 'bg-slate-800/80 hover:bg-slate-700 text-slate-200 border-slate-700'
+                      : 'bg-white hover:bg-slate-100 text-slate-800 border-slate-300 shadow-xs'
                   }`}
                   title={isInWatchlist('movie', movie.id) ? t.inWatchlist : t.addToWatchlist}
                 >
                   {isInWatchlist('movie', movie.id) ? (
-                    <Check className="w-4 h-4 text-white" />
+                    <Check className="w-4 h-4 text-white stroke-[3]" />
                   ) : (
                     <Bookmark className="w-4 h-4 text-indigo-400" />
                   )}
                   <span>{isInWatchlist('movie', movie.id) ? t.inWatchlist : t.addToWatchlist}</span>
-                </button>
-
-                {/* Watch Later Button */}
-                <button
-                  id="movie-watch-later-toggle-btn"
-                  onClick={() => {
-                    if (isInWatchLater('movie', movie.id)) {
-                      removeFromWatchLater('movie', movie.id);
-                    } else {
-                      addToWatchLater({
-                        mediaId: movie.id,
-                        mediaType: 'movie',
-                        title: movie.title,
-                        posterPath: movie.poster_path,
-                        voteAverage: movie.vote_average,
-                        releaseDate: movie.release_date,
-                      });
-                    }
-                  }}
-                  className={`px-5 py-3.5 rounded-xl text-sm font-semibold flex items-center gap-2 border transition-all cursor-pointer ${
-                    isInWatchLater('movie', movie.id)
-                      ? 'bg-amber-500 text-white border-amber-500 shadow-lg shadow-amber-500/25'
-                      : theme === 'dark'
-                      ? 'bg-slate-900/80 hover:bg-slate-800 text-slate-200 border-slate-700'
-                      : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-300 shadow-xs'
-                  }`}
-                  title={isInWatchLater('movie', movie.id) ? t.inWatchLater : t.addToWatchLater}
-                >
-                  <Clock className={`w-4 h-4 ${isInWatchLater('movie', movie.id) ? 'text-white' : 'text-amber-500'}`} />
-                  <span>{isInWatchLater('movie', movie.id) ? t.inWatchLater : t.watchLater}</span>
                 </button>
 
                 {/* Favorite Heart Button */}
@@ -333,16 +291,16 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
                       });
                     }
                   }}
-                  className={`p-3.5 rounded-xl border transition-all cursor-pointer ${
+                  className={`p-3.5 rounded-2xl border transition-all cursor-pointer ${
                     isFavorite('movie', movie.id)
-                      ? 'bg-indigo-500/20 text-indigo-400 border-indigo-500/50'
+                      ? 'bg-rose-500/15 text-rose-500 border-rose-500/40'
                       : theme === 'dark'
-                      ? 'bg-slate-900/80 hover:bg-slate-800 text-slate-400 border-slate-700'
-                      : 'bg-white hover:bg-slate-50 text-slate-500 border-slate-300 shadow-xs'
+                      ? 'bg-slate-800/90 hover:bg-slate-700 text-slate-400 border-slate-700'
+                      : 'bg-white hover:bg-slate-100 text-slate-500 border-slate-300 shadow-xs'
                   }`}
                   title={isFavorite('movie', movie.id) ? 'Favorited' : 'Add to Favorites'}
                 >
-                  <Heart className={`w-5 h-5 ${isFavorite('movie', movie.id) ? 'fill-indigo-500 text-indigo-400' : ''}`} />
+                  <Heart className={`w-5 h-5 ${isFavorite('movie', movie.id) ? 'fill-rose-500 text-rose-500' : ''}`} />
                 </button>
               </div>
             </div>
@@ -379,8 +337,8 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
                       onClick={() => onNavigate({ view: 'actor-detail', id: actor.id })}
                       className={`group p-2 rounded-xl border transition-all cursor-pointer text-center ${
                         theme === 'dark'
-                          ? 'bg-slate-900/60 border-slate-800/80 hover:border-indigo-500/50 hover:bg-slate-800/80'
-                          : 'bg-white border-slate-200 hover:border-indigo-500/50 hover:shadow-md'
+                          ? 'bg-slate-900/80 border-slate-800 hover:border-indigo-500/50 hover:bg-slate-800/80'
+                          : 'bg-white border-slate-200 hover:border-indigo-400 hover:shadow-md'
                       }`}
                     >
                       <div className="aspect-square w-full rounded-lg overflow-hidden bg-slate-800 mb-2">
@@ -391,10 +349,10 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
                           referrerPolicy="no-referrer"
                         />
                       </div>
-                      <h4 className={`text-xs font-semibold line-clamp-1 group-hover:text-indigo-400 transition-colors ${theme === 'dark' ? 'text-slate-200' : 'text-slate-800'}`}>
+                      <h4 className={`text-xs font-bold line-clamp-1 group-hover:text-indigo-400 transition-colors ${theme === 'dark' ? 'text-slate-200' : 'text-slate-800'}`}>
                         {actor.name}
                       </h4>
-                      <p className="text-[10px] text-slate-500 line-clamp-1">
+                      <p className="text-[10px] text-slate-400 line-clamp-1">
                         {actor.character}
                       </p>
                     </div>
@@ -406,41 +364,41 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
 
           {/* Right Column: Key Details */}
           <div
-            className={`p-6 rounded-2xl border space-y-4 h-fit ${
-              theme === 'dark' ? 'bg-slate-900/60 border-slate-800' : 'bg-slate-100/70 border-slate-200'
+            className={`p-6 rounded-xl border space-y-4 h-fit ${
+              theme === 'dark' ? 'bg-[#181818] border-zinc-800' : 'bg-zinc-100 border-zinc-200'
             }`}
           >
-            <h3 className={`text-sm font-bold uppercase tracking-wider ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+            <h3 className={`text-sm font-bold uppercase tracking-wider ${theme === 'dark' ? 'text-white' : 'text-zinc-900'}`}>
               Production Details
             </h3>
 
             {director && (
-              <div className="border-b border-slate-800/50 pb-3">
-                <span className="text-xs text-slate-500 block">{t.director}</span>
-                <span className={`text-sm font-semibold ${theme === 'dark' ? 'text-slate-200' : 'text-slate-800'}`}>
+              <div className="border-b border-zinc-800 pb-3">
+                <span className="text-xs text-zinc-400 block">{t.director}</span>
+                <span className={`text-sm font-semibold ${theme === 'dark' ? 'text-zinc-200' : 'text-zinc-800'}`}>
                   {director.name}
                 </span>
               </div>
             )}
 
-            <div className="border-b border-slate-800/50 pb-3">
-              <span className="text-xs text-slate-500 block">{t.releaseDate}</span>
-              <span className={`text-sm font-semibold ${theme === 'dark' ? 'text-slate-200' : 'text-slate-800'}`}>
+            <div className="border-b border-zinc-800 pb-3">
+              <span className="text-xs text-zinc-400 block">{t.releaseDate}</span>
+              <span className={`text-sm font-semibold ${theme === 'dark' ? 'text-zinc-200' : 'text-zinc-800'}`}>
                 {movie.release_date || 'N/A'}
               </span>
             </div>
 
-            <div className="border-b border-slate-800/50 pb-3">
-              <span className="text-xs text-slate-500 block">{t.status}</span>
-              <span className={`text-sm font-semibold ${theme === 'dark' ? 'text-slate-200' : 'text-slate-800'}`}>
+            <div className="border-b border-zinc-800 pb-3">
+              <span className="text-xs text-zinc-400 block">{t.status}</span>
+              <span className={`text-sm font-semibold ${theme === 'dark' ? 'text-zinc-200' : 'text-zinc-800'}`}>
                 {movie.status || 'Released'}
               </span>
             </div>
 
             {movie.budget ? (
-              <div className="border-b border-slate-800/50 pb-3">
-                <span className="text-xs text-slate-500 block">Budget</span>
-                <span className={`text-sm font-semibold ${theme === 'dark' ? 'text-slate-200' : 'text-slate-800'}`}>
+              <div className="border-b border-zinc-800 pb-3">
+                <span className="text-xs text-zinc-400 block">Budget</span>
+                <span className={`text-sm font-semibold ${theme === 'dark' ? 'text-zinc-200' : 'text-zinc-800'}`}>
                   ${(movie.budget / 1_000_000).toFixed(1)}M USD
                 </span>
               </div>
@@ -448,8 +406,8 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
 
             {movie.revenue ? (
               <div>
-                <span className="text-xs text-slate-500 block">Box Office Revenue</span>
-                <span className={`text-sm font-semibold ${theme === 'dark' ? 'text-slate-200' : 'text-slate-800'}`}>
+                <span className="text-xs text-zinc-400 block">Box Office Revenue</span>
+                <span className={`text-sm font-semibold ${theme === 'dark' ? 'text-zinc-200' : 'text-zinc-800'}`}>
                   ${(movie.revenue / 1_000_000).toFixed(1)}M USD
                 </span>
               </div>
@@ -459,7 +417,7 @@ export const MovieDetailsView: React.FC<MovieDetailsViewProps> = ({
 
         {/* Similar Movies */}
         {similarMovies.length > 0 && (
-          <section id="similar-movies-section" className="space-y-4 pt-4 border-t border-slate-800/50">
+          <section id="similar-movies-section" className="space-y-4 pt-4 border-t border-slate-800">
             <div className="flex items-center gap-2">
               <Film className="w-5 h-5 text-indigo-400" />
               <h2 className={`text-xl font-bold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>

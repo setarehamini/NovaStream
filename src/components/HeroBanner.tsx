@@ -64,7 +64,6 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
       <div
         className="absolute inset-0 cursor-pointer group"
         onClick={handleOpenDetails}
-        title={`View details for ${title}`}
       >
         <img
           key={currentItem.id}
@@ -73,90 +72,83 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
           className="w-full h-full object-cover object-center animate-fade-in transition-transform duration-1000 group-hover:scale-102"
           referrerPolicy="no-referrer"
         />
-        {/* Soft, shallow bottom gradient to blend gently with the page without covering the artwork */}
+        {/* Smooth deep bottom gradient to seamlessly melt into canvas */}
         <div
           className={`absolute inset-0 pointer-events-none ${
             theme === 'dark'
-              ? 'bg-gradient-to-t from-slate-950/70 via-slate-950/15 to-transparent'
-              : 'bg-gradient-to-t from-slate-50/70 via-slate-50/15 to-transparent'
+              ? 'bg-gradient-to-t from-slate-950 via-slate-950/70 to-transparent'
+              : 'bg-gradient-to-t from-slate-50 via-slate-50/70 to-transparent'
           }`}
         />
-        {/* Very light lateral wash just for text legibility while keeping the poster bright and open */}
+        {/* Cinematic lateral wash for bold contrast */}
         <div
           className={`absolute inset-0 pointer-events-none ${
             language === 'fa'
               ? theme === 'dark'
-                ? 'bg-gradient-to-l from-slate-950/45 via-slate-950/10 to-transparent'
-                : 'bg-gradient-to-l from-white/45 via-white/10 to-transparent'
+                ? 'bg-gradient-to-l from-black/85 via-black/40 to-transparent'
+                : 'bg-gradient-to-l from-white/85 via-white/40 to-transparent'
               : theme === 'dark'
-              ? 'bg-gradient-to-r from-slate-950/45 via-slate-950/10 to-transparent'
-              : 'bg-gradient-to-r from-white/45 via-white/10 to-transparent'
+              ? 'bg-gradient-to-r from-black/85 via-black/40 to-transparent'
+              : 'bg-gradient-to-r from-white/85 via-white/40 to-transparent'
           }`}
         />
       </div>
 
-      {/* Hero Content */}
+      {/* Hero Content - Netflix Billboard Style */}
       <div className="relative max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex flex-col justify-end pb-14 sm:pb-20 z-10 pointer-events-none">
-        <div className="max-w-2xl space-y-4 pointer-events-auto">
-          {/* Metadata badges */}
-          <div className="flex flex-wrap items-center gap-2.5 text-xs font-semibold">
-            {isTV ? (
-              <span
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-md uppercase tracking-wider text-xs font-bold transition-all shadow-md ${
-                  theme === 'dark'
-                    ? 'bg-sky-500/25 text-sky-300 border border-sky-400/40 backdrop-blur-md'
-                    : 'bg-sky-600 text-white border border-sky-600 shadow-sky-600/20'
-                }`}
-              >
-                <Tv className={`w-3.5 h-3.5 ${theme === 'dark' ? 'text-sky-400' : 'text-white'}`} />
-                <span>{t.series}</span>
-              </span>
-            ) : (
-              <span
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-md uppercase tracking-wider text-xs font-bold transition-all shadow-md ${
-                  theme === 'dark'
-                    ? 'bg-indigo-500/25 text-indigo-300 border border-indigo-400/40 backdrop-blur-md'
-                    : 'bg-indigo-600 text-white border border-indigo-600 shadow-indigo-600/20'
-                }`}
-              >
-                <Film className={`w-3.5 h-3.5 ${theme === 'dark' ? 'text-indigo-400' : 'text-white'}`} />
-                <span>{t.movies}</span>
-              </span>
-            )}
+        <div className="max-w-2xl space-y-3.5 pointer-events-auto">
+          {/* Brand & Type Tag */}
+          <div className="flex items-center gap-2">
+            <span className="px-2.5 py-1 rounded-md bg-indigo-600 text-white text-[10px] sm:text-[11px] font-bold tracking-wider uppercase shadow-md shadow-indigo-600/30">
+              {isTV ? t.series : t.movies}
+            </span>
+          </div>
 
+          {/* Title - Clean display without pointer/hover distraction */}
+          <h1
+            className={`text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)] cursor-default select-text ${
+              theme === 'dark' ? 'text-white' : 'text-zinc-950'
+            }`}
+          >
+            {title}
+          </h1>
+
+          {/* Metadata Row (Rating, Year, Age, HD) */}
+          <div className="flex flex-wrap items-center gap-3 text-xs font-semibold">
             {rating && (
-              <span className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-900/80 backdrop-blur-md text-amber-400 border border-amber-500/30">
+              <span className="flex items-center gap-1 text-amber-400 font-bold bg-black/60 px-2 py-0.5 rounded-md backdrop-blur-xs">
                 <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                 <span>{rating}</span>
               </span>
             )}
 
             {year && (
-              <span className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-900/70 backdrop-blur-md text-slate-300 border border-slate-700/50">
-                <Calendar className="w-3.5 h-3.5 opacity-70" />
-                <span>{year}</span>
+              <span className={theme === 'dark' ? 'text-zinc-300 font-medium' : 'text-zinc-700 font-semibold'}>
+                {year}
               </span>
             )}
 
-            <span className="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-medium">
-              Ultra HD
+            <span className={`px-2 py-0.5 rounded-md border text-[10px] font-bold ${
+              theme === 'dark'
+                ? 'border-zinc-700/80 text-zinc-300 bg-zinc-900/60'
+                : 'border-zinc-300 text-zinc-800 bg-zinc-200/60'
+            }`}>
+              16+
+            </span>
+
+            <span className={`px-2 py-0.5 rounded-md border text-[10px] font-bold ${
+              theme === 'dark'
+                ? 'border-zinc-700/80 text-zinc-300 bg-zinc-900/60'
+                : 'border-zinc-300 text-zinc-800 bg-zinc-200/60'
+            }`}>
+              HD
             </span>
           </div>
 
-          {/* Title */}
-          <h1
-            onClick={handleOpenDetails}
-            className={`text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)] cursor-pointer ${
-              theme === 'dark' ? 'text-white' : 'text-slate-950'
-            }`}
-          >
-            {title}
-          </h1>
-
           {/* Overview */}
           <p
-            className={`text-sm sm:text-base line-clamp-3 leading-relaxed max-w-xl drop-shadow-[0_1px_6px_rgba(0,0,0,0.8)] ${
-              theme === 'dark' ? 'text-slate-100 font-normal' : 'text-slate-900 font-semibold'
+            className={`text-sm sm:text-base line-clamp-3 leading-relaxed max-w-xl drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)] ${
+              theme === 'dark' ? 'text-zinc-200 font-normal' : 'text-zinc-800 font-medium'
             }`}
           >
             {currentItem.overview || 'Experience the latest cinematic release with seamless high-definition streaming.'}
@@ -167,23 +159,20 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             <button
               id="hero-watch-now-btn"
               onClick={handleWatchNow}
-              className="px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-bold text-sm sm:text-base flex items-center gap-2.5 shadow-lg shadow-indigo-600/35 hover:scale-102 active:scale-98 transition-all cursor-pointer"
+              className="px-7 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm sm:text-base flex items-center gap-2.5 shadow-xl shadow-indigo-600/30 hover:scale-105 active:scale-95 transition-all cursor-pointer"
             >
-              <Play className="w-5 h-5 fill-white" />
+              <Play className="w-5 h-5 fill-white text-white" />
               <span>{t.watchNow}</span>
             </button>
 
             <button
               id="hero-watch-trailer-btn"
               onClick={() => onOpenTrailer(currentItem)}
-              className={`px-5 py-3 rounded-xl text-sm sm:text-base font-semibold flex items-center gap-2 border backdrop-blur-md transition-all cursor-pointer ${
-                theme === 'dark'
-                  ? 'bg-slate-900/80 hover:bg-slate-800 text-white border-slate-700/70 hover:border-slate-600'
-                  : 'bg-white/90 hover:bg-white text-slate-900 border-slate-300 shadow-sm'
-              }`}
+              className="px-5 py-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 hover:text-white border border-slate-700/70 backdrop-blur-md transition-all cursor-pointer flex items-center gap-2"
+              title={t.trailer}
             >
-              <Video className="w-4 h-4 text-indigo-400" />
-              <span>{t.trailer}</span>
+              <Video className="w-5 h-5 text-indigo-400" />
+              <span className="font-semibold text-sm sm:text-base">{t.trailer}</span>
             </button>
           </div>
         </div>
@@ -192,7 +181,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
         <div className="absolute bottom-6 right-4 sm:right-8 rtl:right-auto rtl:left-4 sm:rtl:left-8 flex items-center gap-3 pointer-events-auto">
           <button
             onClick={() => setCurrentIndex((prev) => (prev - 1 + featuredList.length) % featuredList.length)}
-            className="p-2 rounded-full bg-slate-900/70 text-white hover:bg-indigo-600 transition-colors backdrop-blur-md border border-slate-700/50"
+            className="p-2 rounded-full bg-slate-900/80 text-white hover:bg-indigo-600 transition-colors backdrop-blur-md border border-slate-700/60"
             title="Previous Featured"
           >
             <ChevronLeft className="w-4 h-4 rtl:rotate-180" />
@@ -204,7 +193,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
                 key={idx}
                 onClick={() => setCurrentIndex(idx)}
                 className={`h-1.5 rounded-full transition-all duration-300 ${
-                  currentIndex === idx ? 'w-6 bg-indigo-500' : 'w-2 bg-slate-600/70 hover:bg-slate-400'
+                  currentIndex === idx ? 'w-6 bg-indigo-600' : 'w-2 bg-slate-600/70 hover:bg-slate-400'
                 }`}
               />
             ))}
@@ -212,7 +201,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
 
           <button
             onClick={() => setCurrentIndex((prev) => (prev + 1) % featuredList.length)}
-            className="p-2 rounded-full bg-slate-900/70 text-white hover:bg-indigo-600 transition-colors backdrop-blur-md border border-slate-700/50"
+            className="p-2 rounded-full bg-slate-900/80 text-white hover:bg-indigo-600 transition-colors backdrop-blur-md border border-slate-700/60"
             title="Next Featured"
           >
             <ChevronRight className="w-4 h-4 rtl:rotate-180" />

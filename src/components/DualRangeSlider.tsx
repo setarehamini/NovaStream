@@ -204,7 +204,7 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
           <>
             <span
               dir="ltr"
-              className="px-2.5 py-0.5 rounded-lg bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 font-bold text-xs"
+              className="px-2.5 py-0.5 rounded-lg bg-indigo-600/15 border border-indigo-500/30 text-indigo-400 font-bold text-xs"
             >
               {formatValue(minValue)} - {formatValue(maxValue)}
             </span>
@@ -219,7 +219,7 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
             </span>
             <span
               dir="ltr"
-              className="px-2.5 py-0.5 rounded-lg bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 font-bold text-xs"
+              className="px-2.5 py-0.5 rounded-lg bg-indigo-600/15 border border-indigo-500/30 text-indigo-400 font-bold text-xs"
             >
               {formatValue(minValue)} - {formatValue(maxValue)}
             </span>
@@ -237,12 +237,12 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
         <div
           ref={trackRef}
           className={`relative w-full h-2 rounded-full overflow-hidden transition-colors ${
-            theme === 'dark' ? 'bg-slate-800' : 'bg-slate-200'
+            theme === 'dark' ? 'bg-slate-800' : 'bg-slate-300'
           }`}
         >
           {/* Active Range Highlight */}
           <div
-            className="absolute top-0 bottom-0 bg-gradient-to-r from-indigo-600 via-indigo-500 to-indigo-600 rounded-full"
+            className="absolute top-0 bottom-0 bg-indigo-600 rounded-full shadow-sm"
             style={{
               left: `${minPos}%`,
               width: `${Math.max(0, maxPos - minPos)}%`,
@@ -263,16 +263,16 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
           onMouseEnter={() => setHoveredThumb('min')}
           onMouseLeave={() => setHoveredThumb(null)}
           onKeyDown={handleMinKeyDown}
-          className={`absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-8 h-8 flex items-center justify-center cursor-grab active:cursor-grabbing focus:outline-hidden transition-transform ${
+          className={`absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-8 h-8 flex items-center justify-center cursor-grab active:cursor-grabbing outline-none focus:outline-none focus:ring-0 active:outline-none select-none transition-transform ${
             activeThumb === 'min' ? 'z-30 scale-110' : 'z-20 hover:scale-105'
           }`}
           style={{ left: `${minPos}%` }}
         >
-          {/* Visual Diamond */}
+          {/* Visual Circle Thumb */}
           <div
-            className={`w-4 h-4 bg-indigo-600 rotate-45 rounded-[2px] border-2 shadow-md transition-colors ${
-              theme === 'dark' ? 'border-white' : 'border-slate-900'
-            } ${activeThumb === 'min' || hoveredThumb === 'min' ? 'bg-indigo-500 ring-4 ring-indigo-500/25' : ''}`}
+            className={`w-4 h-4 rounded-full bg-white border-2 border-indigo-600 shadow-md transition-all ${
+              activeThumb === 'min' || hoveredThumb === 'min' ? 'ring-4 ring-indigo-500/30 bg-indigo-600' : ''
+            }`}
           />
 
           {/* Floating Tooltip */}
@@ -296,16 +296,16 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
           onMouseEnter={() => setHoveredThumb('max')}
           onMouseLeave={() => setHoveredThumb(null)}
           onKeyDown={handleMaxKeyDown}
-          className={`absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-8 h-8 flex items-center justify-center cursor-grab active:cursor-grabbing focus:outline-hidden transition-transform ${
+          className={`absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-8 h-8 flex items-center justify-center cursor-grab active:cursor-grabbing outline-none focus:outline-none focus:ring-0 active:outline-none select-none transition-transform ${
             activeThumb === 'max' ? 'z-30 scale-110' : 'z-20 hover:scale-105'
           }`}
           style={{ left: `${maxPos}%` }}
         >
-          {/* Visual Diamond */}
+          {/* Visual Circle Thumb */}
           <div
-            className={`w-4 h-4 bg-indigo-600 rotate-45 rounded-[2px] border-2 shadow-md transition-colors ${
-              theme === 'dark' ? 'border-white' : 'border-slate-900'
-            } ${activeThumb === 'max' || hoveredThumb === 'max' ? 'bg-indigo-500 ring-4 ring-indigo-500/25' : ''}`}
+            className={`w-4 h-4 rounded-full bg-white border-2 border-indigo-600 shadow-md transition-all ${
+              activeThumb === 'max' || hoveredThumb === 'max' ? 'ring-4 ring-indigo-500/30 bg-indigo-600' : ''
+            }`}
           />
 
           {/* Floating Tooltip */}
